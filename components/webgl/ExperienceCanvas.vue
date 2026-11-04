@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Experience } from "~/webgl/Experience";
 
+/** Begin loading only once the boot screen is up (reference load order). */
+const props = defineProps<{ start: boolean }>();
+
 const emit = defineEmits<{
   progress: [number, string];
   ready: [];
@@ -19,8 +22,11 @@ const onPointerMove = (event: PointerEvent) => {
   );
 };
 
-onMounted(async () => {
-  if (!canvas.value) return;
+let initialised = false;
+
+async function init() {
+  if (initialised || !canvas.value) return;
+  initialised = true;
 
   const instance = new Experience({
     canvas: canvas.value,
@@ -49,6 +55,16 @@ onMounted(async () => {
   resizeObserver = new ResizeObserver(applySize);
   resizeObserver.observe(document.documentElement);
   window.addEventListener("pointermove", onPointerMove, { passive: true });
+}
+
+onMounted(() => {
+  watch(
+    () => props.start,
+    (start) => {
+      if (start) init();
+    },
+    { immediate: true }
+  );
 });
 
 onBeforeUnmount(() => {

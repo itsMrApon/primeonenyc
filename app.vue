@@ -1,8 +1,7 @@
 <script setup lang="ts">
+const booted = ref(false);
 const ready = ref(false);
 const failure = ref<string | null>(null);
-const loadProgress = ref(0);
-const loadLabel = ref("");
 
 const syncAppVh = () => {
   document.documentElement.style.setProperty("--app-vh", `${window.innerHeight * 0.01}px`);
@@ -17,11 +16,6 @@ onBeforeUnmount(() => {
   window.removeEventListener("resize", syncAppVh);
 });
 
-const onProgress = (p: number, label: string) => {
-  loadProgress.value = p;
-  loadLabel.value = label;
-};
-
 const onError = (error: Error) => {
   failure.value = error.message;
   console.error("[Experience] failed to start", error);
@@ -31,7 +25,7 @@ const onError = (error: Error) => {
 <template>
   <div class="app-root">
     <WebglExperienceCanvas
-      @progress="onProgress"
+      :start="booted"
       @ready="ready = true"
       @error="onError"
     />
@@ -41,13 +35,7 @@ const onError = (error: Error) => {
       <NuxtPage />
     </div>
 
-    <div v-if="!ready && !failure" class="boot" aria-live="polite">
-      <p class="eyebrow">Loading Norris</p>
-      <p class="boot__bar">
-        <span :style="{ width: `${Math.round(loadProgress * 100)}%` }" />
-      </p>
-      <p class="boot__label">{{ loadLabel }}</p>
-    </div>
+    <LayoutPageTransition :ready="ready || !!failure" @booted="booted = true" />
 
     <p v-if="failure" class="startup-error" role="alert">
       The experience failed to start: {{ failure }}
@@ -56,38 +44,6 @@ const onError = (error: Error) => {
 </template>
 
 <style scoped>
-.boot {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  display: grid;
-  place-content: center;
-  gap: 0.75rem;
-  background: var(--color-lime);
-  color: var(--color-dark-green);
-  pointer-events: none;
-}
-
-.boot__bar {
-  width: min(220px, 50vw);
-  height: 3px;
-  background: color-mix(in srgb, var(--color-dark-green) 20%, transparent);
-  overflow: hidden;
-}
-
-.boot__bar span {
-  display: block;
-  height: 100%;
-  background: var(--color-dark-green);
-  transition: width 0.25s ease;
-}
-
-.boot__label {
-  font-size: 0.8rem;
-  opacity: 0.7;
-  text-align: center;
-}
-
 .startup-error {
   position: fixed;
   bottom: 24px;
