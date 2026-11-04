@@ -1,12 +1,15 @@
 import {
-  ACESFilmicToneMapping,
   Clock,
-  Color,
-  Vector2,
+  HalfFloatType,
+  LinearFilter,
+  NoToneMapping,
+  SRGBColorSpace,
+  WebGLRenderTarget,
   WebGLRenderer
 } from "three";
 
-import { BackgroundScene } from "./scenes/BackgroundScene";
+import { ContourNoisePass } from "./passes/ContourNoisePass";
+import { HeroCompositePass } from "./passes/HeroCompositePass";
 import { HeadScene } from "./scenes/HeadScene";
 
 export interface ExperienceOptions {
@@ -15,8 +18,10 @@ export interface ExperienceOptions {
 }
 
 /**
- * Fixed fullscreen WebGL experience sitting behind the DOM overlays.
- * Hero uses the displaced head plane (OFF+BRAND AX port).
+ * Hero pipeline (matches the reference's pass order, see .reanimate/hero/spec.md):
+ *   head scene → headTarget (MSAA)
+ *   contour noise → contourTarget
+ *   composite(contours, head) → screen
  */
 export class Experience {
   readonly #canvas: HTMLCanvasElement;
@@ -25,7 +30,14 @@ export class Experience {
   readonly #onProgress?: ExperienceOptions["onProgress"];
 
   readonly head = new HeadScene();
-  readonly background = new BackgroundScene("#d2ff00");
+  readonly #headTarget = new WebGLRenderTarget(1, 1, { samples: 4, type: HalfFloatType });
+  readonly #contourTarget = new WebGLRenderTarget(1, 1, {
+    minFilter: LinearFilter,
+    magFilter: LinearFilter,
+    depthBuffer: false
+  });
+  readonly #contours = new ContourNoisePass();
+  readonly #composite = new HeroCompositePass(this.#contourTarget.texture, this.#headTarget.texture);
 
   #running = false;
   #frame = 0;
@@ -38,14 +50,18 @@ export class Experience {
 
     this.#renderer = new WebGLRenderer({
       canvas: options.canvas,
-      antialias: true,
+      antialias: false,
       alpha: true,
+      premultipliedAlpha: true,
       powerPreference: "high-performance"
     });
-    this.#renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.#renderer.toneMapping = ACESFilmicToneMapping;
-    this.#renderer.toneMappingExposure = 1.2;
-    this.#renderer.setClearColor(new Color("#d2ff00"), 1);
+    this.#renderer.setPixelRatio(1);
+    this.#renderer.outputColorSpace = SRGBColorSpace;
+    this.#renderer.toneMapping = NoToneMapping;
+    this.#renderer.setClearColor(0x000000, 0);
+    this.#renderer.autoClear = false;
+    // Clock starts at construction, like the reference's uTime (≈ seconds since load).
+    this.#clock.start();
   }
 
   async load() {
@@ -57,7 +73,6 @@ export class Experience {
   start() {
     if (this.#running || this.#disposed) return;
     this.#running = true;
-    this.#clock.start();
     this.#frame = requestAnimationFrame(this.#tick);
   }
 
@@ -67,45 +82,54 @@ export class Experience {
   }
 
   resize(width: number, height: number) {
-    this.#renderer.setSize(Math.max(1, width), Math.max(1, height), false);
-    this.head.resize(width, height);
+    const w = Math.max(1, Math.round(width));
+    const h = Math.max(1, Math.round(height));
+    this.#renderer.setSize(w, h, false);
+    this.#headTarget.setSize(w, h);
+    this.#contourTarget.setSize(w, h);
+    this.#contours.material.uniforms.uAspect.value = w / h;
+    this.head.resize(w, h);
   }
 
   setPointer(nx: number, ny: number) {
     this.head.setPointer(nx, ny);
   }
 
-  /** Fade canvas when leaving the sticky lime hero. */
   setHeroVisible(visible: boolean) {
     if (this.#heroVisible === visible) return;
     this.#heroVisible = visible;
-    if (visible) {
-      this.background.setColor("#d2ff00", 0.6);
-      this.#renderer.setClearColor(new Color("#d2ff00"), 1);
-      this.#canvas.style.opacity = "1";
-    } else {
-      this.background.setColor("#282c20", 0.8);
-      this.#renderer.setClearColor(new Color("#282c20"), 0);
-      this.#canvas.style.opacity = "0";
-    }
+    this.#canvas.style.opacity = visible ? "1" : "0";
   }
 
   dispose() {
     this.#disposed = true;
     this.stop();
     this.head.dispose();
-    this.background.dispose();
+    this.#contours.dispose();
+    this.#composite.dispose();
+    this.#headTarget.dispose();
+    this.#contourTarget.dispose();
     this.#renderer.dispose();
   }
 
   readonly #tick = () => {
     if (!this.#running || this.#disposed) return;
     const dt = Math.min(this.#clock.getDelta(), 0.05);
-    this.head.update(dt);
+    const r = this.#renderer;
 
-    this.#renderer.autoClear = true;
     if (this.#heroVisible) {
-      this.#renderer.render(this.head.scene, this.head.camera);
+      this.head.update(dt);
+
+      r.setRenderTarget(this.#headTarget);
+      r.clear();
+      r.render(this.head.scene, this.head.camera);
+
+      this.#contours.material.uniforms.uTime.value = this.#clock.elapsedTime;
+      this.#contours.render(r, this.#contourTarget);
+
+      r.setRenderTarget(null);
+      r.clear();
+      this.#composite.render(r, null);
     }
 
     this.#frame = requestAnimationFrame(this.#tick);
