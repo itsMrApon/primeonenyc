@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const content = useHomeContent();
 const open = ref(false);
+const hover = ref(false);
 
 watch(open, (v) => {
   document.documentElement.classList.toggle("nav-open", v);
@@ -8,10 +9,14 @@ watch(open, (v) => {
 </script>
 
 <template>
-  <header data-app-nav data-nav-theme="light" class="nav">
+  <header data-app-nav data-nav-theme="dark" class="nav">
     <div class="nav-inner">
       <a class="nav-brand-link" href="/" aria-label="Lando Home" title="Lando Home">
-        <img :src="content.nav.logoSrc" alt="LN" width="56" height="28" class="nav-brand-img" />
+        <LayoutNavBrand />
+      </a>
+
+      <a class="nav-middle" href="/" aria-label="Home">
+        <RiveCanvas file="logo" artboard="logo" state-machine="logo" />
       </a>
 
       <div class="btn-layout is-nav">
@@ -22,6 +27,7 @@ watch(open, (v) => {
           rel="noopener"
           data-theme="lime"
         >
+          <span class="btn-icon"><LayoutStoreIcon /></span>
           <span class="btn-text">{{ content.nav.store.label }}</span>
         </a>
 
@@ -33,11 +39,15 @@ watch(open, (v) => {
           :aria-label="open ? 'Close menu' : 'Open menu'"
           aria-controls="site-menu"
           @click="open = !open"
+          @pointerenter="hover = true"
+          @pointerleave="hover = false"
         >
-          <span class="nav-ham__bars" aria-hidden="true">
-            <i />
-            <i />
-          </span>
+          <RiveCanvas
+            file="btn-ui"
+            artboard="hamburger"
+            state-machine="hamburger"
+            :inputs="{ hover, close: open, 'color-transparent': true }"
+          />
         </button>
       </div>
     </div>
@@ -65,105 +75,112 @@ watch(open, (v) => {
 </template>
 
 <style scoped>
+/* Reference metrics at 1440 px: 1u = clamp(992px, 100vw, 1920px) / 1728 × 16 = 13.33 px. */
 .nav {
-  z-index: 120;
-  pointer-events: none;
-  justify-content: space-between;
-  align-items: center;
-  display: flex;
+  --u: calc(clamp(992px, 100vw, 1920px) / 1728 * 16);
   position: fixed;
   inset: 0 0 auto;
-  color: var(--color-dark-green);
+  z-index: 120;
+  pointer-events: none;
 }
 
 .nav-inner {
-  width: 100%;
+  position: relative;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 0.85rem var(--pad-x);
-  pointer-events: none;
+  align-items: flex-start;
+  padding: calc(var(--u) * 1.25);
 }
 
 .nav-brand-link,
+.nav-middle,
 .btn-layout {
   pointer-events: auto;
 }
 
-.nav-brand-img {
-  height: 1.65rem;
+.nav-brand-link {
+  display: block;
+  height: calc(var(--u) * 4.5);
+}
+
+.nav-brand-link :deep(.nav-brand) {
+  display: block;
   width: auto;
+  height: 100%;
+}
+
+.nav-brand-link :deep(path) {
+  transition: fill 0.75s cubic-bezier(0.65, 0.05, 0, 1);
+}
+
+.nav[data-nav-theme="dark"] :deep(.nav-brand__p1),
+.nav[data-nav-theme="dark"] :deep(.nav-brand__p2) {
+  fill: #282c20;
+}
+
+.nav[data-nav-theme="light"] :deep(.nav-brand__p1) {
+  fill: #c8cbbd;
+}
+
+.nav[data-nav-theme="light"] :deep(.nav-brand__p2) {
+  fill: #ebeee0;
+}
+
+.nav-middle {
+  position: absolute;
+  top: calc(var(--u) * 1.75);
+  left: 50%;
+  width: calc(var(--u) * 2.75);
+  height: calc(var(--u) * 2.75);
+  transform: translateX(-50%);
 }
 
 .btn-layout.is-nav {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: calc(var(--u) * 0.75);
 }
 
 .btn-w.is-nav {
-  border: 1px solid var(--color-lime);
-  background-color: var(--color-lime);
-  color: var(--color-dark-green);
-  border-radius: 0.54rem;
-  height: 3rem;
-  padding: 0 1rem;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-weight: 650;
-  font-size: 0.92rem;
-  transition: transform 0.3s var(--ease-out);
+  gap: calc(var(--u) * 0.8);
+  height: calc(var(--u) * 4.5);
+  padding: 0 calc(var(--u) * 1.25);
+  border: 1px solid var(--color-lime);
+  border-radius: calc(var(--u) * 0.54);
+  background-color: var(--color-lime);
+  color: #282c20;
 }
 
-.btn-w.is-nav:hover {
-  transform: translateY(-1px);
+.btn-icon {
+  display: block;
+  width: calc(var(--u) * 1.36);
+  height: calc(var(--u) * 1.44);
+}
+
+.btn-icon :deep(svg) {
+  display: block;
+}
+
+.btn-w.is-nav .btn-text {
+  font-family: var(--font-mona);
+  font-size: calc(var(--u) * 1.25);
+  font-weight: 800;
+  /* Reference declares "wdth" 86 but its glyphs measure like 96.5 with the
+     same font file (STORE = 54.7 px at 1440); match the measured result. */
+  font-variation-settings: "wdth" 96.5;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .nav-ham {
-  pointer-events: auto;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 0.54rem;
-  border: 1px solid color-mix(in srgb, var(--color-dark-green) 35%, transparent);
-  display: grid;
-  place-items: center;
-  background: color-mix(in srgb, var(--color-lime) 55%, transparent);
-}
-
-.nav-ham__bars {
-  display: grid;
-  gap: 5px;
-  width: 1.05rem;
-}
-
-.nav-ham__bars i {
-  display: block;
-  height: 1.5px;
-  background: var(--color-dark-green);
-  border-radius: 1px;
-}
-
-.nav[data-nav-theme="dark"] {
-  color: var(--color-white);
-}
-
-.nav[data-nav-theme="dark"] .btn-w.is-nav {
-  background: var(--color-lime);
-  color: var(--color-dark-green);
-}
-
-.nav[data-nav-theme="dark"] .nav-ham {
+  width: calc(var(--u) * 4.5);
+  height: calc(var(--u) * 4.5);
+  padding: 0;
+  border: 0;
   background: transparent;
-  border-color: color-mix(in srgb, var(--color-white) 40%, transparent);
-}
-
-.nav[data-nav-theme="dark"] .nav-ham__bars i {
-  background: var(--color-white);
-}
-
-.nav[data-nav-theme="dark"] .nav-brand-img {
-  filter: invert(1) brightness(1.15);
+  cursor: pointer;
 }
 
 .nav-menu-w {

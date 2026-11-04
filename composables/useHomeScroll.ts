@@ -94,15 +94,15 @@ export function useHomeScroll(options: {
         end: "bottom top+=80",
           onUpdate: (self) => {
           const lime = self.progress < 0.92;
-          nav.dataset.navTheme = lime ? "light" : "dark";
+          nav.dataset.navTheme = lime ? "dark" : "light";
           options.getExperience?.()?.setHeroVisible(lime);
         },
         onLeave: () => {
-          nav.dataset.navTheme = "dark";
+          nav.dataset.navTheme = "light";
           options.getExperience?.()?.setHeroVisible(false);
         },
         onEnterBack: () => {
-          nav.dataset.navTheme = "light";
+          nav.dataset.navTheme = "dark";
           options.getExperience?.()?.setHeroVisible(true);
         }
       });

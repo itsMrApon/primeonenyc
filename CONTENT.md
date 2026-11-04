@@ -27,7 +27,7 @@ Crawl mirror: `../noomo/output-lando/mirror/index.html`
 
 - Eyebrow: `2025 McLaren Formula 1 Driver`
 - Title feel: **LANDO NORRIS** (WebGL head/helmet on lime)
-- Next Race card: `Next Race` / `Zandvoort` / `gp` → `/calendar`
+- Next Race card: `Next Race` / `Sāo Paulo` / `gp` → `/calendar` (circuit Rive input `sao-paulo`; the macron typo is on the live site)
 
 ## Impact
 

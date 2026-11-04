@@ -31,9 +31,10 @@
     "title": "Lando Norris",
     "nextRace": {
       "label": "Next Race",
-      "name": "Zandvoort",
+      "name": "Sāo Paulo",
       "suffix": "gp",
-      "href": "/calendar"
+      "href": "/calendar",
+      "track": "sao-paulo"
     },
     "signatureSrc": "/images/misc/signature-lime.svg",
     "note": "Desktop hero has no giant title — face WebGL only. Mobile uses lando-norris-text-mobile.svg."
