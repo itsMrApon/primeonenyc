@@ -106,18 +106,19 @@ export function useHomeScroll(options: { getExperience?: () => HeroScrollTarget 
 
     // Sections that only declare a nav ink (reference [data-nav-theme-target]):
     // the theme applies while the element spans the nav's centre line.
+    // With nested markers (e.g. footer section dark, its panel light) the most
+    // recently started active one wins; re-evaluated on every enter/leave.
+    const themeTargets: { st: ScrollTrigger; value: string }[] = [];
+    const applyTheme = () => {
+      const active = themeTargets.filter((t) => t.st.isActive).sort((a, b) => b.st.start - a.st.start)[0];
+      if (active && nav) nav.dataset.navTheme = active.value;
+    };
     document.querySelectorAll<HTMLElement>("[data-nav-theme-target]").forEach((el) => {
       const value = el.dataset.navThemeTarget;
-      triggers.push(
-        ScrollTrigger.create({
-          trigger: el,
-          start: "top 42px",
-          end: "bottom 42px",
-          onToggle: (self) => {
-            if (self.isActive && nav && value) nav.dataset.navTheme = value;
-          }
-        })
-      );
+      if (!value) return;
+      const st = ScrollTrigger.create({ trigger: el, start: "top 42px", end: "bottom 42px", onToggle: applyTheme });
+      themeTargets.push({ st, value });
+      triggers.push(st);
     });
 
     // Reference partners section: contour lines fade into the page from "top bottom" to "top top".

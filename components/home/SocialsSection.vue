@@ -289,7 +289,7 @@ onBeforeUnmount(() => {
   font-family: var(--font-mona);
   font-size: var(--u);
   font-weight: 800;
-  font-variation-settings: "wdth" 96.5; /* declared 86 on the reference, renders like 96.5 */
+  font-variation-settings: "wdth" 86;
   line-height: 1;
   text-transform: uppercase;
 }

@@ -322,7 +322,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
   font-family: var(--font-mona);
   font-size: var(--u);
   font-weight: 800;
-  font-variation-settings: "wdth" 96.5; /* same declared-86 / measured-96.5 quirk as the nav Store label */
+  font-variation-settings: "wdth" 86;
   line-height: 1;
   text-transform: uppercase;
 }

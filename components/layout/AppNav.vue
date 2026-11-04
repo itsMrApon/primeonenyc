@@ -195,8 +195,9 @@ watch(open, (v) => {
   font-family: var(--font-mona);
   font-size: calc(var(--u) * 1.25);
   font-weight: 800;
-  /* Reference declares "wdth" 86 but its glyphs measure like 96.5 with the
-     same font file (STORE = 54.7 px at 1440); match the measured result. */
+  /* Reference declares "wdth" 86 but the nav Store label alone measures like
+     96.5 with the same font file (STORE = 54.7 px at 1440; every other label on
+     the site measures as a true 86); match the measured result. */
   font-variation-settings: "wdth" 96.5;
   line-height: 1;
   text-transform: uppercase;
