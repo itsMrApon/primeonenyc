@@ -17,9 +17,24 @@ export class DarkContourPass extends FullscreenPass {
    * #282C20 / #363B25 → #F4F4ED / #D4D7CA, mixed in raw byte space).
    */
   setTint(t: number) {
+    this.#tint = t;
+    this.#apply();
+  }
+
+  /** 0 = contour lines visible, 1 = lines faded into the paper (reference partners section). */
+  setLineFade(t: number) {
+    this.#fade = t;
+    this.#apply();
+  }
+
+  #tint = 0;
+  #fade = 0;
+
+  #apply() {
     const u = this.material.uniforms;
-    (u.uPaper.value as Color).lerpColors(PAPER.from, PAPER.to, t);
-    (u.uLine.value as Color).lerpColors(LINE.from, LINE.to, t);
+    const paper = u.uPaper.value as Color;
+    paper.lerpColors(PAPER.from, PAPER.to, this.#tint);
+    (u.uLine.value as Color).lerpColors(LINE.from, LINE.to, this.#tint).lerp(paper, this.#fade);
   }
 
   constructor(contours: Texture) {

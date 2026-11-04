@@ -14,12 +14,14 @@ gsap.registerPlugin(ScrollTrigger);
 export interface HeroScrollTarget {
   setHeroScroll: (progress: number, offset: number) => void;
   setPageTint: (t: number) => void;
+  setPageLineFade: (t: number) => void;
 }
 
 export function useHomeScroll(options: { getExperience?: () => HeroScrollTarget | null | undefined }) {
   let lenis: Lenis | null = null;
   let rafId = 0;
   const triggers: ScrollTrigger[] = [];
+  let onImageLoad: ((event: Event) => void) | null = null;
 
   onMounted(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -78,9 +80,13 @@ export function useHomeScroll(options: { getExperience?: () => HeroScrollTarget 
         const vh = window.innerHeight;
         const scrolled = Math.max(0, -hero.getBoundingClientRect().top);
         options.getExperience?.()?.setHeroScroll(scrolled / vh, scrolled - vh);
-        nav.dataset.navTheme = scrolled > vh * 0.05 ? "light" : "dark";
-        // Reference: the nav LN4 hides while the marquee card is on screen.
-        nav.dataset.navLogo = scrolled > vh * 0.3 && scrolled < vh * 2.05 ? "hidden" : "shown"; // back by ~1900 at 900 high
+        // Only inside the hero's own range: refreshes (e.g. lazy images) re-run this
+        // anywhere on the page and must not override later sections' nav state.
+        if (scrolled <= vh * 2.5) {
+          nav.dataset.navTheme = scrolled > vh * 0.05 ? "light" : "dark";
+          // Reference: the nav LN4 hides while the marquee card is on screen.
+          nav.dataset.navLogo = scrolled > vh * 0.3 && scrolled < vh * 2.05 ? "hidden" : "shown"; // back by ~1900 at 900 high
+        }
         card?.classList.toggle("is-hidden", scrolled > 0);
         // Reference: nav compacts 60 → 50 px (scale 0.833) over the first ~0.08vh, ease-out.
         const k = Math.min(scrolled / (vh * 0.08), 1);
@@ -98,10 +104,51 @@ export function useHomeScroll(options: { getExperience?: () => HeroScrollTarget 
       triggers.push(st);
     }
 
+    // Sections that only declare a nav ink (reference [data-nav-theme-target]):
+    // the theme applies while the element spans the nav's centre line.
+    document.querySelectorAll<HTMLElement>("[data-nav-theme-target]").forEach((el) => {
+      const value = el.dataset.navThemeTarget;
+      triggers.push(
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top 42px",
+          end: "bottom 42px",
+          onToggle: (self) => {
+            if (self.isActive && nav && value) nav.dataset.navTheme = value;
+          }
+        })
+      );
+    });
+
+    // Reference partners section: contour lines fade into the page from "top bottom" to "top top".
+    const linesFade = document.querySelector<HTMLElement>("[data-gl-lines-fade]");
+    if (linesFade) {
+      const fade = (p: number) => options.getExperience?.()?.setPageLineFade(p);
+      triggers.push(
+        ScrollTrigger.create({
+          trigger: linesFade,
+          start: "top bottom",
+          end: "top top",
+          onUpdate: (self) => fade(self.progress),
+          onRefresh: (self) => fade(self.progress)
+        })
+      );
+    }
+
+    // Lazy images change section heights after first layout; keep trigger positions current.
+    let refreshTimer = 0;
+    onImageLoad = (event: Event) => {
+      if ((event.target as HTMLElement)?.tagName !== "IMG") return;
+      clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 150);
+    };
+    document.addEventListener("load", onImageLoad, true);
+
     ScrollTrigger.refresh();
   });
 
   onBeforeUnmount(() => {
+    if (onImageLoad) document.removeEventListener("load", onImageLoad, true);
     cancelAnimationFrame(rafId);
     triggers.forEach((t) => t.kill());
     ScrollTrigger.getAll().forEach((t) => t.kill());

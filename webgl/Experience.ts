@@ -148,6 +148,11 @@ export class Experience {
     this.#darkPage.setTint(Math.min(Math.max(t, 0), 1));
   }
 
+  /** Fade the contour lines into the page colour (0 visible → 1 gone). */
+  setPageLineFade(t: number) {
+    this.#darkPage.setLineFade(Math.min(Math.max(t, 0), 1));
+  }
+
   #applyScroll(dt: number) {
     const { w, h } = this.#size;
     const e = easeInOutQuad(this.#scroll.progress);

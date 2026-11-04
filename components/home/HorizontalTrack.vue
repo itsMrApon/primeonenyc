@@ -107,7 +107,8 @@ function update() {
   exp?.setPageTint(easeOutQuad(pinned));
   const nav = document.querySelector<HTMLElement>("[data-app-nav]");
   if (nav && window.scrollY >= top - vh) {
-    nav.dataset.navTheme = pinned >= 0.1 ? "dark" : "light";
+    // theme only within the track (refreshes re-run this further down the page)
+    if (window.scrollY <= top + travel) nav.dataset.navTheme = pinned >= 0.1 ? "dark" : "light";
     // Reference: the nav LN4 hides from just before the track (≈0.2vh) and stays
     // hidden further down the page (checked through the helmets section).
     nav.dataset.navLogo = window.scrollY >= top - vh * 0.2 ? "hidden" : "shown";

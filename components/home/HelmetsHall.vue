@@ -61,7 +61,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
 </script>
 
 <template>
-  <div class="helmets-group">
+  <div class="helmets-group" data-nav-theme-target="light">
     <section class="helmets">
       <div class="helmets-title">
         <div class="helmets-headline">

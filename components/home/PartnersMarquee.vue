@@ -4,7 +4,7 @@ const logos = computed(() => [...content.partners.logos, ...content.partners.log
 </script>
 
 <template>
-  <section class="section partners">
+  <section class="section partners" data-gl-lines-fade data-nav-theme-target="dark">
     <div class="container partners__intro reveal" data-reveal>
       <h2 class="text-impact" v-html="content.partners.titleHtml" />
       <p class="text-body">{{ content.partners.body }}</p>
