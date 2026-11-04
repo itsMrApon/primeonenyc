@@ -13,11 +13,20 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const props = withDefaults(
-  defineProps<{ html: string; color?: "lime" | "lime-off"; tag?: string; manual?: boolean }>(),
-  { color: "lime", tag: "div", manual: false }
+  defineProps<{
+    html: string;
+    color?: "lime" | "lime-off" | "dark-green-tint-1";
+    tag?: string;
+    manual?: boolean;
+    /** "right" reveals left → right (bar leaves to the right); "left" mirrors it. */
+    direction?: "right" | "left";
+    /** Extra start delay in seconds (reference third parameter, given there in ms). */
+    delay?: number;
+  }>(),
+  { color: "lime", tag: "div", manual: false, direction: "right", delay: 0 }
 );
 
-const BAR = { lime: "#d2ff00", "lime-off": "#b2c73a" } as const;
+const BAR = { lime: "#d2ff00", "lime-off": "#b2c73a", "dark-green-tint-1": "#3b3c38" } as const;
 const STAGGER = 0.15;
 const CLIP_S = 0.6;
 const BAR_S = 0.6;
@@ -81,12 +90,15 @@ function animate() {
   trigger?.kill();
   const lineEls = [...el.querySelectorAll<HTMLElement>(".line")];
   timeline = gsap.timeline({ paused: true });
+  const right = props.direction === "right";
+  const hidden = right ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)";
+  const shown = right ? "inset(0 0% 0 0)" : "inset(0 0 0 0%)";
   lineEls.forEach((line, i) => {
     const bar = line.querySelector<HTMLElement>(".high-line-reveal");
-    gsap.set(line, { clipPath: "inset(0 100% 0 0)" });
-    gsap.set(bar, { scaleX: 1 });
-    const at = i * STAGGER;
-    timeline!.to(line, { clipPath: "inset(0 0% 0 0)", duration: CLIP_S, ease: "power2.out" }, at);
+    gsap.set(line, { clipPath: hidden });
+    gsap.set(bar, { scaleX: 1, transformOrigin: right ? "right center" : "left center" });
+    const at = props.delay + i * STAGGER;
+    timeline!.to(line, { clipPath: shown, duration: CLIP_S, ease: "power2.out" }, at);
     timeline!.to(bar, { scaleX: 0, duration: BAR_S, ease: "power2.inOut" }, at + CLIP_S / 2);
   });
   const wasBuilt = built;

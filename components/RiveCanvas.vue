@@ -16,8 +16,10 @@ const props = withDefaults(
     fit?: "contain" | "cover";
     /** Reference behaviour for in-page Rives: start 100 ms after 10 % is in view (bottom −10 %). */
     playOnView?: boolean;
+    /** false: stays on its first frame until play() (e.g. a scroll trigger in the parent). */
+    autoplay?: boolean;
   }>(),
-  { inputs: () => ({}), fit: "contain", playOnView: false }
+  { inputs: () => ({}), fit: "contain", playOnView: false, autoplay: true }
 );
 
 const canvas = ref<HTMLCanvasElement | null>(null);
@@ -41,13 +43,14 @@ onMounted(async () => {
     canvas: canvas.value,
     artboard: props.artboard,
     stateMachines: props.stateMachine,
-    autoplay: !props.playOnView,
+    autoplay: props.autoplay && !props.playOnView,
     layout: new Layout({ fit: props.fit === "cover" ? Fit.Cover : Fit.Contain, alignment: Alignment.Center }),
     onLoad: () => {
       if (!rive) return;
       rive.resizeDrawingSurfaceToCanvas();
       byName = Object.fromEntries(rive.stateMachineInputs(props.stateMachine).map((i) => [i.name, i]));
       applyInputs();
+      if (pendingPlay) rive.play();
       if (props.playOnView && canvas.value) {
         viewObserver = new IntersectionObserver(
           (entries) => {
@@ -66,6 +69,13 @@ onMounted(async () => {
 });
 
 watch(() => props.inputs, applyInputs, { deep: true });
+
+let pendingPlay = false;
+function play() {
+  if (rive) rive.play();
+  else pendingPlay = true;
+}
+defineExpose({ play });
 
 onBeforeUnmount(() => {
   observer?.disconnect();
