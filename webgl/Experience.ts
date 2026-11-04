@@ -1,6 +1,5 @@
 import {
   Clock,
-  HalfFloatType,
   LinearFilter,
   NoToneMapping,
   SRGBColorSpace,
@@ -30,7 +29,7 @@ export class Experience {
   readonly #onProgress?: ExperienceOptions["onProgress"];
 
   readonly head = new HeadScene();
-  readonly #headTarget = new WebGLRenderTarget(1, 1, { samples: 4, type: HalfFloatType });
+  readonly #headTarget = new WebGLRenderTarget(1, 1, { samples: 4 });
   readonly #contourTarget = new WebGLRenderTarget(1, 1, {
     minFilter: LinearFilter,
     magFilter: LinearFilter,
@@ -53,6 +52,9 @@ export class Experience {
       antialias: false,
       alpha: true,
       premultipliedAlpha: true,
+      // Reference compiles every three.js program at lowp; on Apple/ANGLE this
+      // changes lighting and blending results visibly, so match it.
+      precision: "lowp",
       powerPreference: "high-performance"
     });
     this.#renderer.setPixelRatio(1);
@@ -118,7 +120,7 @@ export class Experience {
     const r = this.#renderer;
 
     if (this.#heroVisible) {
-      this.head.update(dt);
+      this.head.update(dt, this.#clock.elapsedTime);
 
       r.setRenderTarget(this.#headTarget);
       r.clear();
