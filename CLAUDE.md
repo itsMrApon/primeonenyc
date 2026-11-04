@@ -14,8 +14,9 @@ Lando Norris homepage rebuild — Nuxt 3 (`ssr: false`) + GSAP ScrollTrigger + L
 ## Sources of truth
 
 - **Playbook:** `../noomo/CLONE-PLAYBOOK.md` — follow its crawl → extract → rebuild phases and do/don't rules.
-- **Mirror:** `../noomo/output-lando/` (`mirror/` HTML for 7 routes, `assets/` blobs, `manifest.json`). Crawler: `../noomo/scrape-lando.mjs`.
-- **Behavior lives in** `assets/assets.itsoffbrand.io/lando/dev-js/lando-by-OFF+BRAND.js` (~1.4 MB, ~88 GLSL programs), plus `transitions-rive-isolate.js`. The page is Webflow (`assets/webflow/*.css`) + this OFF+BRAND GL bundle; GL assets resolve from `https://assets.itsoffbrand.io/lando/gl`.
+- **Mirror (current, 2026-11-04):** `../noomo/output-lando-2026-11/` (`mirror/` HTML for 6 routes — `/partnerships` is gone, `assets/`, `shaders/`, `manifest.json`). Old Aug crawl kept at `../noomo/output-lando/` for diffing. Re-crawl: `LANDO_OUT=output-lando-<date> node scrape-lando.mjs` in `../noomo/`.
+- **Behavior lives in** `assets/lando.itsoffbrand.io/dev-js/lando-by-OFF+BRAND.05.js` (the only OFF+BRAND bundle the live page executes; ~1.3 MB, 80 extracted GLSL files in `shaders/`), plus `transitions-rive-isolate.js`. Page CSS: `assets/website-files/**/lando-offbrand.shared.6e09a725a.css`. GL assets resolve from `https://lando.itsoffbrand.io/gl`.
+- **Hero shaders** (changed since Aug): `shaders/04175_fragmentShader_*.frag.glsl` (head/helmet cursor-reveal compositor) and `shaders/04696_fragmentShader_*.frag.glsl` (contour background). These are study references — write our own implementation, don't copy them in.
 - Search the bundle with string needles and slice around them — never read or paste it whole.
 
 ## Verifying visual work
@@ -23,7 +24,7 @@ Lando Norris homepage rebuild — Nuxt 3 (`ssr: false`) + GSAP ScrollTrigger + L
 Typecheck passing is not "done" for animation/3D changes. After a change:
 1. Run the dev server and open it in the browser pane.
 2. Check the console for WebGL/shader/loader errors and the network tab for 404s on `/gl/**`.
-3. Screenshot the affected section (scroll to it) and compare to the live reference (https://landonorris.com/) or the mirror in `../noomo/output-lando/`.
+3. Screenshot the affected section (scroll to it) and compare to the live reference (https://landonorris.com/) or the mirror in `../noomo/output-lando-2026-11/`.
 4. For motion that must match the reference exactly, use the `/reanimate` skill.
 
 Clean up on unmount: dispose Three.js geometries/materials/textures, kill ScrollTriggers and GSAP timelines, destroy Lenis.
