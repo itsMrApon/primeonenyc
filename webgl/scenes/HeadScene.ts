@@ -12,14 +12,14 @@ import {
   ShaderMaterial,
   SRGBColorSpace,
   TextureLoader,
-  Vector2,
+  type Texture,
   type WebGLRenderer
 } from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
 import { loadModel } from "../loaders";
 
-/** Helmet placement shared by the wireframe here and the helmet pass (step 3). */
+/** Helmet placement shared by the wireframe here and HelmetScene. */
 export const HELMET_TRANSFORM = { scale: 6.9, rotationX: 0.188496, positionY: 0.05 } as const;
 
 /**
@@ -64,13 +64,12 @@ export class HeadScene {
   readonly camera = new PerspectiveCamera(15, 1, 0.1, 1000);
   readonly root = new Group();
 
-  readonly #pointer = new Vector2();
-  readonly #pointerSmooth = new Vector2();
   #head: Mesh | null = null;
   #wireframe: Mesh<BufferGeometry, ShaderMaterial> | null = null;
   #ready = false;
 
-  readonly #intensity = 0.075;
+  /** Fluid mask (screen space); where it's active the head shows its shadowed variant. */
+  readonly cursorEffect: { value: Texture | null } = { value: null };
 
   constructor() {
     this.scene.add(this.root);
@@ -88,8 +87,9 @@ export class HeadScene {
 
   async load(_renderer: WebGLRenderer) {
     const loader = new TextureLoader();
-    const [diffuse, depth, alpha, normal, helmet] = await Promise.all([
+    const [diffuse, shadow, depth, alpha, normal, helmet] = await Promise.all([
       loader.loadAsync("/gl/textures/head/webp/diffuse.webp"),
+      loader.loadAsync("/gl/textures/head/webp/shadow-softer-edit.webp"),
       loader.loadAsync("/gl/textures/head/webp/depth.webp"),
       loader.loadAsync("/gl/textures/head/webp/alpha.webp"),
       loader.loadAsync("/gl/textures/head/webp/normal.webp"),
@@ -97,13 +97,13 @@ export class HeadScene {
     ]);
 
     diffuse.colorSpace = SRGBColorSpace;
+    shadow.colorSpace = SRGBColorSpace;
     for (const tex of [alpha, normal]) tex.colorSpace = NoColorSpace;
     // Reference tags the depth map sRGB; displacement reads the decoded value.
     depth.colorSpace = SRGBColorSpace;
 
     const material = new MeshStandardMaterial({
       color: 0xffffff,
-      map: diffuse,
       roughness: 1,
       metalness: 0,
       alphaMap: alpha,
@@ -113,6 +113,32 @@ export class HeadScene {
       displacementBias: 0,
       transparent: true
     });
+    // Base colour: default diffuse, swapped for the shadowed variant wherever
+    // the fluid mask is active (sampled in screen space, top/bottom gap fix).
+    material.defines = { USE_UV: "" };
+    material.onBeforeCompile = (shader) => {
+      Object.assign(shader.uniforms, {
+        tHeadDiffuse: { value: diffuse },
+        tHeadShadow: { value: shadow },
+        tCursorEffect: this.cursorEffect
+      });
+      shader.vertexShader = shader.vertexShader
+        .replace("#include <common>", "#include <common>\nvarying vec4 vClip;")
+        .replace("#include <project_vertex>", "#include <project_vertex>\nvClip = gl_Position;");
+      shader.fragmentShader = shader.fragmentShader
+        .replace(
+          "#include <common>",
+          "#include <common>\nvarying vec4 vClip;\nuniform sampler2D tHeadDiffuse, tHeadShadow, tCursorEffect;"
+        )
+        .replace(
+          "vec4 diffuseColor = vec4( diffuse, opacity );",
+          `vec2 screenUv = vClip.xy / vClip.w * 0.5 + 0.5;
+          float mask = step(0.1, 1.0 - texture2D(tCursorEffect, vec2(screenUv.x, 0.025 + screenUv.y * 0.95)).r);
+          vec3 base = mix(texture2D(tHeadDiffuse, vUv).rgb, texture2D(tHeadShadow, vUv).rgb, mask);
+          vec4 diffuseColor = vec4(base, opacity);`
+        );
+    };
+    material.userData.textures = [diffuse, shadow];
 
     this.#head = new Mesh(new PlaneGeometry(1, 1, 128, 128), material);
     this.root.add(this.#head);
@@ -139,10 +165,6 @@ export class HeadScene {
     this.#ready = true;
   }
 
-  setPointer(nx: number, ny: number) {
-    this.#pointer.set(nx, ny);
-  }
-
   resize(width: number, height: number) {
     this.camera.aspect = width / Math.max(height, 1);
     this.camera.updateProjectionMatrix();
@@ -155,15 +177,10 @@ export class HeadScene {
     }
   }
 
-  update(dt: number, elapsed: number) {
-    if (!this.#ready || !this.#head) return;
+  /** The reference head does not follow the pointer; only the wireframe scan animates. */
+  update(elapsed: number) {
+    if (!this.#ready) return;
     if (this.#wireframe) this.#wireframe.material.uniforms.uTime.value = elapsed;
-
-    const lerp = 1 - Math.exp(-8 * dt);
-    this.#pointerSmooth.lerp(this.#pointer, lerp);
-
-    this.#head.rotation.y = this.#pointerSmooth.x * this.#intensity;
-    this.#head.rotation.x = this.#pointerSmooth.y * -1 * this.#intensity;
   }
 
   dispose() {
@@ -173,7 +190,7 @@ export class HeadScene {
       mesh.geometry?.dispose();
       const mat = mesh.material as MeshStandardMaterial | ShaderMaterial;
       if (mat instanceof MeshStandardMaterial) {
-        mat.map?.dispose();
+        (mat.userData.textures as Texture[] | undefined)?.forEach((t) => t.dispose());
         mat.alphaMap?.dispose();
         mat.normalMap?.dispose();
         mat.displacementMap?.dispose();
