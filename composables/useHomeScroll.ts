@@ -7,13 +7,13 @@ gsap.registerPlugin(ScrollTrigger);
 /**
  * Homepage scroll choreography:
  * - Lenis smooth scroll (optional)
- * - Horizontal photo track pin + scrub translateX
  * - Section reveals
  * - Hero scroll-out → WebGL (card shrink, filter, camera), nav theme, next-race card
  * - WebGL keeps drawing the dark contour page behind later transparent sections
  */
 export interface HeroScrollTarget {
   setHeroScroll: (progress: number, offset: number) => void;
+  setPageTint: (t: number) => void;
 }
 
 export function useHomeScroll(options: { getExperience?: () => HeroScrollTarget | null | undefined }) {
@@ -56,28 +56,6 @@ export function useHomeScroll(options: { getExperience?: () => HeroScrollTarget 
           };
         }
       });
-    }
-
-    // Horizontal track
-    const pin = document.querySelector<HTMLElement>("[data-horizontal-pin]");
-    const track = document.querySelector<HTMLElement>("[data-horizontal-track]");
-    if (pin && track) {
-      const getScroll = () => Math.max(0, track.scrollWidth - window.innerWidth);
-
-      const tween = gsap.to(track, {
-        x: () => -getScroll(),
-        ease: "none",
-        scrollTrigger: {
-          trigger: pin,
-          start: "top top",
-          end: () => `+=${getScroll()}`,
-          pin: true,
-          scrub: 0.65,
-          invalidateOnRefresh: true,
-          anticipatePin: 1
-        }
-      });
-      if (tween.scrollTrigger) triggers.push(tween.scrollTrigger);
     }
 
     // Reveals

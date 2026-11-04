@@ -143,6 +143,11 @@ export class Experience {
     this.#scroll.offset = Math.max(offset, 0);
   }
 
+  /** Page colour under transparent sections: 0 dark green → 1 off-white. */
+  setPageTint(t: number) {
+    this.#darkPage.setTint(Math.min(Math.max(t, 0), 1));
+  }
+
   #applyScroll(dt: number) {
     const { w, h } = this.#size;
     const e = easeInOutQuad(this.#scroll.progress);

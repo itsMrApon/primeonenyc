@@ -47,7 +47,7 @@
     "quotes": [
       {
         "after": 2,
-        "text": "It doesn’t matter where you start, it’s how you progress from there.",
+        "text": "It doesn’t matter <strong>where</strong> you start, it’s <strong>how</strong> you progress from there.",
         "signatureSrc": "/images/misc/signature-lime.svg"
       },
       {

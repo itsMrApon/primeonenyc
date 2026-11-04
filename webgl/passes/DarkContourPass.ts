@@ -1,4 +1,4 @@
-import { ShaderMaterial, type Texture } from "three";
+import { Color, ShaderMaterial, type Texture } from "three";
 
 import { raw } from "./colors";
 import { FullscreenPass } from "./FullscreenPass";
@@ -8,7 +8,20 @@ import { fullRect, rectVert } from "./rect";
  * Dark green page behind the hero card: #282C20 with the same 1px contour
  * isolines (from the shared contour field) drawn in #363B25.
  */
+const PAPER = { from: raw("#282c20"), to: raw("#f4f4ed") };
+const LINE = { from: raw("#363b25"), to: raw("#d4d7ca") };
+
 export class DarkContourPass extends FullscreenPass {
+  /**
+   * 0 = dark green page, 1 = off-white page (reference horizontal track:
+   * #282C20 / #363B25 → #F4F4ED / #D4D7CA, mixed in raw byte space).
+   */
+  setTint(t: number) {
+    const u = this.material.uniforms;
+    (u.uPaper.value as Color).lerpColors(PAPER.from, PAPER.to, t);
+    (u.uLine.value as Color).lerpColors(LINE.from, LINE.to, t);
+  }
+
   constructor(contours: Texture) {
     super(
       new ShaderMaterial({
@@ -16,8 +29,8 @@ export class DarkContourPass extends FullscreenPass {
           tContours: { value: contours },
           uRect: { value: fullRect() },
           uEdgeOffset: { value: 0.000005 },
-          uPaper: { value: raw("#282c20") },
-          uLine: { value: raw("#363b25") }
+          uPaper: { value: PAPER.from.clone() },
+          uLine: { value: LINE.from.clone() }
         },
         vertexShader: rectVert,
         fragmentShader: /* glsl */ `

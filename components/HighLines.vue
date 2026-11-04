@@ -6,13 +6,15 @@
  *   - opens a clip left → right over 0.6 s (power2.out), exposing a solid bar;
  *   - 0.3 s in, the bar shrinks toward the right over 0.6 s (power2.inOut).
  * Input: plain text with optional <strong>…</strong> runs (styled by the parent).
+ * `manual`: no scroll trigger; the parent calls play() (e.g. horizontal track,
+ * where the reference triggers when the block's left edge passes 90 % of vw).
  */
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const props = withDefaults(
-  defineProps<{ html: string; color?: "lime" | "lime-off"; tag?: string }>(),
-  { color: "lime", tag: "div" }
+  defineProps<{ html: string; color?: "lime" | "lime-off"; tag?: string; manual?: boolean }>(),
+  { color: "lime", tag: "div", manual: false }
 );
 
 const BAR = { lime: "#d2ff00", "lime-off": "#b2c73a" } as const;
@@ -41,6 +43,7 @@ const lines = ref<Word[][] | null>(null);
 let timeline: gsap.core.Timeline | null = null;
 let trigger: ScrollTrigger | null = null;
 let played = false;
+let built = false;
 let observer: ResizeObserver | null = null;
 let lastWidth = 0;
 
@@ -86,10 +89,15 @@ function animate() {
     timeline!.to(line, { clipPath: "inset(0 0% 0 0)", duration: CLIP_S, ease: "power2.out" }, at);
     timeline!.to(bar, { scaleX: 0, duration: BAR_S, ease: "power2.inOut" }, at + CLIP_S / 2);
   });
+  const wasBuilt = built;
+  built = true;
   if (played) {
-    timeline.progress(1);
+    // first build after an early play(): animate; a re-split after resize: jump to the end
+    if (wasBuilt) timeline.progress(1);
+    else timeline.play();
     return;
   }
+  if (props.manual) return;
   trigger = ScrollTrigger.create({
     trigger: el,
     start: "top 90%",
@@ -100,6 +108,14 @@ function animate() {
     }
   });
 }
+
+function play() {
+  if (played) return;
+  played = true;
+  timeline?.play();
+}
+
+defineExpose({ play });
 
 onMounted(async () => {
   gsap.registerPlugin(ScrollTrigger);
