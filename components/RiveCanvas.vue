@@ -14,14 +14,17 @@ const props = withDefaults(
     stateMachine: string;
     inputs?: Record<string, boolean | number>;
     fit?: "contain" | "cover";
+    /** Reference behaviour for in-page Rives: start 100 ms after 10 % is in view (bottom −10 %). */
+    playOnView?: boolean;
   }>(),
-  { inputs: () => ({}), fit: "contain" }
+  { inputs: () => ({}), fit: "contain", playOnView: false }
 );
 
 const canvas = ref<HTMLCanvasElement | null>(null);
 let rive: Rive | null = null;
 let byName: Record<string, StateMachineInput> = {};
 let observer: ResizeObserver | null = null;
+let viewObserver: IntersectionObserver | null = null;
 
 function applyInputs() {
   for (const [name, value] of Object.entries(props.inputs)) {
@@ -38,13 +41,24 @@ onMounted(async () => {
     canvas: canvas.value,
     artboard: props.artboard,
     stateMachines: props.stateMachine,
-    autoplay: true,
+    autoplay: !props.playOnView,
     layout: new Layout({ fit: props.fit === "cover" ? Fit.Cover : Fit.Contain, alignment: Alignment.Center }),
     onLoad: () => {
       if (!rive) return;
       rive.resizeDrawingSurfaceToCanvas();
       byName = Object.fromEntries(rive.stateMachineInputs(props.stateMachine).map((i) => [i.name, i]));
       applyInputs();
+      if (props.playOnView && canvas.value) {
+        viewObserver = new IntersectionObserver(
+          (entries) => {
+            if (!entries.some((e) => e.isIntersecting)) return;
+            viewObserver?.disconnect();
+            setTimeout(() => rive?.play(), 100);
+          },
+          { threshold: 0.1, rootMargin: "0px 0px -10% 0px" }
+        );
+        viewObserver.observe(canvas.value);
+      }
     }
   });
   observer = new ResizeObserver(() => rive?.resizeDrawingSurfaceToCanvas());
@@ -55,6 +69,7 @@ watch(() => props.inputs, applyInputs, { deep: true });
 
 onBeforeUnmount(() => {
   observer?.disconnect();
+  viewObserver?.disconnect();
   rive?.cleanup();
   rive = null;
 });

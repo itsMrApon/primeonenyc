@@ -10,10 +10,9 @@ gsap.registerPlugin(ScrollTrigger);
  * - Horizontal photo track pin + scrub translateX
  * - Section reveals
  * - Hero scroll-out → WebGL (card shrink, filter, camera), nav theme, next-race card
- * - WebGL visibility (only while the hero track is on screen)
+ * - WebGL keeps drawing the dark contour page behind later transparent sections
  */
 export interface HeroScrollTarget {
-  setHeroVisible: (v: boolean) => void;
   setHeroScroll: (progress: number, offset: number) => void;
 }
 
@@ -103,7 +102,7 @@ export function useHomeScroll(options: { getExperience?: () => HeroScrollTarget 
         options.getExperience?.()?.setHeroScroll(scrolled / vh, scrolled - vh);
         nav.dataset.navTheme = scrolled > vh * 0.05 ? "light" : "dark";
         // Reference: the nav LN4 hides while the marquee card is on screen.
-        nav.dataset.navLogo = scrolled > vh * 0.3 && scrolled < vh * 2 ? "hidden" : "shown";
+        nav.dataset.navLogo = scrolled > vh * 0.3 && scrolled < vh * 2.05 ? "hidden" : "shown"; // back by ~1900 at 900 high
         card?.classList.toggle("is-hidden", scrolled > 0);
         // Reference: nav compacts 60 → 50 px (scale 0.833) over the first ~0.08vh, ease-out.
         const k = Math.min(scrolled / (vh * 0.08), 1);
@@ -112,10 +111,10 @@ export function useHomeScroll(options: { getExperience?: () => HeroScrollTarget 
       const st = ScrollTrigger.create({
         trigger: hero,
         start: "top top",
-        end: "bottom top",
+        // half a viewport past the track so the nav logo's return (≈2.05vh) is applied
+        end: () => `bottom+=${window.innerHeight * 0.5} top`,
+        invalidateOnRefresh: true,
         onUpdate: update,
-        onLeave: () => options.getExperience?.()?.setHeroVisible(false),
-        onEnterBack: () => options.getExperience?.()?.setHeroVisible(true),
         onRefresh: update
       });
       triggers.push(st);

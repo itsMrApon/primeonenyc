@@ -45,7 +45,6 @@ export interface ExperienceOptions {
  * the camera dollies in 1 unit; past that, card + text move up with the page.
  */
 export class Experience {
-  readonly #canvas: HTMLCanvasElement;
   readonly #renderer: WebGLRenderer;
   readonly #clock = new Clock();
   readonly #onProgress?: ExperienceOptions["onProgress"];
@@ -82,10 +81,8 @@ export class Experience {
   #running = false;
   #frame = 0;
   #disposed = false;
-  #heroVisible = true;
 
   constructor(options: ExperienceOptions) {
-    this.#canvas = options.canvas;
     this.#onProgress = options.onProgress;
 
     this.#renderer = new WebGLRenderer({
@@ -172,11 +169,6 @@ export class Experience {
     this.#pointer.set(nx, ny);
   }
 
-  setHeroVisible(visible: boolean) {
-    if (this.#heroVisible === visible) return;
-    this.#heroVisible = visible;
-    this.#canvas.style.opacity = visible ? "1" : "0";
-  }
 
   dispose() {
     this.#disposed = true;
@@ -200,8 +192,12 @@ export class Experience {
     const elapsed = this.#clock.elapsedTime;
     const r = this.#renderer;
 
-    if (this.#heroVisible) {
-      this.#applyScroll(dt);
+    this.#applyScroll(dt);
+    // The dark contour page stays on behind the transparent sections below the
+    // hero (reference); the hero layers only render while they are on screen.
+    const heroOnScreen = this.#scroll.offset < this.#size.h;
+
+    if (heroOnScreen) {
       this.head.update(elapsed);
       r.setRenderTarget(this.#headTarget);
       r.clear();
@@ -211,16 +207,20 @@ export class Experience {
       r.setRenderTarget(this.#textTarget);
       r.clear();
       r.render(this.marquee.scene, this.marquee.camera);
+    }
 
-      r.setRenderTarget(null);
-      r.clear();
-      this.#darkPage.render(r, null);
+    r.setRenderTarget(null);
+    r.clear();
+    this.#darkPage.render(r, null);
+    if (heroOnScreen) {
       this.#textPlane.render(r, null);
       this.#composite.render(r, null);
+    }
 
-      this.#contours.material.uniforms.uTime.value = elapsed;
-      this.#contours.render(r, this.#contourTarget);
+    this.#contours.material.uniforms.uTime.value = elapsed;
+    this.#contours.render(r, this.#contourTarget);
 
+    if (heroOnScreen) {
       this.#idle.update();
       const p = this.#idle.isMoving ? this.#pointer : this.#idle.cursor;
       this.#fluid.setPointer(p.x, p.y, this.#idle.isMoving);
