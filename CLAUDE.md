@@ -29,7 +29,11 @@ Clean up on unmount: dispose Three.js geometries/materials/textures, kill Scroll
 
 ## Assets & licensing
 
-Assets, fonts, and branding here are copied from landonorris.com. This repo is a learning/template project — don't present it as shippable for a client without replacing third-party assets and branding.
+Private study project: an exact 1:1 clone of landonorris.com. Shaders and animations must match the original — use reanimate at **pixel-faithful** level with `--gl --assets`; never simplify or "approximate" them. Not for deployment; branding gets replaced later.
+
+## Replies
+
+Keep them short. Answer first, bullets, no long recaps.
 
 ---
 
