@@ -1,6 +1,6 @@
 # Lando Norris homepage rebuild (`boilerplate_agency`)
 
-Nuxt 3 + GSAP + Three.js rebuild of [landonorris.com](https://landonorris.com/) following the Clone playbook patterns from `boilerplatestorytelling/` and `CLONE-PLAYBOOK.md`.
+Nuxt 3 + GSAP + Three.js rebuild of [landonorris.com](https://landonorris.com/) following the Clone playbook patterns from `../boilerplatestorytelling/` and `../noomo/CLONE-PLAYBOOK.md`.
 
 ## Stack
 
@@ -38,7 +38,7 @@ Node **20+** recommended (see `.nvmrc`). Scripts use `NODE_OPTIONS=--experimenta
 
 ## Assets source
 
-Copied from `../output-lando/`:
+Copied from `../noomo/output-lando/`:
 
 - GL: `assets/lando.itsoffbrand.io/gl/`
 - Images/fonts: `assets/website-files/`

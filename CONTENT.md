@@ -3,7 +3,7 @@
 Source of truth for rebuild overlays. Machine-readable twin: `content/home.json`.
 
 Live reference: https://landonorris.com/  
-Crawl mirror: `../output-lando/mirror/index.html`
+Crawl mirror: `../noomo/output-lando/mirror/index.html`
 
 ## Brand
 
