@@ -32,3 +32,6 @@ vite.config.ts.timestamp-*
 # Local scratch
 .tmp*
 .firecrawl/
+
+# reanimate capture evidence
+.reanimate/
