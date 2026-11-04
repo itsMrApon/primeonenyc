@@ -1,10 +1,8 @@
 <script setup lang="ts">
+import type { HeroScrollTarget } from "~/composables/useHomeScroll";
+
 useHomeScroll({
-  getExperience: () => {
-    const exp = (window as unknown as { experience?: { setHeroVisible: (v: boolean) => void } })
-      .experience;
-    return exp ?? null;
-  }
+  getExperience: () => (window as unknown as { experience?: HeroScrollTarget }).experience ?? null
 });
 </script>
 

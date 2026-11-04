@@ -165,16 +165,26 @@ export class HeadScene {
     this.#ready = true;
   }
 
+  #baseZ = 3;
+  readonly #offset = { z: 0, y: 0 };
+
   resize(width: number, height: number) {
     this.camera.aspect = width / Math.max(height, 1);
     this.camera.updateProjectionMatrix();
-    if (width > 768) {
-      this.camera.position.z = 3;
-      if (this.#head) this.#head.position.y = 0;
-    } else {
-      this.camera.position.z = 3.75;
-      if (this.#head) this.#head.position.y = -0.05;
-    }
+    this.#baseZ = width > 768 ? 3 : 3.75;
+    if (this.#head) this.#head.position.y = width > 768 ? 0 : -0.05;
+    this.#applyCamera();
+  }
+
+  /** Scroll-out camera move (reference: camera group z 0 → −1, then y 0 → 0.1). */
+  setCameraOffset(z: number, y: number) {
+    this.#offset.z = z;
+    this.#offset.y = y;
+    this.#applyCamera();
+  }
+
+  #applyCamera() {
+    this.camera.position.set(0, this.#offset.y, this.#baseZ + this.#offset.z);
   }
 
   /** The reference head does not follow the pointer; only the wireframe scan animates. */

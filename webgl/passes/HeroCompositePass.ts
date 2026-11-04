@@ -1,16 +1,8 @@
-import { Color, ShaderMaterial, type Texture } from "three";
+import { ShaderMaterial, type Texture } from "three";
 
+import { raw } from "./colors";
 import { FullscreenPass } from "./FullscreenPass";
-
-/**
- * The reference feeds these hex bytes to the shader as *linear* values and
- * then converts to sRGB on output (#f8f8f3 renders as #fcfcfa). Keep that:
- * setRGB with no colour space = raw working-space numbers.
- */
-const raw = (hex: string) => {
-  const n = parseInt(hex.slice(1), 16);
-  return new Color().setRGB(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
-};
+import { fullRect, rectVert } from "./rect";
 
 export interface HeroCompositeInputs {
   contours: Texture;
@@ -24,7 +16,10 @@ export interface HeroCompositeInputs {
  *   paper + 1px contour outlines
  *   → under the fluid mask: banded "cursor paper" (two greys) with its own outline
  *   → lit head on top
- *   → helmet on top of that, only where the fluid mask is active.
+ *   → helmet on top of that, only where the fluid mask is active
+ *   → uFilter 0 → 1 (scroll-out): fades to a grey, contrasty, olive-tinted
+ *     head on near-black (grayscale → contrast 0.8 → ×0.75 → hard light #50593F).
+ * Drawn into uRect so the hero can shrink into the marquee card on scroll.
  * Colours are the reference site's traced constants.
  */
 export class HeroCompositePass extends FullscreenPass {
@@ -36,7 +31,10 @@ export class HeroCompositePass extends FullscreenPass {
           tHead: { value: inputs.head },
           tHelmet: { value: inputs.helmet },
           tCursorEffect: { value: inputs.cursorEffect },
+          uRect: { value: fullRect() },
           uReveal: { value: 1 },
+          uFilter: { value: 0 },
+          uFilterTint: { value: raw("#50593f") },
           uCursorIntensity: { value: 1 },
           uEdgeOffset: { value: 0.000005 },
           uPaper: { value: raw("#f8f8f3") },
@@ -45,18 +43,21 @@ export class HeroCompositePass extends FullscreenPass {
           uCursorPaperAlt: { value: raw("#cfd2c5") },
           uCursorLine: { value: raw("#e8e8df") }
         },
-        vertexShader: /* glsl */ `
-          varying vec2 vUv;
-          void main() {
-            vUv = uv;
-            gl_Position = vec4(position.xy, 0.0, 1.0);
-          }
-        `,
+        vertexShader: rectVert,
         fragmentShader: /* glsl */ `
           uniform sampler2D tContours, tHead, tHelmet, tCursorEffect;
-          uniform float uReveal, uCursorIntensity, uEdgeOffset;
-          uniform vec3 uPaper, uLine, uCursorPaper, uCursorPaperAlt, uCursorLine;
+          uniform float uReveal, uCursorIntensity, uEdgeOffset, uFilter;
+          uniform vec3 uPaper, uLine, uCursorPaper, uCursorPaperAlt, uCursorLine, uFilterTint;
           varying vec2 vUv;
+
+          vec3 grayscale(vec3 c) { return vec3(dot(c, vec3(0.299, 0.587, 0.114))); }
+          float overlay(float base, float top) {
+            return base < 0.5 ? 2.0 * base * top : 1.0 - 2.0 * (1.0 - base) * (1.0 - top);
+          }
+          // Hard light = overlay with the layers swapped.
+          vec3 hardLight(vec3 base, vec3 top) {
+            return vec3(overlay(top.r, base.r), overlay(top.g, base.g), overlay(top.b, base.b));
+          }
 
           // 1 where the band value changes within a hair's offset: a 1px isoline.
           float contourEdge(vec2 uv, float c) {
@@ -83,6 +84,11 @@ export class HeroCompositePass extends FullscreenPass {
             vec4 helmet = texture2D(tHelmet, vUv);
             vec3 color = mix(paper, head.rgb, head.a);
             color = mix(color, helmet.rgb, clamp(mask, 0.0, 1.0) * helmet.a);
+
+            vec3 filtered = grayscale(mix(head.rgb, vec3(0.05), 1.0 - head.a));
+            filtered = ((filtered - 0.5) * 0.8 + 0.5) * 0.75;
+            filtered = hardLight(filtered, uFilterTint);
+            color = mix(color, filtered, uFilter);
 
             gl_FragColor = vec4(color, 1.0);
             #include <colorspace_fragment>

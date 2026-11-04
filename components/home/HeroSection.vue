@@ -1,15 +1,80 @@
 <script setup lang="ts">
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 const content = useHomeContent();
+
+/**
+ * Signature Rive is scrubbed by scroll like the reference: trigger is the
+ * tracker (second 100vh of the track), "top center" → "bottom 80%", scrub 0.5,
+ * input `scroll` = progress × 1000.
+ */
+const tracker = ref<HTMLElement | null>(null);
+const track = ref<HTMLElement | null>(null);
+const logo = ref<HTMLElement | null>(null);
+const signatureScroll = ref(0);
+const triggers: ScrollTrigger[] = [];
+
+onMounted(() => {
+  gsap.registerPlugin(ScrollTrigger);
+  const state = { p: 0 };
+  const tween = gsap.to(state, {
+    p: 1,
+    ease: "none",
+    onUpdate: () => (signatureScroll.value = state.p * 1000),
+    scrollTrigger: { trigger: tracker.value, start: "top center", end: "bottom 80%", scrub: 0.5 }
+  });
+  if (tween.scrollTrigger) triggers.push(tween.scrollTrigger);
+
+  // Lime LN above "Message from Lando": scrubbed in over scroll 0.778 → 0.944 vh (700 → 850 at 900).
+  const reveal = gsap.fromTo(
+    logo.value,
+    { opacity: 0, y: () => Math.min(Math.max(window.innerWidth, 992), 1920) / 108 }, // 1u
+    {
+      opacity: 1,
+      y: 0,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: track.value,
+        start: () => `top+=${window.innerHeight * 0.778} top`,
+        end: () => `top+=${window.innerHeight * 0.944} top`,
+        scrub: true,
+        invalidateOnRefresh: true
+      }
+    }
+  );
+  if (reveal.scrollTrigger) triggers.push(reveal.scrollTrigger);
+});
+
+onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
 </script>
 
 <template>
   <!-- Sticky track mirrors original: 200vh track, sticky 100svh lime hero -->
-  <div data-hero data-gl-track="head" class="sticky-track home-hero">
+  <div ref="track" data-hero data-gl-track="head" class="sticky-track home-hero">
     <div class="sticky-item home-hero">
       <section class="s home-hero">
         <div class="c home-hero">
           <!-- WebGL head paints into the fixed canvas behind; this is the DOM mount zone -->
           <div data-gl="head" data-sticky-hero="canvas" class="gl-canvas" aria-hidden="true" />
+
+          <img
+            ref="logo"
+            class="hero-msg-logo"
+            src="/images/misc/ln4-LN-logo-lime.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <p class="hero-msg">Message from Lando</p>
+
+          <div class="hero-signature" aria-hidden="true">
+            <RiveCanvas
+              file="signature"
+              artboard="signature"
+              state-machine="signature_scroll"
+              :inputs="{ scroll: signatureScroll }"
+            />
+          </div>
 
           <a class="home-hero-next-race-w" :href="content.hero.nextRace.href">
             <!-- Exact path from landonorris.com next-race outline -->
@@ -54,6 +119,7 @@ const content = useHomeContent();
         </div>
       </section>
     </div>
+    <div ref="tracker" class="hero-rive-tracker" aria-hidden="true" />
   </div>
 </template>
 
@@ -96,6 +162,62 @@ const content = useHomeContent();
   pointer-events: none;
 }
 
+.sticky-track.home-hero,
+.hero-msg,
+.hero-msg-logo,
+.hero-signature {
+  --u: calc(clamp(992px, 100vw, 1920px) / 1728 * 16);
+}
+
+/* Second 100vh of the track: drives the signature scrub. */
+.hero-rive-tracker {
+  position: absolute;
+  top: 100vh;
+  left: 0;
+  width: 10px;
+  height: 100vh;
+  pointer-events: none;
+}
+
+/* White on the light hero (effectively invisible); reads once the page turns dark. */
+.hero-msg {
+  position: absolute;
+  top: calc(var(--u) * 14.78);
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+  color: #f4f4ed;
+  font-family: var(--font-mona);
+  font-size: calc(var(--u) * 0.625);
+  font-variation-settings: "wdth" 100, "wght" 700;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.hero-msg-logo {
+  position: absolute;
+  top: calc(var(--u) * 11.25);
+  left: 50%;
+  width: calc(var(--u) * 1.875);
+  height: calc(var(--u) * 2.1);
+  margin-left: calc(var(--u) * -0.9375);
+  object-fit: cover;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-signature {
+  position: absolute;
+  top: calc(var(--u) * 12.32);
+  left: 50%;
+  width: calc(var(--u) * 60);
+  height: calc(var(--u) * 42.86);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
 /* Next-race card — reference metrics at 1440 px, 1u = 13.33 px. */
 .home-hero-next-race-w {
   --u: calc(clamp(992px, 100vw, 1920px) / 1728 * 16);
@@ -107,6 +229,16 @@ const content = useHomeContent();
   height: calc(var(--u) * 15.25);
   color: #535450;
   text-decoration: none;
+}
+
+/* Hides from the bottom up as soon as the page scrolls (CSS transition, not scrubbed). */
+.home-hero-next-race-w {
+  clip-path: ellipse(100% 120% at 50% 0%);
+  transition: clip-path 0.75s cubic-bezier(0.65, 0.05, 0, 1);
+}
+
+.home-hero-next-race-w.is-hidden {
+  clip-path: ellipse(100% 0% at 50% 0%);
 }
 
 .home-hero-next-race-outline {

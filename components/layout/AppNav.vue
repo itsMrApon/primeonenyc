@@ -3,20 +3,44 @@ const content = useHomeContent();
 const open = ref(false);
 const hover = ref(false);
 
+/** Mirrors [data-nav-theme] (set by the scroll choreography) for the Rive hamburger. */
+const header = ref<HTMLElement | null>(null);
+const theme = ref<"dark" | "light">("dark");
+const logoShown = ref(true);
+let themeObserver: MutationObserver | null = null;
+onMounted(() => {
+  if (!header.value) return;
+  themeObserver = new MutationObserver(() => {
+    theme.value = header.value?.dataset.navTheme === "light" ? "light" : "dark";
+    logoShown.value = header.value?.dataset.navLogo !== "hidden";
+  });
+  themeObserver.observe(header.value, { attributes: true, attributeFilter: ["data-nav-theme", "data-nav-logo"] });
+});
+onBeforeUnmount(() => themeObserver?.disconnect());
+
 watch(open, (v) => {
   document.documentElement.classList.toggle("nav-open", v);
 });
 </script>
 
 <template>
-  <header data-app-nav data-nav-theme="dark" class="nav">
+  <header ref="header" data-app-nav data-nav-theme="dark" class="nav">
     <div class="nav-inner">
       <a class="nav-brand-link" href="/" aria-label="Lando Home" title="Lando Home">
         <LayoutNavBrand />
       </a>
 
       <a class="nav-middle" href="/" aria-label="Home">
-        <RiveCanvas file="logo" artboard="logo" state-machine="logo" />
+        <RiveCanvas
+          file="logo"
+          artboard="logo"
+          state-machine="logo"
+          :inputs="{
+            'logo-active': logoShown,
+            'color_dark-green': theme === 'dark',
+            color_white: theme === 'light'
+          }"
+        />
       </a>
 
       <div class="btn-layout is-nav">
@@ -46,7 +70,7 @@ watch(open, (v) => {
             file="btn-ui"
             artboard="hamburger"
             state-machine="hamburger"
-            :inputs="{ hover, close: open, 'color-transparent': true }"
+            :inputs="{ hover, close: open, 'color-transparent': theme === 'dark', 'color-white': theme === 'light' }"
           />
         </button>
       </div>
@@ -101,6 +125,8 @@ watch(open, (v) => {
 .nav-brand-link {
   display: block;
   height: calc(var(--u) * 4.5);
+  transform: scale(var(--nav-scale, 1));
+  transform-origin: top left;
 }
 
 .nav-brand-link :deep(.nav-brand) {
@@ -139,6 +165,8 @@ watch(open, (v) => {
   display: flex;
   align-items: center;
   gap: calc(var(--u) * 0.75);
+  transform: scale(var(--nav-scale, 1));
+  transform-origin: top right;
 }
 
 .btn-w.is-nav {

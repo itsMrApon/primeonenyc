@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * One Rive artboard on a canvas, fed from the shared preloaded files
- * (useRiveFiles). Boolean state-machine inputs are reactive.
+ * (useRiveFiles). State-machine inputs (boolean or number) are reactive.
  */
 import { Alignment, Fit, Layout, Rive, RuntimeLoader, type StateMachineInput } from "@rive-app/canvas";
 
@@ -12,7 +12,7 @@ const props = withDefaults(
     file: RiveFileKey;
     artboard: string;
     stateMachine: string;
-    inputs?: Record<string, boolean>;
+    inputs?: Record<string, boolean | number>;
     fit?: "contain" | "cover";
   }>(),
   { inputs: () => ({}), fit: "contain" }

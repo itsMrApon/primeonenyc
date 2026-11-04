@@ -9,12 +9,15 @@ gsap.registerPlugin(ScrollTrigger);
  * - Lenis smooth scroll (optional)
  * - Horizontal photo track pin + scrub translateX
  * - Section reveals
- * - Nav theme (lime hero → dark body)
- * - WebGL hero visibility
+ * - Hero scroll-out → WebGL (card shrink, filter, camera), nav theme, next-race card
+ * - WebGL visibility (only while the hero track is on screen)
  */
-export function useHomeScroll(options: {
-  getExperience?: () => { setHeroVisible: (v: boolean) => void } | null | undefined;
-}) {
+export interface HeroScrollTarget {
+  setHeroVisible: (v: boolean) => void;
+  setHeroScroll: (progress: number, offset: number) => void;
+}
+
+export function useHomeScroll(options: { getExperience?: () => HeroScrollTarget | null | undefined }) {
   let lenis: Lenis | null = null;
   let rafId = 0;
   const triggers: ScrollTrigger[] = [];
@@ -23,10 +26,15 @@ export function useHomeScroll(options: {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (!reduceMotion) {
+      // Reference options (lando-by-OFF+BRAND): lerp-based smoothing, not duration.
       lenis = new Lenis({
-        duration: 1.1,
-        smoothWheel: true
+        lerp: 0.1,
+        smoothWheel: true,
+        syncTouch: true,
+        touchMultiplier: 1.25,
+        autoResize: true
       });
+      (window as unknown as { lenis?: Lenis }).lenis = lenis;
       lenis.on("scroll", ScrollTrigger.update);
       const raf = (time: number) => {
         lenis?.raf(time);
@@ -84,27 +92,31 @@ export function useHomeScroll(options: {
       triggers.push(st);
     });
 
-    // Nav theme + WebGL visibility from hero
+    // Hero track (200vh, sticky 100vh): reference scroll-out choreography.
     const hero = document.querySelector<HTMLElement>("[data-hero]");
     const nav = document.querySelector<HTMLElement>("[data-app-nav]");
+    const card = hero?.querySelector<HTMLElement>(".home-hero-next-race-w");
     if (hero && nav) {
+      const update = () => {
+        const vh = window.innerHeight;
+        const scrolled = Math.max(0, -hero.getBoundingClientRect().top);
+        options.getExperience?.()?.setHeroScroll(scrolled / vh, scrolled - vh);
+        nav.dataset.navTheme = scrolled > vh * 0.05 ? "light" : "dark";
+        // Reference: the nav LN4 hides while the marquee card is on screen.
+        nav.dataset.navLogo = scrolled > vh * 0.3 && scrolled < vh * 2 ? "hidden" : "shown";
+        card?.classList.toggle("is-hidden", scrolled > 0);
+        // Reference: nav compacts 60 → 50 px (scale 0.833) over the first ~0.08vh, ease-out.
+        const k = Math.min(scrolled / (vh * 0.08), 1);
+        nav.style.setProperty("--nav-scale", String(1 - (1 / 6) * (1 - (1 - k) * (1 - k))));
+      };
       const st = ScrollTrigger.create({
         trigger: hero,
         start: "top top",
-        end: "bottom top+=80",
-          onUpdate: (self) => {
-          const lime = self.progress < 0.92;
-          nav.dataset.navTheme = lime ? "dark" : "light";
-          options.getExperience?.()?.setHeroVisible(lime);
-        },
-        onLeave: () => {
-          nav.dataset.navTheme = "light";
-          options.getExperience?.()?.setHeroVisible(false);
-        },
-        onEnterBack: () => {
-          nav.dataset.navTheme = "dark";
-          options.getExperience?.()?.setHeroVisible(true);
-        }
+        end: "bottom top",
+        onUpdate: update,
+        onLeave: () => options.getExperience?.()?.setHeroVisible(false),
+        onEnterBack: () => options.getExperience?.()?.setHeroVisible(true),
+        onRefresh: update
       });
       triggers.push(st);
     }
