@@ -1,0 +1,36 @@
+:root {
+  /* Brand */
+  --color-lime: #d2ff00;
+  --color-lime-off: #d2ff00;
+  --color-dark-green: #282c20;
+  --color-dark-green-tint-1: #35392d;
+  --color-dark-green-tint-2: #3f4437;
+  --color-white: #f4f4ed;
+  --color-off-white: #e8e8df;
+  --color-black: #111112;
+  --color-green-off-white: #c9cbbf;
+
+  /* Typography */
+  --font-mona: "Mona Sans", "Mona Sans Variable", system-ui, sans-serif;
+  --font-brier: "Brier", "Brier Bold", Impact, sans-serif;
+
+  --text-eyebrow: clamp(0.7rem, 0.9vw, 0.85rem);
+  --text-body: clamp(1rem, 1.35vw, 1.25rem);
+  --text-impact-sm: clamp(2rem, 4vw, 3.5rem);
+  --text-impact: clamp(2.4rem, 5.5vw, 4.75rem);
+  --text-impact-lg: clamp(2.8rem, 7vw, 6.5rem);
+  --text-nav: 0.85rem;
+
+  /* Layout */
+  --pad-x: clamp(1rem, 3vw, 2.5rem);
+  --pad-section: clamp(4rem, 10vh, 8rem);
+  --nav-h: 4.5rem;
+  --radius-sm: 0.25rem;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Aliases used by layout */
+  --c-lime: var(--color-lime);
+  --c-dark-green: var(--color-dark-green);
+  --c-white: var(--color-white);
+  --c-black: var(--color-black);
+}

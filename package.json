@@ -1,0 +1,42 @@
+{
+  "name": "boilerplate-agency",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Lando Norris homepage rebuild — Nuxt 3 + GSAP + Three.js (OFF+BRAND clone playbook).",
+  "scripts": {
+    "dev": "NODE_OPTIONS=--experimental-require-module nuxt dev",
+    "build": "NODE_OPTIONS=--experimental-require-module nuxt build",
+    "generate": "NODE_OPTIONS=--experimental-require-module nuxt generate",
+    "preview": "NODE_OPTIONS=--experimental-require-module nuxt preview",
+    "postinstall": "NODE_OPTIONS=--experimental-require-module nuxt prepare",
+    "typecheck": "NODE_OPTIONS=--experimental-require-module nuxt typecheck"
+  },
+  "dependencies": {
+    "gsap": "^3.13.0",
+    "lenis": "^1.1.18",
+    "three": "^0.170.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.4.5"
+  },
+  "devDependencies": {
+    "@oxc-minify/binding-darwin-arm64": "0.141.0",
+    "@oxc-parser/binding-darwin-arm64": "0.140.0",
+    "@oxc-transform/binding-darwin-arm64": "0.141.0",
+    "@types/three": "^0.170.0",
+    "nuxt": "^3.14.1592",
+    "oxc-minify": "0.141.0",
+    "oxc-parser": "0.140.0",
+    "oxc-transform": "0.141.0",
+    "typescript": "^5.6.3",
+    "vue-tsc": "^2.1.10"
+  },
+  "pnpm": {
+    "overrides": {
+      "oxc-parser": "0.140.0",
+      "oxc-transform": "0.141.0",
+      "oxc-minify": "0.141.0"
+    }
+  },
+  "packageManager": "pnpm@10.11.0"
+}

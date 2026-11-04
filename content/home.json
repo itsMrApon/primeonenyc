@@ -1,0 +1,173 @@
+{
+  "meta": {
+    "title": "Lando Norris | McLaren Formula 1 Driver",
+    "description": "Official hub for British racing star Lando Norris: news, race wins, campaigns, helmets, and store."
+  },
+  "nav": {
+    "logoSrc": "/images/misc/ln-logo.svg",
+    "store": {
+      "label": "Store",
+      "href": "https://store.landonorris.com/"
+    },
+    "links": [
+      { "label": "Home", "href": "/" },
+      { "label": "On Track", "href": "/on-track" },
+      { "label": "Off Track", "href": "/off-track" },
+      { "label": "Calendar", "href": "/calendar" }
+    ],
+    "business": {
+      "label": "business enquiries",
+      "href": "mailto:business@landonorris.com"
+    },
+    "socials": [
+      { "label": "tiktok", "href": "https://www.tiktok.com/@landonorris" },
+      { "label": "instagram", "href": "https://www.instagram.com/lando" },
+      { "label": "youtube", "href": "https://www.youtube.com/landonorris04" },
+      { "label": "Twitch", "href": "https://www.twitch.tv/landonorris" }
+    ]
+  },
+  "hero": {
+    "eyebrow": "2025 McLaren Formula 1 Driver",
+    "title": "Lando Norris",
+    "nextRace": {
+      "label": "Next Race",
+      "name": "Zandvoort",
+      "suffix": "gp",
+      "href": "/calendar"
+    },
+    "signatureSrc": "/images/misc/signature-lime.svg",
+    "note": "Desktop hero has no giant title — face WebGL only. Mobile uses lando-norris-text-mobile.svg."
+  },
+  "impact": {
+    "eyebrow": "mclaren f1 since 2019",
+    "html": "<strong>Redefining</strong> limits, fighting for <strong>wins</strong>, bringing it all in all ways. Defining a <strong>legacy</strong> in Formula 1 on and off the track."
+  },
+  "horizontal": {
+    "quotes": [
+      {
+        "after": 2,
+        "text": "It doesn’t matter where you start, it’s how you progress from there.",
+        "signatureSrc": "/images/misc/signature-lime.svg"
+      },
+      {
+        "after": 8,
+        "text": "Since I was 7 years old and had my first experience with kart racing, I’ve worked tirelessly to make that dream come true.",
+        "signatureSrc": "/images/misc/signature-dark-green.webp"
+      }
+    ],
+    "items": [
+      { "caption": "Qatar, 2024", "src": "/images/horiz/01.webp", "alt": "Lando in casual clothes walking through paddock" },
+      { "caption": "FIA Prize Giving, 2024", "src": "/images/horiz/02.webp", "alt": "Lando lifting trophy in tux" },
+      { "caption": "Miami GP, 2024", "src": "/images/horiz/03.webp", "alt": "Lando lifting trophy" },
+      { "caption": "Monaco, 2023", "src": "/images/horiz/04.webp", "alt": "Lando playing golf" },
+      { "caption": "Britain, 2025", "src": "/images/horiz/05.webp", "alt": "Lando in F1 car" },
+      { "caption": "Battersea, 2024", "src": "/images/horiz/06.webp", "alt": "Lando holding dog smiling" },
+      { "caption": "High Performance Gala, 2024", "src": "/images/horiz/07.webp", "alt": "Lando in tux" },
+      { "caption": "Barcelona, 2024", "src": "/images/horiz/08.webp", "alt": "Lando taking photo out of a plane" },
+      { "caption": "austria, 2020", "src": "/images/horiz/09.webp", "alt": "Lando on track podium moment" },
+      { "caption": "US, 2024", "src": "/images/horiz/10.webp", "alt": "Lando in the United States" }
+    ]
+  },
+  "onOffTrack": {
+    "on": {
+      "titleTop": "ON",
+      "titleBottom": "TRACK",
+      "body": "Most recent <strong>results</strong>, career stats and photos from trackside.",
+      "href": "/on-track",
+      "image": "/images/misc/hp-lando-helmet.webp",
+      "imageAlt": "Lando Norris wearing a lime helmet, side profile"
+    },
+    "off": {
+      "titleTop": "OFF",
+      "titleBottom": "TRACK",
+      "body": "<strong>Campaigns</strong>, shoots and other such promotional materials for fans",
+      "href": "/off-track",
+      "image": "/images/misc/hp-lando-head.webp",
+      "imageAlt": "Lando Norris wearing a fleece, side profile"
+    },
+    "featureImage": "/images/misc/home-helm-large.webp"
+  },
+  "helmets": {
+    "eyebrow": "Helmets",
+    "title": "Hall of Fame",
+    "body": "From his iconic blobs to innovative one-off designs, Lando has always been passionate about designing innovative and memorable helmets.",
+    "items": [
+      { "name": "Season", "year": "2025", "src": "/images/helmets/2025-Season.webp" },
+      { "name": "Discoball", "year": "2025", "src": "/images/helmets/2025-Discoball.webp" },
+      { "name": "Dark Glitter", "year": "2025", "src": "/images/helmets/2025-DarkGlitter.webp" },
+      { "name": "Season", "year": "2024", "src": "/images/helmets/2024-Season.webp" },
+      { "name": "Porcelain", "year": "2024", "src": "/images/helmets/2024-Porcelain.webp" },
+      { "name": "Japan", "year": "2024", "src": "/images/helmets/2024-Japan.webp" },
+      { "name": "GIF", "year": "2024", "src": "/images/helmets/2024-GIF-Helmet.webp" },
+      { "name": "Dark Mode", "year": "2024", "src": "/images/helmets/2024-DarkMode.webp" },
+      { "name": "Race 100", "year": "2023", "src": "/images/helmets/2023-Race-100.webp" },
+      { "name": "Las Vegas", "year": "2023", "src": "/images/helmets/2023-Las-Vegas.webp" },
+      { "name": "Chrome", "year": "2023", "src": "/images/helmets/2023-Chrome.webp" },
+      { "name": "Beach Ball", "year": "2023", "src": "/images/helmets/2023-Beach-Ball.webp" },
+      { "name": "Basketball", "year": "2022", "src": "/images/helmets/2022-Basketball.webp" },
+      { "name": "Silverstone", "year": "2020", "src": "/images/helmets/2020-Silverstone.webp" },
+      { "name": "Debut", "year": "2019", "src": "/images/helmets/2019.webp" }
+    ]
+  },
+  "store": {
+    "eyebrow": "LANDO STORE",
+    "titleHtml": "World Drivers' <span class=\"text-brier\">Champion</span>",
+    "body": "Celebrate this incredible moment with a collection designed for the fans who never stopped believing. Wear it, frame it, treasure it forever.",
+    "cta": { "label": "Visit the store", "href": "https://landonorris.store/" },
+    "images": [
+      "/images/store/69458be88faa89137717632c_lando-store-gold-2.webp",
+      "/images/store/69458be7e803d4123abb47dd_lando-store-gold-5.webp",
+      "/images/store/69458be8f7e939c143a9bed6_lando-store-gold-3.webp",
+      "/images/store/69458be7e4ccfdba84b69d27_lando-store-gold-1.webp"
+    ]
+  },
+  "partners": {
+    "titleHtml": "partners <span class=\"text-brier\">&amp;campaigns</span>",
+    "body": "Lando is proud to collaborate with a range of partners, who share his passion for performance across a range of industries.",
+    "cta": { "label": "view partnerships", "href": "/partnerships" },
+    "logos": [
+      { "src": "/images/partners/logo-ralph.svg", "alt": "Ralph Lauren" },
+      { "src": "/images/partners/logo-mind.svg", "alt": "Mind" },
+      { "src": "/images/partners/logo-ps4.svg", "alt": "PlayStation" },
+      { "src": "/images/partners/logo-quadrant.svg", "alt": "Quadrant" },
+      { "src": "/images/partners/logo-tumi.svg", "alt": "Tumi" },
+      { "src": "/images/partners/logo-hilton.svg", "alt": "Hilton" },
+      { "src": "/images/partners/logo-uber.svg", "alt": "Uber" },
+      { "src": "/images/partners/lnkart.svg", "alt": "LN Kart" },
+      { "src": "/images/partners/bell-helmets.svg", "alt": "Bell Helmets" },
+      { "src": "/images/partners/pure-electric.svg", "alt": "Pure Electric" },
+      { "src": "/images/partners/google.svg", "alt": "Google" }
+    ]
+  },
+  "socials": {
+    "titleTop": "what’s up",
+    "titleBottom": "On Socials",
+    "follow": "Follow Lando on social media",
+    "links": [
+      { "label": "tiktok", "href": "https://www.tiktok.com/@landonorris" },
+      { "label": "instagram", "href": "https://www.instagram.com/lando" },
+      { "label": "Youtube", "href": "https://www.youtube.com/@LandoNorris" },
+      { "label": "Twitch", "href": "https://www.twitch.tv/landonorris" }
+    ],
+    "images": [
+      "/images/social/68d3ba846e593e52541fb7a8_Lando-6-on-track.webp",
+      "/images/social/6830302d42237886d0c4b24c_ln-social-img-2.webp",
+      "/images/social/68d3ba8463e72a95c2d8a0ba_Lando-4-off-track.webp",
+      "/images/social/68d3ba848fb98d1ca68eb6c8_Lando-5-off-track.webp",
+      "/images/social/68d3ba8449f0506fbaad037b_Lano-5-on-track.webp",
+      "/images/social/6830302dadd0727e6ac034dd_ln-social-img-6.webp"
+    ]
+  },
+  "footer": {
+    "taglineHtml": "Always <span class=\"text-brier c-lime\">bringing</span> the <span class=\"text-brier c-lime\">fight</span>.",
+    "business": {
+      "label": "business enquiries",
+      "href": "mailto:business@landonorris.com"
+    },
+    "legal": [
+      { "label": "Privacy Policy", "href": "/legal/privacy-policy" },
+      { "label": "Terms & Conditions", "href": "/legal/terms-conditions" }
+    ],
+    "bg": "/images/misc/footer-helm.webp"
+  }
+}
