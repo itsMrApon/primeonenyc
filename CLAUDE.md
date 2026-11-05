@@ -13,6 +13,8 @@ Lando Norris homepage rebuild — Nuxt 3 (`ssr: false`) + GSAP ScrollTrigger + L
 
 ## Sources of truth
 
+- **Exact-clone method (read first):** `docs/EXACT-CLONE-PLAYBOOK.md` — toolchain, per-section pipeline, gotchas, token rules. Probes in `tools/probes/`.
+
 - **Playbook:** `../noomo/CLONE-PLAYBOOK.md` — follow its crawl → extract → rebuild phases and do/don't rules.
 - **Mirror (current, 2026-11-04):** `../noomo/output-lando-2026-11/` (`mirror/` HTML for 6 routes — `/partnerships` is gone, `assets/`, `shaders/`, `manifest.json`). Old Aug crawl kept at `../noomo/output-lando/` for diffing. Re-crawl: `LANDO_OUT=output-lando-<date> node scrape-lando.mjs` in `../noomo/`.
 - **Behavior lives in** `assets/lando.itsoffbrand.io/dev-js/lando-by-OFF+BRAND.05.js` (the only OFF+BRAND bundle the live page executes; ~1.3 MB, 80 extracted GLSL files in `shaders/`), plus `transitions-rive-isolate.js`. Page CSS: `assets/website-files/**/lando-offbrand.shared.6e09a725a.css`. GL assets resolve from `https://lando.itsoffbrand.io/gl`.
