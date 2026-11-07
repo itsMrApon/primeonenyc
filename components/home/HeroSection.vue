@@ -12,6 +12,7 @@ const content = useHomeContent();
 const tracker = ref<HTMLElement | null>(null);
 const track = ref<HTMLElement | null>(null);
 const logo = ref<HTMLElement | null>(null);
+const msg = ref<HTMLElement | null>(null);
 const signatureScroll = ref(0);
 const triggers: ScrollTrigger[] = [];
 
@@ -26,12 +27,15 @@ onMounted(() => {
   });
   if (tween.scrollTrigger) triggers.push(tween.scrollTrigger);
 
-  // Lime LN above "Message from Lando": scrubbed in over scroll 0.778 → 0.944 vh (700 → 850 at 900).
+  // Lime PO logo + "Message from Prime One": hidden at the top, scrubbed in over
+  // scroll 0.778 → 0.944 vh (700 → 850 at 900). The message keeps its −50 % x centring.
+  const xCentre = (i: number) => (i === 1 ? -50 : 0);
   const reveal = gsap.fromTo(
-    logo.value,
-    { opacity: 0, y: () => Math.min(Math.max(window.innerWidth, 992), 1920) / 108 }, // 1u
+    [logo.value, msg.value],
+    { opacity: 0, xPercent: xCentre, y: () => Math.min(Math.max(window.innerWidth, 992), 1920) / 108 }, // 1u
     {
       opacity: 1,
+      xPercent: xCentre,
       y: 0,
       ease: "power2.out",
       scrollTrigger: {
@@ -65,7 +69,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
             alt=""
             aria-hidden="true"
           />
-          <p class="hero-msg">Message from Lando</p>
+          <p ref="msg" class="hero-msg">Message from Prime One</p>
 
           <!-- Signature: hidden at the top, writes itself left → right as the tracker scrolls. -->
           <div class="hero-signature" aria-hidden="true">
@@ -194,6 +198,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
   line-height: 1;
   text-transform: uppercase;
   white-space: nowrap;
+  opacity: 0;
   pointer-events: none;
 }
 
