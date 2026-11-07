@@ -15,7 +15,9 @@ import { DarkContourPass } from "./passes/DarkContourPass";
 import { HeroCompositePass } from "./passes/HeroCompositePass";
 import { setRect } from "./passes/rect";
 import { TexturePlanePass } from "./passes/TexturePlanePass";
-import { HeadScene } from "./scenes/HeadScene";
+import type { HeroStage } from "./scenes/HeroStage";
+import { TaxiScene } from "./scenes/TaxiScene";
+import { UmbrellaScene } from "./scenes/UmbrellaScene";
 import { MarqueeTextScene } from "./scenes/MarqueeTextScene";
 
 const easeInOutQuad = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
@@ -23,6 +25,8 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 /** Hero card size at the end of the shrink, in reference units (1u = 13.33 px at 1440). */
 const CARD_U = { w: 472 / (1440 / 108), h: 305 / (1440 / 108) };
 const CURSOR_FADE_S = 0.233;
+/** Hero subject: "umbrella" (home + car under cover) or the backup "taxi". */
+const HERO: "umbrella" | "taxi" = "umbrella";
 
 export interface ExperienceOptions {
   canvas: HTMLCanvasElement;
@@ -31,12 +35,13 @@ export interface ExperienceOptions {
 
 /**
  * Hero pipeline, in the reference's per-frame order (see .reanimate/hero/spec.md):
- *   1. head scene                    → headTarget (MSAA)
+ *   1. hero scene (HERO)             → headTarget (MSAA)
  *   2. marquee text                  → textTarget (MSAA)
  *   3. screen: dark contour page, text plane, hero card
- *      (reads last frame's contours / fluid)
+ *      (reads last frame's contours / fluid / reveal)
  *   4. contour noise                 → contourTarget
  *   5. fluid sim (idle sweep or mouse) → fluid.output
+ *   6. hero reveal scene             → revealTarget (MSAA), shown under the fluid mask
  *
  * Scroll-out (setHeroScroll): over the first 100vh of the 200vh hero track the
  * card shrinks 1440×900 → 472×305 (eased power1.inOut), filters to grey and
@@ -47,13 +52,14 @@ export class Experience {
   readonly #clock = new Clock();
   readonly #onProgress?: ExperienceOptions["onProgress"];
 
-  readonly head = new HeadScene();
+  readonly hero: HeroStage = HERO === "taxi" ? new TaxiScene() : new UmbrellaScene();
   readonly #fluid = new FluidSim();
   readonly #idle = new IdleCursor();
   readonly #pointer = new Vector2();
 
   readonly marquee = new MarqueeTextScene();
   readonly #headTarget = new WebGLRenderTarget(1, 1, { samples: 4 });
+  readonly #revealTarget = new WebGLRenderTarget(1, 1, { samples: 4 });
   readonly #textTarget = new WebGLRenderTarget(1, 1, { samples: 4 });
   readonly #contourTarget = new WebGLRenderTarget(1, 1, {
     minFilter: LinearFilter,
@@ -66,6 +72,7 @@ export class Experience {
   readonly #composite = new HeroCompositePass({
     contours: this.#contourTarget.texture,
     head: this.#headTarget.texture,
+    reveal: this.#revealTarget.texture,
     cursorEffect: this.#fluid.output.texture
   });
 
@@ -94,14 +101,13 @@ export class Experience {
     this.#renderer.toneMapping = NoToneMapping;
     this.#renderer.setClearColor(0x000000, 0);
     this.#renderer.autoClear = false;
-    this.head.cursorEffect.value = this.#fluid.output.texture;
     // Clock starts at construction, like the reference's uTime (≈ seconds since load).
     this.#clock.start();
   }
 
   async load() {
-    this.#onProgress?.(0.15, "Loading head");
-    await Promise.all([this.head.load(this.#renderer), this.marquee.load()]);
+    this.#onProgress?.(0.15, "Loading hero");
+    await Promise.all([this.hero.load(this.#renderer), this.marquee.load()]);
     this.#onProgress?.(1, "Ready");
   }
 
@@ -122,10 +128,10 @@ export class Experience {
     this.#renderer.setSize(w, h, false);
     this.#size.w = w;
     this.#size.h = h;
-    for (const t of [this.#headTarget, this.#textTarget, this.#contourTarget]) t.setSize(w, h);
+    for (const t of [this.#headTarget, this.#textTarget, this.#revealTarget, this.#contourTarget]) t.setSize(w, h);
     this.#fluid.resize(w, h);
     this.#contours.material.uniforms.uAspect.value = w / h;
-    this.head.resize(w, h);
+    this.hero.resize(w, h);
     this.marquee.resize(w, h);
   }
 
@@ -166,7 +172,7 @@ export class Experience {
     this.#cursorIntensity += Math.max(-step, Math.min(step, target - this.#cursorIntensity));
     u.uCursorIntensity.value = this.#cursorIntensity;
 
-    this.head.setCameraOffset(-e, (offset / h) * 0.1);
+    this.hero.setCameraOffset(-e, (offset / h) * 0.1);
   }
 
   /** Real pointer in NDC (−1..1, y up). */
@@ -178,7 +184,7 @@ export class Experience {
   dispose() {
     this.#disposed = true;
     this.stop();
-    this.head.dispose();
+    this.hero.dispose();
     this.#fluid.dispose();
     this.marquee.dispose();
     this.#darkPage.dispose();
@@ -186,7 +192,7 @@ export class Experience {
     this.#idle.dispose();
     this.#contours.dispose();
     this.#composite.dispose();
-    for (const t of [this.#headTarget, this.#textTarget, this.#contourTarget]) t.dispose();
+    for (const t of [this.#headTarget, this.#textTarget, this.#revealTarget, this.#contourTarget]) t.dispose();
     this.#renderer.dispose();
   }
 
@@ -202,9 +208,10 @@ export class Experience {
     const heroOnScreen = this.#scroll.offset < this.#size.h;
 
     if (heroOnScreen) {
+      this.hero.update(elapsed);
       r.setRenderTarget(this.#headTarget);
       r.clear();
-      r.render(this.head.scene, this.head.camera);
+      r.render(this.hero.scene, this.hero.camera);
 
       this.marquee.update(dt);
       r.setRenderTarget(this.#textTarget);
@@ -228,6 +235,10 @@ export class Experience {
       const p = this.#idle.isMoving ? this.#pointer : this.#idle.cursor;
       this.#fluid.setPointer(p.x, p.y, this.#idle.isMoving);
       this.#fluid.update(r);
+
+      r.setRenderTarget(this.#revealTarget);
+      r.clear();
+      r.render(this.hero.revealScene, this.hero.camera);
     }
 
     this.#frame = requestAnimationFrame(this.#tick);

@@ -7,6 +7,7 @@ import { fullRect, rectVert } from "./rect";
 export interface HeroCompositeInputs {
   contours: Texture;
   head: Texture;
+  reveal: Texture;
   cursorEffect: Texture;
 }
 
@@ -14,7 +15,8 @@ export interface HeroCompositeInputs {
  * Final hero image:
  *   paper + 1px contour outlines
  *   → under the fluid mask: banded "cursor paper" (two greys) with its own outline
- *   → lit head on top
+ *   → lit hero subject on top
+ *   → hero reveal layer over it, only where the fluid mask is active (premultiplied over)
  *   → uFilter 0 → 1 (scroll-out): fades to a grey, contrasty, olive-tinted
  *     head on near-black (grayscale → contrast 0.8 → ×0.75 → hard light #50593F).
  * Drawn into uRect so the hero can shrink into the marquee card on scroll.
@@ -27,6 +29,7 @@ export class HeroCompositePass extends FullscreenPass {
         uniforms: {
           tContours: { value: inputs.contours },
           tHead: { value: inputs.head },
+          tReveal: { value: inputs.reveal },
           tCursorEffect: { value: inputs.cursorEffect },
           uRect: { value: fullRect() },
           uReveal: { value: 1 },
@@ -42,7 +45,7 @@ export class HeroCompositePass extends FullscreenPass {
         },
         vertexShader: rectVert,
         fragmentShader: /* glsl */ `
-          uniform sampler2D tContours, tHead, tCursorEffect;
+          uniform sampler2D tContours, tHead, tReveal, tCursorEffect;
           uniform float uReveal, uCursorIntensity, uEdgeOffset, uFilter;
           uniform vec3 uPaper, uLine, uCursorPaper, uCursorPaperAlt, uCursorLine, uFilterTint;
           varying vec2 vUv;
@@ -79,6 +82,9 @@ export class HeroCompositePass extends FullscreenPass {
 
             vec4 head = texture2D(tHead, vUv);
             vec3 color = mix(paper, head.rgb, head.a);
+            vec4 reveal = texture2D(tReveal, vUv);
+            float revealMask = clamp(mask, 0.0, 1.0);
+            color = color * (1.0 - revealMask * reveal.a) + reveal.rgb * revealMask;
 
             vec3 filtered = grayscale(mix(head.rgb, vec3(0.05), 1.0 - head.a));
             filtered = ((filtered - 0.5) * 0.8 + 0.5) * 0.75;
