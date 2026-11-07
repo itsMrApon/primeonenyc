@@ -134,10 +134,16 @@ export class Experience {
   resize(width: number, height: number) {
     const w = Math.max(1, Math.round(width));
     const h = Math.max(1, Math.round(height));
+    // Desktop keeps the reference's 1× buffer; phones render at their screen density
+    // (capped at 2×) so the 3D isn't upscaled 2–3× and blurry.
+    const dpr = isMobileLayout(w) ? Math.min(window.devicePixelRatio || 1, 2) : 1;
+    this.#renderer.setPixelRatio(dpr);
     this.#renderer.setSize(w, h, false);
     this.#size.w = w;
     this.#size.h = h;
-    for (const t of [this.#headTarget, this.#textTarget, this.#revealTarget, this.#contourTarget]) t.setSize(w, h);
+    const pw = Math.round(w * dpr);
+    const ph = Math.round(h * dpr);
+    for (const t of [this.#headTarget, this.#textTarget, this.#revealTarget, this.#contourTarget]) t.setSize(pw, ph);
     this.#fluid.resize(w, h);
     this.#contours.material.uniforms.uAspect.value = w / h;
     this.hero.resize(w, h);
@@ -173,7 +179,7 @@ export class Experience {
     const offset = this.#scroll.offset;
 
     setRect(this.#composite.material.uniforms.uRect.value, cardW, cardH, offset, w, h);
-    setRect(this.#textPlane.material.uniforms.uRect.value, w, h, offset, w, h);
+    setRect(this.#textPlane.material.uniforms.uRect.value, w, h, offset - this.marquee.topMobile, w, h);
 
     const u = this.#composite.material.uniforms;
     // Cover-crop the full-screen render into the card instead of stretching it.

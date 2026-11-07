@@ -37,6 +37,12 @@ ap.add_argument("--preview", default="")
 ap.add_argument("--closeup", default="", help="extra close-up render of the nameplate")
 ap.add_argument("--samples", type=int, default=96)
 ap.add_argument("--atlas", type=int, default=2048)
+ap.add_argument("--no-house", action="store_true",
+                help="leave the lot empty (the site loads its own house model there)")
+ap.add_argument("--style", choices=("classic", "cartoon"), default="classic",
+                help="classic: white paper model; cartoon: painted colours + chunkier street props")
+ap.add_argument("--no-car", action="store_true",
+                help="leave the driveway empty (the site loads its own car model there)")
 ap.add_argument("--plaque-font", default=os.path.expanduser("~/Library/Fonts/Montserrat-ExtraBold.otf"),
                 help="OFL font for the QUEENS, NY nameplate")
 ap.add_argument("--font", default=os.path.expanduser("~/Library/Fonts/Montserrat-ExtraBoldItalic.otf"),
@@ -79,6 +85,14 @@ STREET = "#c9cbbf"
 DARK = "#282c20"
 LIME = "#d2ff00"
 LIME_ALT = "#bde600"
+TREE = "#f4f3ec"
+CHROME = "#d9dbd4"
+CARTOON = args.style == "cartoon"
+if CARTOON:
+    # Painted palette pulled from the house (blue-grey siding, cream trim) and the car
+    # (mint body, lilac shadows, purple ink): warm cream board, lilac-slate street.
+    PAPER, PAPER_SHADE, STREET, DARK = "#f3ecdc", "#e4dbc6", "#8f8aa3", "#2f2a3d"
+    LIME_ALT, TREE, CHROME = "#fff4d8", "#7cb35b", "#e2b04a"   # cream panels, leaf hedge, brass
 
 M = {
     "paper": material("Paper", PAPER, 0.9),
@@ -86,12 +100,12 @@ M = {
     "street": material("Street", STREET, 0.95),
     "dark": material("Dark", DARK, 0.6),
     "window": material("WindowPane", "#3f4437", 0.25, 0.1),
-    "tree": material("Tree", "#f4f3ec", 0.95),
+    "tree": material("Tree", TREE, 0.95),
     # die-cast car
     "paint": material("Car_Paint", "#1f3b2c", 0.32, 0.55, **{"Coat Weight": 1.0, "Coat Roughness": 0.05}),
     "glass": material("Car_Glass", "#1c2024", 0.04, 0.0, **{"Alpha": 0.55}),
     "tyre": material("Car_Tyre", "#16171a", 0.85),
-    "chrome": material("Car_Chrome", "#d9dbd4", 0.12, 1.0),
+    "chrome": material("Car_Chrome", CHROME, 0.12 if not CARTOON else 0.3, 1.0),
     "head": material("Car_Headlight", "#fff6df", 0.2, 0.0, **{"Emission Color": srgb("#fff6df"), "Emission Strength": 0.4}),
     "tail": material("Car_Taillight", "#c2271c", 0.3, 0.0),
     "interior": material("Car_Interior", "#202319", 0.9),
@@ -99,6 +113,17 @@ M = {
     "lime": material("Canopy_Lime", LIME, 0.75, 0.0, **{"Sheen Weight": 0.6, "Sheen Roughness": 0.4}),
     "lime_alt": material("Canopy_LimeAlt", LIME_ALT, 0.75, 0.0, **{"Sheen Weight": 0.6, "Sheen Roughness": 0.4}),
     "frame": material("Umbrella_Frame", DARK, 0.4, 0.6),
+    # cartoon street props
+    "bark": material("Bark", "#8a5a3b", 0.9),
+    "leaf": material("Leaf", "#7cb35b", 0.85),
+    "leaf_dark": material("LeafDark", "#5a9147", 0.85),
+    "leaf_light": material("LeafLight", "#a6cf6e", 0.85),
+    "hydrant": material("Hydrant", "#e0523f", 0.45),
+    "hydrant_cap": material("HydrantCap", "#b93a2c", 0.45),
+    "sign": material("Sign", "#2f7d5b", 0.5),
+    "wood": material("Wood", "#a8683a", 0.55),
+    "lamp": material("Lamp", "#3d5b5c", 0.5),
+    "bulb": material("Bulb", "#fff1c2", 0.3, 0.0, **{"Emission Color": srgb("#fff1c2"), "Emission Strength": 0.6}),
 }
 for attr, value in (("blend_method", "BLEND"), ("surface_render_method", "BLENDED")):
     if hasattr(M["glass"], attr):
@@ -203,6 +228,8 @@ static(box("driveway", (1.25, 2.4, 0.02), (1.5, 0.15, 0.01), M["paper_shade"]))
 
 # ----------------------------------------------------------------- house (Woodside two-family)
 
+house_from = len(static_parts)  # house parts are static_parts[house_from:house_to]
+
 HX0, HX1 = -2.75, -0.1       # footprint x
 HY0, HY1 = -0.95, 1.15       # footprint y (front face at HY0)
 HZ = 2.25                    # wall height (flat roof)
@@ -292,7 +319,10 @@ for s in (-1, 1):
         base_z = max(0.26 - STEP_H * min(int(t * N_STEPS), N_STEPS - 1), 0.04)
         static(rod(f"baluster{s}_{k}", (top.x, top.y, base_z), (top.x, top.y, top.z), 0.007, M["dark"]))
 
+house_to = len(static_parts)
+
 # front-yard railing along the sidewalk, in front of the house
+fence_from = len(static_parts)
 FY = -1.0 - 0.05
 fy_rail = HY0 - 0.08 - 0.0
 for x0, x1 in ((HX0 - 0.05, DX - 0.45),):
@@ -305,23 +335,76 @@ for x0, x1 in ((HX0 - 0.05, DX - 0.45),):
     for x in (x0, x1):
         static(box(f"fence_post{x:.2f}", (0.05, 0.05, 0.42), (x, -1.02, 0.21), M["dark"]))
 
+fence_to = len(static_parts)
+
 # model-kit trees (white, faceted crowns on wire trunks)
-for i, (x, y, s) in enumerate(((-3.25, 1.95, 1.0), (-3.3, -1.37, 0.8), (2.95, 1.9, 1.1))):
+TREES = ((-3.25, 1.95, 1.0), (-3.3, -1.37, 0.8), (2.95, 1.9, 1.1))
+
+
+def cartoon_tree(i, x, y, s):
+    """Storybook tree: tapered trunk with two branches, a lumpy two-tone crown, a pit ring."""
+    trunk = bmesh.new()
+    bmesh.ops.create_cone(trunk, cap_ends=True, segments=12, radius1=0.09 * s, radius2=0.05 * s, depth=1.1 * s)
+    bmesh.ops.translate(trunk, vec=Vector((x, y, 0.55 * s)), verts=trunk.verts)
+    static(obj_from_bmesh(f"trunk{i}", trunk, M["bark"]))
+    for k, (dx, dy, dz) in enumerate(((0.28, -0.08, 0.32), (-0.24, 0.1, 0.22))):
+        static(rod(f"branch{i}_{k}", (x, y, 0.75 * s), (x + dx * s, y + dy * s, (0.75 + dz) * s), 0.03 * s, M["bark"], verts=8))
+    blobs = ((0, 0, 1.35, 0.52, "leaf"), (0.3, -0.12, 1.2, 0.36, "leaf_dark"), (-0.28, 0.1, 1.18, 0.34, "leaf_dark"),
+             (0.12, 0.18, 1.62, 0.36, "leaf"), (-0.12, -0.2, 1.58, 0.32, "leaf_light"), (0.05, -0.32, 1.32, 0.26, "leaf_light"))
+    for k, (dx, dy, z, r, mat) in enumerate(blobs):
+        static(icosphere(f"crown{i}_{k}", r * s, (x + dx * s, y + dy * s, z * s), M[mat], subdiv=3, squash=0.92))
+    static(cylinder(f"tree_pit{i}", 0.24 * s, 0.03, (x, y, 0.015), M["paper_shade"], verts=24))
+
+
+for i, (x, y, s) in enumerate(TREES):
+    if CARTOON:
+        cartoon_tree(i, x, y, s)
+        continue
     static(rod(f"trunk{i}", (x, y, 0.0), (x, y, 1.05 * s), 0.03 * s, M["dark"]))
     static(icosphere(f"crown{i}a", 0.5 * s, (x, y, 1.25 * s), M["tree"], subdiv=1, squash=1.15))
     static(icosphere(f"crown{i}b", 0.33 * s, (x + 0.22 * s, y - 0.1 * s, 1.55 * s), M["tree"], subdiv=1))
     static(icosphere(f"crown{i}c", 0.3 * s, (x - 0.2 * s, y + 0.12 * s, 1.0 * s), M["tree"], subdiv=1))
 # NYC street furniture: hydrant, street lamp, stoop planters
 HYD = (2.55, -1.5)
-static(cylinder("hydrant_body", 0.075, 0.26, (HYD[0], HYD[1], 0.165), M["dark"], verts=16))
-static(cylinder("hydrant_base", 0.1, 0.05, (HYD[0], HYD[1], 0.06), M["dark"], verts=16))
-static(icosphere("hydrant_cap", 0.08, (HYD[0], HYD[1], 0.3), M["dark"], subdiv=2, squash=0.7))
-static(cylinder("hydrant_nozzles", 0.035, 0.24, (HYD[0], HYD[1], 0.2), M["dark"], axis="X", verts=10))
+if CARTOON:
+    # Chunky NYC hydrant (≈1.5× the classic one): flange, barrel with a waist ring, side
+    # outlets with caps and a chain, front pumper, domed bonnet and the pentagon nut.
+    hx, hy = HYD
+    red, cap = M["hydrant"], M["hydrant_cap"]
+    static(cylinder("hydrant_flange", 0.15, 0.05, (hx, hy, 0.025), cap, verts=24))
+    for k in range(6):
+        a = k * math.pi / 3
+        static(icosphere(f"hydrant_bolt{k}", 0.018, (hx + math.cos(a) * 0.125, hy + math.sin(a) * 0.125, 0.055), cap, subdiv=1))
+    barrel = bmesh.new()
+    bmesh.ops.create_cone(barrel, cap_ends=True, segments=24, radius1=0.115, radius2=0.1, depth=0.34)
+    bmesh.ops.translate(barrel, vec=Vector((hx, hy, 0.22)), verts=barrel.verts)
+    static(obj_from_bmesh("hydrant_barrel", barrel, red))
+    static(cylinder("hydrant_ring", 0.125, 0.04, (hx, hy, 0.3), cap, verts=24))
+    static(cylinder("hydrant_collar", 0.12, 0.035, (hx, hy, 0.4), cap, verts=24))
+    static(icosphere("hydrant_bonnet", 0.11, (hx, hy, 0.43), red, subdiv=3, squash=0.75))
+    static(cylinder("hydrant_nut", 0.035, 0.07, (hx, hy, 0.53), cap, verts=5))
+    static(cylinder("hydrant_outlets", 0.045, 0.36, (hx, hy, 0.27), red, axis="X", verts=16))
+    for sx in (-1, 1):
+        static(cylinder(f"hydrant_cap{sx}", 0.055, 0.04, (hx + sx * 0.19, hy, 0.27), cap, axis="X", verts=16))
+        static(cylinder(f"hydrant_capnut{sx}", 0.022, 0.03, (hx + sx * 0.22, hy, 0.27), cap, axis="X", verts=5))
+    static(cylinder("hydrant_pumper", 0.06, 0.12, (hx, hy - 0.12, 0.25), red, axis="Y", verts=16))
+    static(cylinder("hydrant_pumpercap", 0.068, 0.035, (hx, hy - 0.185, 0.25), cap, axis="Y", verts=16))
+    chain = [(hx + 0.19, hy - 0.02, 0.24), (hx + 0.16, hy - 0.08, 0.17), (hx + 0.08, hy - 0.11, 0.15), (hx + 0.02, hy - 0.12, 0.2)]
+    for k in range(len(chain) - 1):
+        static(rod(f"hydrant_chain{k}", chain[k], chain[k + 1], 0.007, M["dark"], verts=6))
+else:
+    static(cylinder("hydrant_body", 0.075, 0.26, (HYD[0], HYD[1], 0.165), M["dark"], verts=16))
+    static(cylinder("hydrant_base", 0.1, 0.05, (HYD[0], HYD[1], 0.06), M["dark"], verts=16))
+    static(icosphere("hydrant_cap", 0.08, (HYD[0], HYD[1], 0.3), M["dark"], subdiv=2, squash=0.7))
+    static(cylinder("hydrant_nozzles", 0.035, 0.24, (HYD[0], HYD[1], 0.2), M["dark"], axis="X", verts=10))
 LAMP = (-1.0, -1.55)
-static(cylinder("lamp_base", 0.06, 0.12, (LAMP[0], LAMP[1], 0.095), M["dark"], verts=12))
-static(rod("lamp_pole", (LAMP[0], LAMP[1], 0.1), (LAMP[0], LAMP[1], 2.0), 0.022, M["dark"]))
-static(rod("lamp_arm", (LAMP[0], LAMP[1], 1.95), (LAMP[0], LAMP[1] - 0.32, 2.05), 0.016, M["dark"]))
-static(box("lamp_head", (0.16, 0.24, 0.06), (LAMP[0], LAMP[1] - 0.36, 2.03), M["dark"], bevel=0.015))
+LAMP_M = M["lamp"] if CARTOON else M["dark"]
+static(cylinder("lamp_base", 0.06, 0.12, (LAMP[0], LAMP[1], 0.095), LAMP_M, verts=12))
+static(rod("lamp_pole", (LAMP[0], LAMP[1], 0.1), (LAMP[0], LAMP[1], 2.0), 0.022, LAMP_M))
+static(rod("lamp_arm", (LAMP[0], LAMP[1], 1.95), (LAMP[0], LAMP[1] - 0.32, 2.05), 0.016, LAMP_M))
+static(box("lamp_head", (0.16, 0.24, 0.06), (LAMP[0], LAMP[1] - 0.36, 2.03), LAMP_M, bevel=0.015))
+if CARTOON:
+    static(icosphere("lamp_bulb", 0.05, (LAMP[0], LAMP[1] - 0.36, 1.98), M["bulb"], subdiv=2, squash=0.7))
 for s in (-1, 1):
     static(box(f"planter{s}", (0.16, 0.16, 0.16), (DX + s * 0.5, HY0 - 0.12, 0.08), M["paper_shade"], bevel=0.01))
     static(icosphere(f"shrub{s}", 0.12, (DX + s * 0.5, HY0 - 0.12, 0.24), M["tree"], subdiv=1))
@@ -548,7 +631,7 @@ bpy.ops.object.convert(target="MESH")
 handle = bpy.context.view_layer.objects.active
 handle.name = "Umbrella_Handle"
 handle.data.materials.clear()
-handle.data.materials.append(M["dark"])
+handle.data.materials.append(M["wood"] if CARTOON else M["dark"])
 handle.parent = umbrella
 collar = cylinder("Umbrella_Collar", 0.075, 0.07, (0, 0, shaft_bottom + 0.02), M["chrome"], verts=20)
 collar.parent = umbrella
@@ -625,7 +708,8 @@ def text_mesh(name, text, font_path, height, depth):
 PLAQUE = dict(x=3.15, y=-1.42, w=1.08, h=0.36, t=0.04, post=0.36, yaw=math.radians(-12))
 plaque_parts = []
 panel_z = PLAQUE["post"] + PLAQUE["h"] / 2
-plaque_parts.append(box("plaque_panel", (PLAQUE["w"], PLAQUE["t"], PLAQUE["h"]), (0, 0, panel_z), M["dark"], bevel=0.012))
+plaque_parts.append(box("plaque_panel", (PLAQUE["w"], PLAQUE["t"], PLAQUE["h"]), (0, 0, panel_z),
+                        M["sign"] if CARTOON else M["dark"], bevel=0.05 if CARTOON else 0.012, segments=4 if CARTOON else 2))
 # fine paper-white border, inset from the edge, on the front face
 inset, line = 0.035, 0.012
 fy = -PLAQUE["t"] / 2 - 0.004
@@ -638,8 +722,11 @@ for sx, sz, lx, lz in (
     plaque_parts.append(box(f"plaque_border{lx:.2f}{lz:.2f}", (sx, 0.008, sz), (lx, fy, panel_z + lz), M["paper"]))
 for sx in (-1, 1):
     x = sx * (PLAQUE["w"] / 2 - 0.12)
-    plaque_parts.append(box(f"plaque_post{sx}", (0.05, 0.05, PLAQUE["post"] + 0.04), (x, 0.0, (PLAQUE["post"] + 0.04) / 2), M["dark"], bevel=0.008))
+    post_h = PLAQUE["post"] + (PLAQUE["h"] + 0.08 if CARTOON else 0.04)  # cartoon posts frame the sign
+    plaque_parts.append(box(f"plaque_post{sx}", (0.05, 0.05, post_h), (x, 0.03 if CARTOON else 0.0, post_h / 2), M["dark"], bevel=0.008))
     plaque_parts.append(box(f"plaque_foot{sx}", (0.11, 0.11, 0.03), (x, 0.0, 0.015), M["dark"], bevel=0.006))
+    if CARTOON:  # ball finials on the posts
+        plaque_parts.append(icosphere(f"plaque_ball{sx}", 0.045, (x, 0.03, post_h + 0.03), M["chrome"], subdiv=2))
 letters = text_mesh("plaque_text", "QUEENS, NY", args.plaque_font, height=0.1, depth=0.012)
 letters.rotation_euler = (math.pi / 2, 0, 0)          # stand the text up on the front face
 letters.location = (0, -PLAQUE["t"] / 2 - 0.006, panel_z)
@@ -651,17 +738,32 @@ letters.data.materials.clear()
 letters.data.materials.append(M["paper"])
 plaque_parts.append(letters)
 
+# --no-house / --no-car: drop those parts; everything else (board, street, trees,
+# hydrant, lamp, hedge, nameplate, umbrella) is built exactly as before.
+if args.no_house:
+    dropped = static_parts[house_from:house_to] + static_parts[fence_from:fence_to]
+    dropped += [o for o in static_parts if o.name.startswith(("planter", "shrub"))]  # door planters
+    ids = {id(o) for o in dropped}
+    static_parts = [o for o in static_parts if id(o) not in ids]
+    for o in dropped:
+        bpy.data.objects.remove(o)
+if args.no_car:
+    for o in car_parts:
+        bpy.data.objects.remove(o)
+    car_parts = []
+
 # car: group parts by material into a few meshes, then place
 by_mat = {}
 for o in car_parts:
     by_mat.setdefault(o.data.materials[0].name, []).append(o)
-car_root = bpy.data.objects.new("Car", None)
-scene.collection.objects.link(car_root)
-for mat_name, objs in by_mat.items():
-    ob = join(mat_name.replace("Car_", "Car_") + "_Mesh", objs)
-    ob.parent = car_root
-car_root.location = CAR_LOC
-car_root.scale = (CAR_SCALE,) * 3
+if car_parts:
+    car_root = bpy.data.objects.new("Car", None)
+    scene.collection.objects.link(car_root)
+    for mat_name, objs in by_mat.items():
+        ob = join(mat_name.replace("Car_", "Car_") + "_Mesh", objs)
+        ob.parent = car_root
+    car_root.location = CAR_LOC
+    car_root.scale = (CAR_SCALE,) * 3
 
 plaque = join("Plaque", plaque_parts)
 plaque.location = (PLAQUE["x"], PLAQUE["y"], 0)

@@ -71,9 +71,19 @@ export class MarqueeTextScene {
     }
   }
 
+  /** Reference responsive(): px the text layer sits below its desktop place (0 above 768). */
+  topMobile = 0;
+
   resize(width: number, height: number) {
     this.camera.aspect = width / Math.max(height, 1);
     this.camera.updateProjectionMatrix();
+    // Reference responsive(): phones pull the camera back (smaller text) and drop the
+    // whole text layer 35 % of the screen height, so the rows run below the card.
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * Math.min(Math.max(t, 0), 1);
+    if (width > 768) this.camera.position.z = 4.5;
+    else if (width >= 480) this.camera.position.z = lerp(11, 6.5, (width - 480) / 288);
+    else this.camera.position.z = lerp(14, 9.5, (width - 320) / 160);
+    this.topMobile = width > 768 ? 0 : height * 0.35;
   }
 
   update(dt: number) {

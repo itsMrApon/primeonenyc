@@ -1,0 +1,5 @@
+"cHe" by luyssport on Sketchfab
+https://sketchfab.com/3d-models/che-1e529f4b8efc4f20925957a9a4208dcd
+License: CC BY-NC-SA 4.0 (http://creativecommons.org/licenses/by-nc-sa/4.0/) — non-commercial only.
+car.glb is a modified version (scene clouds, skid marks and painted ground removed; Draco geometry,
+WebP 2048 textures) under the same license.

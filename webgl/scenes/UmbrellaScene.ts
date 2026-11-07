@@ -1,4 +1,6 @@
 import {
+  BackSide,
+  Box3,
   BufferAttribute,
   BufferGeometry,
   Color,
@@ -22,15 +24,26 @@ import {
   type WebGLRenderer
 } from "three";
 
+import { mergeVertices } from "three/examples/jsm/utils/BufferGeometryUtils.js";
+
 import { loadModel } from "../loaders";
 import { applyNeutralToneMapping, createStudioEnvironment, HeroStage } from "./HeroStage";
 
 /**
  * Architectural-miniature diorama built by tools/blender/build_hero_miniature.py
- * (board + house baked into one atlas, die-cast sedan, printed umbrella).
- * Scene units ≈ metres: board 7.4 × 5.8, canopy apex 4.45 high.
+ * with --no-house --no-car --atlas 4096 (board, street, trees, hydrant, lamp,
+ * nameplate, printed umbrella). The house and car are separate, full-detail models
+ * placed on the lot below. Scene units ≈ metres: board 7.4 × 5.8, apex 4.45 high.
  */
 const MODEL_URL = "/gl/models/hero/miniature.glb";
+/**
+ * Placement in stage (glTF) space, matching the procedural house/sedan they replace:
+ * house 2.65 wide centred on x −1.425 with its porch on the old front line (z 0.95);
+ * car centred on the driveway (1.5, −0.05), nose to the street (+z). The car model
+ * ("cHe", luyssport, CC BY-NC-SA — see car.CREDITS.txt) runs along +x, nose at +x.
+ */
+const HOUSE = { url: "/gl/models/hero/house.glb", width: 2.65, x: -1.425, frontZ: 0.95 } as const;
+const CAR = { url: "/gl/models/hero/car.glb", length: 2.3, x: 1.5, z: -0.05, y: 0.02, yaw: -Math.PI / 2 } as const;
 const ROOT = { scale: 0.1, pitch: 0.2, yaw: -0.42, centreY: 2.2 } as const;
 /**
  * Wide-screen fit: the diorama's base slab reaches NDC ±0.95 at z = FIT_K / aspect.
@@ -202,6 +215,76 @@ function createSun(scale: number) {
   return sun;
 }
 
+/** Diorama parts drawn with an ink outline (cartoon style, matches the car's line work). */
+const INKED = ["Static", "Plaque", "Canopy", "Umbrella_Shaft", "Umbrella_Handle", "Umbrella_Collar", "Umbrella_HandleCap"];
+const INK = { color: "#2f2a3d", width: 0.022 } as const;
+const UNINKED = ["Canopy_Frame", "Canopy_Logo"]; // width in stage units (≈2–3 px)
+
+/**
+ * Inverted-hull outline: a back-face copy pushed out along smoothed normals (merged
+ * by position, so flat-shaded box corners don't crack), added as a child so it
+ * follows the part's animation.
+ */
+function addInkOutline(mesh: Mesh) {
+  const geo = mesh.geometry.clone();
+  for (const name of Object.keys(geo.attributes)) if (name !== "position") geo.deleteAttribute(name);
+  const hull = mergeVertices(geo, 1e-4);
+  hull.computeVertexNormals();
+  geo.dispose();
+  const outline = new Mesh(
+    hull,
+    new ShaderMaterial({
+      side: BackSide,
+      precision: "highp",
+      uniforms: { uColor: { value: new Color(INK.color) }, uWidth: { value: INK.width } },
+      vertexShader: /* glsl */ `
+        uniform float uWidth;
+        void main() {
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position + normal * uWidth, 1.0);
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        uniform vec3 uColor;
+        void main() { gl_FragColor = vec4(uColor, 1.0); }
+      `
+    })
+  );
+  outline.name = `${mesh.name}_Ink`;
+  outline.castShadow = outline.receiveShadow = false;
+  mesh.add(outline);
+}
+
+/** Full precision, shadows, cheap glass (real transmission re-renders the scene). */
+function prepareModel(root: Object3D) {
+  root.traverse((obj) => {
+    const mesh = obj as Mesh;
+    if (!mesh.isMesh) return;
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    const tune = (source: Material) => {
+      const mat = source.clone();
+      mat.precision = "highp";
+      if (mat instanceof MeshPhysicalMaterial && mat.transmission > 0) {
+        Object.assign(mat, { transmission: 0, transparent: true, opacity: 0.35, roughness: 0.05, metalness: 0.2 });
+        mesh.castShadow = false;
+      }
+      return mat;
+    };
+    mesh.material = Array.isArray(mesh.material) ? mesh.material.map(tune) : tune(mesh.material);
+  });
+  applyNeutralToneMapping(root);
+}
+
+/** Wrap `model` turned by `yaw`, then scaled by `scaleFor(its size)`. */
+function normalise(model: Object3D, scaleFor: (size: Vector3) => number, yaw = 0) {
+  const holder = new Group();
+  holder.add(model);
+  model.rotation.y = yaw;
+  const size = new Box3().setFromObject(holder).getSize(new Vector3());
+  holder.scale.setScalar(scaleFor(size));
+  return holder;
+}
+
 /**
  * Hero subject: an architectural miniature — a Woodside two-family house and a
  * die-cast sedan sheltered by a lime umbrella that springs open after load,
@@ -233,7 +316,12 @@ export class UmbrellaScene extends HeroStage {
   }
 
   async load(renderer: WebGLRenderer) {
-    const [env, model] = await Promise.all([createStudioEnvironment(renderer), loadModel(MODEL_URL)]);
+    const [env, model, houseModel, carModel] = await Promise.all([
+      createStudioEnvironment(renderer),
+      loadModel(MODEL_URL),
+      loadModel(HOUSE.url),
+      loadModel(CAR.url)
+    ]);
     this.env = env;
     this.scene.environment = env;
     // The studio HDRI is warm; keep it for reflections, not for the paper's colour.
@@ -246,6 +334,9 @@ export class UmbrellaScene extends HeroStage {
       mesh.castShadow = true;
       mesh.receiveShadow = true;
       for (const mat of (Array.isArray(mesh.material) ? mesh.material : [mesh.material]) as Material[]) {
+        // The renderer defaults programs to lowp, which phone GPUs honour (banding,
+        // blotchy shading); the diorama's lit materials need full precision.
+        mat.precision = "highp";
         if (mat.name === "Car_Glass") {
           Object.assign(mat, { transparent: true, opacity: 0.55, depthWrite: false });
           mesh.castShadow = false;
@@ -259,11 +350,32 @@ export class UmbrellaScene extends HeroStage {
       }
     });
     applyNeutralToneMapping(diorama);
+    for (const name of INKED) {
+      const part = diorama.getObjectByName(name);
+      if (!part) continue;
+      // Multi-material nodes load as a group of per-material leaf meshes (plus any child
+      // nodes, e.g. the canopy's frame and printed logo, which stay un-inked: too thin).
+      const meshes = (part as Mesh).isMesh
+        ? [part]
+        : part.children.filter((c) => c.children.length === 0 && !UNINKED.includes(c.name));
+      for (const m of meshes) if ((m as Mesh).isMesh) addInkOutline(m as Mesh);
+    }
     this.#umbrella = diorama.getObjectByName("Umbrella") ?? null;
     this.#canopy = diorama.getObjectByName("Canopy") ?? null;
 
+    // House: width-fitted, porch on the front line, sitting on the board.
+    const house = normalise(houseModel.clone(true), (size) => HOUSE.width / size.x);
+    prepareModel(house);
+    let box = new Box3().setFromObject(house);
+    house.position.set(HOUSE.x - (box.min.x + box.max.x) / 2, -box.min.y, HOUSE.frontZ - box.max.z);
+    // Car: length-fitted along z, centred on the driveway.
+    const car = normalise(carModel.clone(true), (size) => CAR.length / size.z, CAR.yaw);
+    prepareModel(car);
+    box = new Box3().setFromObject(car);
+    car.position.set(CAR.x - (box.min.x + box.max.x) / 2, CAR.y - box.min.y, CAR.z - (box.min.z + box.max.z) / 2);
+
     const sun = createSun(ROOT.scale);
-    this.#stage.add(diorama, sun, sun.target);
+    this.#stage.add(diorama, house, car, sun, sun.target);
     this.#stage.position.y = -ROOT.centreY;
     this.root.add(this.#stage);
     this.root.scale.setScalar(ROOT.scale);
