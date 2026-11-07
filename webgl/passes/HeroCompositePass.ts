@@ -15,7 +15,7 @@ export interface HeroCompositeInputs {
  * Final hero image:
  *   paper + 1px contour outlines
  *   → under the fluid mask: banded "cursor paper" (two greys) with its own outline
- *   → lit hero subject on top
+ *   → lit hero subject on top (optional tilt-shift: top/bottom bands softly blurred)
  *   → hero reveal layer over it, only where the fluid mask is active (premultiplied over)
  *   → uFilter 0 → 1 (scroll-out): fades to a grey, contrasty, olive-tinted
  *     head on near-black (grayscale → contrast 0.8 → ×0.75 → hard light #50593F).
@@ -34,6 +34,7 @@ export class HeroCompositePass extends FullscreenPass {
           uRect: { value: fullRect() },
           uReveal: { value: 1 },
           uFilter: { value: 0 },
+          uTiltShift: { value: 0 },
           uFilterTint: { value: raw("#50593f") },
           uCursorIntensity: { value: 1 },
           uEdgeOffset: { value: 0.000005 },
@@ -46,7 +47,7 @@ export class HeroCompositePass extends FullscreenPass {
         vertexShader: rectVert,
         fragmentShader: /* glsl */ `
           uniform sampler2D tContours, tHead, tReveal, tCursorEffect;
-          uniform float uReveal, uCursorIntensity, uEdgeOffset, uFilter;
+          uniform float uReveal, uCursorIntensity, uEdgeOffset, uFilter, uTiltShift;
           uniform vec3 uPaper, uLine, uCursorPaper, uCursorPaperAlt, uCursorLine, uFilterTint;
           varying vec2 vUv;
 
@@ -81,6 +82,21 @@ export class HeroCompositePass extends FullscreenPass {
             paper = mix(paper, cursorPaper, mask);
 
             vec4 head = texture2D(tHead, vUv);
+            // Miniature-photography tilt-shift: 8-tap blur that grows towards the top/bottom.
+            float tilt = smoothstep(0.2, 0.48, abs(vUv.y - 0.52)) * uTiltShift;
+            if (tilt > 0.001) {
+              vec2 o = vec2(0.0018, 0.0028) * tilt;
+              vec4 blur = head * 0.2;
+              blur += texture2D(tHead, vUv + vec2(o.x, 0.0)) * 0.1;
+              blur += texture2D(tHead, vUv - vec2(o.x, 0.0)) * 0.1;
+              blur += texture2D(tHead, vUv + vec2(0.0, o.y)) * 0.1;
+              blur += texture2D(tHead, vUv - vec2(0.0, o.y)) * 0.1;
+              blur += texture2D(tHead, vUv + o * 0.7) * 0.1;
+              blur += texture2D(tHead, vUv - o * 0.7) * 0.1;
+              blur += texture2D(tHead, vUv + vec2(o.x, -o.y) * 0.7) * 0.1;
+              blur += texture2D(tHead, vUv + vec2(-o.x, o.y) * 0.7) * 0.1;
+              head = blur;
+            }
             vec3 color = mix(paper, head.rgb, head.a);
             vec4 reveal = texture2D(tReveal, vUv);
             float revealMask = clamp(mask, 0.0, 1.0);

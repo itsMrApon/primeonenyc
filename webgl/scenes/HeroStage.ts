@@ -2,6 +2,8 @@ import {
   Group,
   type Material,
   type Mesh,
+  MeshStandardMaterial,
+  type Object3D,
   PerspectiveCamera,
   PMREMGenerator,
   Scene,
@@ -10,6 +12,58 @@ import {
   type WebGLRenderer
 } from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
+
+/** Studio HDRI that ships in /gl/hdri, prefiltered for PBR reflections. */
+export async function createStudioEnvironment(renderer: WebGLRenderer, file = "studio_small_08_1k--light.hdr") {
+  const hdr = await new RGBELoader().loadAsync(`/gl/hdri/${file}`);
+  const pmrem = new PMREMGenerator(renderer);
+  const env = pmrem.fromEquirectangular(hdr).texture;
+  hdr.dispose();
+  pmrem.dispose();
+  return env;
+}
+
+/**
+ * three.js skips tone mapping when rendering into a render target (the hero
+ * draws into headTarget), so bright faces clip and saturated colours wash out.
+ * This appends Khronos PBR Neutral to every standard/physical material under
+ * `root`; it is built to keep product base colours (the brand lime) accurate.
+ */
+export function applyNeutralToneMapping(root: Object3D, exposure = 1) {
+  const fn = /* glsl */ `
+    vec3 heroNeutral(vec3 color) {
+      const float start = 0.8 - 0.04;
+      const float desat = 0.15;
+      color *= ${exposure.toFixed(3)};
+      float x = min(color.r, min(color.g, color.b));
+      color -= x < 0.08 ? x - 6.25 * x * x : 0.04;
+      float peak = max(color.r, max(color.g, color.b));
+      if (peak < start) return color;
+      float d = 1.0 - start;
+      float newPeak = 1.0 - d * d / (peak + d - start);
+      color *= newPeak / peak;
+      float g = 1.0 - 1.0 / (desat * (peak - newPeak) + 1.0);
+      return mix(color, vec3(newPeak), g);
+    }`;
+  root.traverse((obj) => {
+    const mesh = obj as Mesh;
+    if (!mesh.isMesh) return;
+    for (const mat of (Array.isArray(mesh.material) ? mesh.material : [mesh.material]) as Material[]) {
+      if (!(mat instanceof MeshStandardMaterial) || mat.userData.heroToneMapped) continue;
+      mat.userData.heroToneMapped = true;
+      const previous = mat.onBeforeCompile;
+      mat.onBeforeCompile = (shader, renderer) => {
+        previous.call(mat, shader, renderer);
+        shader.fragmentShader = shader.fragmentShader
+          .replace("#include <common>", `#include <common>\n${fn}`)
+          .replace("#include <tonemapping_fragment>", "gl_FragColor.rgb = heroNeutral(gl_FragColor.rgb);");
+      };
+      mat.customProgramCacheKey = () => `heroNeutral${exposure}`;
+      mat.needsUpdate = true;
+    }
+  });
+}
 
 /** Soft studio reflections without an HDR download. */
 export function createRoomEnvironment(renderer: WebGLRenderer): Texture {

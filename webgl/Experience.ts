@@ -2,6 +2,7 @@ import {
   Clock,
   LinearFilter,
   NoToneMapping,
+  PCFShadowMap,
   SRGBColorSpace,
   Vector2,
   WebGLRenderTarget,
@@ -99,6 +100,11 @@ export class Experience {
     this.#renderer.setPixelRatio(1);
     this.#renderer.outputColorSpace = SRGBColorSpace;
     this.#renderer.toneMapping = NoToneMapping;
+    // Hero sun shadows (only the hero scene has shadow-casting lights).
+    this.#renderer.shadowMap.enabled = true;
+    this.#renderer.shadowMap.type = PCFShadowMap;
+    // The miniature look gets a slight tilt-shift; the taxi backup stays sharp.
+    this.#composite.material.uniforms.uTiltShift.value = HERO === "umbrella" ? 1 : 0;
     this.#renderer.setClearColor(0x000000, 0);
     this.#renderer.autoClear = false;
     // Clock starts at construction, like the reference's uTime (≈ seconds since load).
