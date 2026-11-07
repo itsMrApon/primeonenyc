@@ -26,7 +26,6 @@ const content = useHomeContent();
 <style scoped>
 /* Reference metrics at 1440 px, 1u = clamp(992px, 100vw, 1920px) / 1728 × 16 = 13.33 px. */
 .impact {
-  --u: calc(clamp(992px, 100vw, 1920px) / 1728 * 16);
   position: relative;
   padding: calc(var(--u) * 6) 0 calc(var(--u) * 12);
   background: transparent;
@@ -77,5 +76,30 @@ const content = useHomeContent();
   line-height: 0.83;
   letter-spacing: calc(var(--u) * -0.1875);
   color: #b2c73a;
+}
+
+/* Reference ≤479 (live at 375 px): full-width column, 3.5u quote, Brier inherits size. */
+@media (max-width: 767px) {
+  .impact-content {
+    width: auto;
+    padding: 0 calc(var(--u) * 1.25);
+  }
+
+  .impact-helmet {
+    width: calc(var(--u) * 4.7);
+    height: calc(var(--u) * 2.47);
+  }
+
+  .impact-eyebrow {
+    font-size: calc(var(--u) * 0.8);
+  }
+
+  .impact-quote {
+    font-size: calc(var(--u) * 3.5);
+  }
+
+  .impact-quote :deep(strong) {
+    font-size: inherit;
+  }
 }
 </style>

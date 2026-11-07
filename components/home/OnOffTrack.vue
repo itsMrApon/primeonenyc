@@ -34,21 +34,29 @@ function update() {
   const el = track.value;
   if (!el) return;
   const vh = window.innerHeight;
-  const unit = Math.min(Math.max(window.innerWidth, 992), 1920) / 108;
+  const unit = fluidUnit();
   const top = el.getBoundingClientRect().top + window.scrollY;
   const dy = window.scrollY - top;
 
-  const k = Math.pow(1 - clamp01((dy + vh) / (2 * vh)), 3); // power3.out, remaining
+  const mobile = isMobileLayout();
+  // Portraits ease in until the end photo arrives: track − vh past the top (vh desktop, 0.6vh mobile).
+  const span = vh + Math.max(el.offsetHeight - vh, 1);
+  const k = Math.pow(1 - clamp01((dy + vh) / span), 3); // power3.out, remaining
   const slide = 20 * unit * k;
   if (leftImg.value) leftImg.value.style.transform = `translate3d(${-slide}px, 0, 0)`;
   if (rightImg.value) rightImg.value.style.transform = `translate3d(${slide}px, 0, 0)`;
 
-  const gap = 5 * unit * (1 - clamp01((dy + vh) / (1.2 * vh)));
+  const gap = 5 * unit * (1 - clamp01((dy + vh) / ((mobile ? 1 : 1.2) * vh)));
   if (col1.value) col1.value.style.transform = `translate3d(${-gap}px, 0, 0)`;
   if (col2.value) col2.value.style.transform = `translate3d(${gap}px, 0, 0)`;
 
   const passed = Math.max(dy, 0);
-  if (endImg.value) endImg.value.style.transform = `translate3d(0, ${-0.1 * passed}px, 0) scale(${1 + 0.05 * (passed / vh)})`;
+  if (endImg.value) {
+    // Mobile shows the full 4:5 poster: no drift or zoom (either would crop its text).
+    const drift = mobile ? 0 : -0.1 * passed;
+    const grow = mobile ? 0 : 0.05 * (passed / vh);
+    endImg.value.style.transform = `translate3d(0, ${drift}px, 0) scale(${1 + grow})`;
+  }
 
   const nav = document.querySelector<HTMLElement>("[data-app-nav]");
   if (nav && dy > -vh && dy < 2 * vh) nav.dataset.navTheme = dy > vh + 20 ? "light" : "dark";
@@ -124,14 +132,16 @@ onBeforeUnmount(() => {
     </div>
 
     <section class="otot-end">
-      <img ref="endImg" class="otot-end-img" :src="content.onOffTrack.featureImage" alt="Lando lifting helmet up" />
+      <picture>
+        <source media="(max-width: 767px)" :srcset="content.onOffTrack.featureImageMobile" />
+        <img ref="endImg" class="otot-end-img" :src="content.onOffTrack.featureImage" alt="Lando lifting helmet up" />
+      </picture>
     </section>
   </div>
 </template>
 
 <style scoped>
 .otot-track {
-  --u: calc(clamp(992px, 100vw, 1920px) / 1728 * 16);
   position: relative;
   height: 200vh;
   color: #282c20;
@@ -293,5 +303,72 @@ onBeforeUnmount(() => {
   object-fit: cover;
   transform-origin: center center;
   will-change: transform;
+}
+
+/* Reference ≤991 / ≤479 at 375 px: 2-col grid from 8u, 4u titles, side photos
+   62.67vh tall pushed 7u off-screen, end photo 60vh (image 80vh). */
+@media (max-width: 767px) {
+  /* Sticky 100vh + the end poster at its own height. */
+  .otot-track {
+    height: auto;
+  }
+
+  .otot-img-w {
+    height: 62.67vh;
+    width: auto;
+  }
+
+  /* Reference pushes these 7u off-screen; our portraits have the faces on the outer
+     edge, so they sit flush with the screen edges, at their own aspect, uncropped. */
+  .otot-img-w.is-1 {
+    left: 0;
+    width: auto;
+    aspect-ratio: 883 / 1984;
+  }
+
+  .otot-img-w.is-2 {
+    right: 0;
+    width: auto;
+    aspect-ratio: 830 / 1984;
+  }
+
+  .otot-layout {
+    top: calc(var(--u) * 8);
+    gap: calc(var(--u) * 2.5);
+  }
+
+  .otot-col {
+    width: calc(var(--u) * 15.5);
+  }
+
+  .otot-t-brier,
+  .otot-t-mona {
+    font-size: calc(var(--u) * 4);
+    letter-spacing: calc(var(--u) * -0.1);
+  }
+
+  .otot-phrase {
+    left: calc(var(--u) * 0.56);
+  }
+
+  .otot-p {
+    width: 100%;
+    font-size: calc(var(--u) * 1.3);
+  }
+
+  .otot-btn {
+    width: calc(var(--u) * 3.3);
+    height: calc(var(--u) * 3.3);
+  }
+
+  /* Mobile poster (1080 × 1350) is shown whole instead of the cropped desktop photo. */
+  .otot-end {
+    height: auto;
+    aspect-ratio: 1080 / 1350;
+  }
+
+  .otot-end-img {
+    height: 100%;
+  }
 }
 </style>

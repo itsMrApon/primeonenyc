@@ -32,7 +32,7 @@ onMounted(() => {
   const xCentre = (i: number) => (i === 1 ? -50 : 0);
   const reveal = gsap.fromTo(
     [logo.value, msg.value],
-    { opacity: 0, xPercent: xCentre, y: () => Math.min(Math.max(window.innerWidth, 992), 1920) / 108 }, // 1u
+    { opacity: 0, xPercent: xCentre, y: () => fluidUnit() }, // 1u
     {
       opacity: 1,
       xPercent: xCentre,
@@ -171,7 +171,6 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
 .hero-msg,
 .hero-msg-logo,
 .hero-signature {
-  --u: calc(clamp(992px, 100vw, 1920px) / 1728 * 16);
 }
 
 /* Second 100vh of the track: drives the signature scrub. */
@@ -237,7 +236,6 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
 
 /* Next-race card — reference metrics at 1440 px, 1u = 13.33 px. */
 .home-hero-next-race-w {
-  --u: calc(clamp(992px, 100vw, 1920px) / 1728 * 16);
   position: absolute;
   left: calc(var(--u) * 1.25);
   bottom: calc(var(--u) * 1.25);
@@ -328,6 +326,22 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
 @media (max-width: 767px) {
   .home-hero-next-race-w {
     display: none;
+  }
+
+  /* Reference ≤479 at 375 px: logo 16.55u, message 20u, signature 28.8 × 20.57u centred. */
+  .hero-msg-logo {
+    top: calc(var(--u) * 16.55);
+  }
+
+  .hero-msg {
+    top: calc(var(--u) * 20);
+    font-size: calc(var(--u) * 0.8);
+  }
+
+  .hero-signature {
+    top: calc(50% - var(--u) * 10.285);
+    width: calc(var(--u) * 28.8);
+    height: calc(var(--u) * 20.57);
   }
 }
 </style>

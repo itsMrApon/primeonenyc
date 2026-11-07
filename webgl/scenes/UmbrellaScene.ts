@@ -32,6 +32,14 @@ import { applyNeutralToneMapping, createStudioEnvironment, HeroStage } from "./H
  */
 const MODEL_URL = "/gl/models/hero/miniature.glb";
 const ROOT = { scale: 0.1, pitch: 0.2, yaw: -0.42, centreY: 2.2 } as const;
+/**
+ * Wide-screen fit: the diorama's base slab reaches NDC ±0.95 at z = FIT_K / aspect.
+ * Narrower than that (phones), the camera backs off only ×1.2 and pans so the right
+ * side (umbrella, car, plaque) fills the screen: the slab's right edge, at NDC
+ * RIGHT_K / (aspect × z), is pinned at 0.95 and the house crops off the left.
+ */
+const FIT_K = 3.7;
+const RIGHT_K = 3.27;
 /** Must match UMBRELLA in the Blender script (the rain lands on this canopy profile). */
 const UMBRELLA = { x: 0.35, z: 0.25, radius: 3.0, rimY: 3.5, height: 0.95, tilt: 0.05 } as const;
 
@@ -201,6 +209,12 @@ function createSun(scale: number) {
  * darkens the sky and rain falls — except beneath the canopy.
  */
 export class UmbrellaScene extends HeroStage {
+  protected override frame(aspect: number, refZ: number) {
+    if (FIT_K / aspect <= refZ) return { z: refZ, shiftX: 0 };
+    const z = refZ * 1.2;
+    return { z, shiftX: Math.min(0, 0.95 - RIGHT_K / (aspect * z)) };
+  }
+
   readonly #stage = new Group();
   readonly #stormStage = new Group();
   #umbrella: Object3D | null = null;

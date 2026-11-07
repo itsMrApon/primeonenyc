@@ -86,7 +86,8 @@
       "image": "/images/misc/hp-lando-head.webp",
       "imageAlt": "Lando Norris wearing a fleece, side profile"
     },
-    "featureImage": "/images/misc/home-helm-large.webp"
+    "featureImage": "/images/misc/home-helm-large.webp",
+    "featureImageMobile": "/images/misc/home-helm-large-mobile.webp"
   },
   "helmets": {
     "eyebrow": "Helmets",

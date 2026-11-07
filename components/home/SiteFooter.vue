@@ -128,7 +128,6 @@ const PX = 1440 / 108;
 
 <style scoped>
 .footer {
-  --u: calc(clamp(992px, 100vw, 1920px) / 1728 * 16);
   position: relative;
   padding-top: calc(var(--u) * 14);
   background: #f4f4ed;
@@ -393,5 +392,90 @@ const PX = 1440 / 108;
 
 .footer-links :deep(.line) {
   margin-inline: auto;
+}
+
+/* Reference ≤991 / ≤479 at 375 px (panel-relative units): mobile LN4 mask,
+   marquee at 3u, links 2 × 50 % from 9u, signature 10u wide, 3.6u statement,
+   24u helmet, CTA 1.1u off the bottom, legal row reversed and centred below. */
+@media (max-width: 767px) {
+  .footer-panel {
+    height: auto;
+    aspect-ratio: 381.94 / 627.49;
+    mask-image: url("/images/footer/ln4-footer-mask-mobile.svg");
+    -webkit-mask-image: url("/images/footer/ln4-footer-mask-mobile.svg");
+  }
+
+  .footer-marquee {
+    top: calc(var(--u) * 3);
+  }
+
+  .footer-links {
+    top: calc(var(--u) * 9);
+    padding: 0 calc(var(--u) * 4.1);
+  }
+
+  .footer-col {
+    width: 50%;
+  }
+
+  .footer-eyebrow {
+    font-size: calc(var(--u) * 0.8);
+  }
+
+  .footer-link {
+    font-size: calc(var(--u) * 1.6);
+  }
+
+  .footer-signature {
+    top: calc(var(--u) * 22.6);
+    left: calc(var(--u) * 11.75);
+    width: calc(var(--u) * 10);
+    height: calc(var(--u) * 6.51);
+  }
+
+  .footer-title {
+    top: calc(var(--u) * 27.4);
+    width: 90%;
+    font-size: calc(var(--u) * 3.6);
+  }
+
+  .footer-title :deep(strong) {
+    font-size: inherit;
+  }
+
+  .footer-helmet {
+    top: calc(var(--u) * 34.04);
+    width: auto;
+    height: calc(var(--u) * 24);
+    aspect-ratio: 48.75 / 39.875;
+  }
+
+  .footer-cta {
+    top: auto;
+    bottom: calc(var(--u) * 1.1);
+  }
+
+  .footer-legal {
+    position: relative;
+    inset: auto;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+    gap: calc(var(--u) * 1.25);
+    margin-top: var(--u);
+  }
+
+  .footer-legal-col {
+    gap: calc(var(--u) * 0.63);
+  }
+
+  .footer-copy {
+    font-size: calc(var(--u) * 0.65);
+    line-height: 1;
+  }
+
+  .footer-legal-link {
+    font-size: calc(var(--u) * 0.8);
+  }
 }
 </style>

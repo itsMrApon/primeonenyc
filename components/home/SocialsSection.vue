@@ -28,6 +28,9 @@ const FAN = [
   { scale: 0.8498, rotation: 14, x: 22, y: 4, z: 2 },
   { scale: 0.7756, rotation: 21, x: 30, y: 7.3, z: 1 }
 ];
+/** Reference ≤767 (live at 375 px): same fan, tighter x spread. */
+const FAN_X_MOBILE = [-15, -11, -6, 0, 6, 11, 15];
+const fanX = (i: number) => (isMobileLayout() ? FAN_X_MOBILE[i] : FAN[i].x);
 const ELASTIC = "elastic.out(1, 0.75)";
 
 const title = ref<HTMLElement | null>(null);
@@ -40,7 +43,7 @@ const triggers: ScrollTrigger[] = [];
 let interactive = false;
 let leaveTimer: ReturnType<typeof setTimeout> | null = null;
 
-const unit = () => Math.min(Math.max(window.innerWidth, 992), 1920) / 108;
+const unit = () => fluidUnit();
 const centre = Math.floor(FAN.length / 2);
 
 function rest() {
@@ -48,7 +51,7 @@ function rest() {
   const tl = gsap.timeline();
   cards.forEach((card, i) => {
     const f = FAN[i];
-    tl.to(card, { x: f.x * u, y: f.y * u, scale: f.scale, rotation: f.rotation, duration: 0.5, ease: ELASTIC, overwrite: "auto" }, Math.abs(i - centre) * 0.02);
+    tl.to(card, { x: fanX(i) * u, y: f.y * u, scale: f.scale, rotation: f.rotation, duration: 0.5, ease: ELASTIC, overwrite: "auto" }, Math.abs(i - centre) * 0.02);
   });
 }
 
@@ -63,12 +66,12 @@ function spreadAround(n: number) {
     const boost = 1 + 0.2 * Math.max(0, 3 - d);
     let to: gsap.TweenVars;
     if (i === n) {
-      to = { x: f.x * u, y: (f.y - 2.5) * u, scale: f.scale * 1.08, rotation: f.rotation };
+      to = { x: fanX(i) * u, y: (f.y - 2.5) * u, scale: f.scale * 1.08, rotation: f.rotation };
     } else if (i < n) {
-      to = { x: (f.x - 8 * reach * boost) * u, y: f.y * u, scale: f.scale, rotation: f.rotation - 3 / (d + 1) };
+      to = { x: (fanX(i) - 8 * reach * boost) * u, y: f.y * u, scale: f.scale, rotation: f.rotation - 3 / (d + 1) };
     } else {
       const push = i === last ? 0 : 8 * reach * boost;
-      to = { x: (f.x + push) * u, y: (f.y + (i === last ? -1 : 0)) * u, scale: f.scale, rotation: f.rotation + 3 / (d + 1) };
+      to = { x: (fanX(i) + push) * u, y: (f.y + (i === last ? -1 : 0)) * u, scale: f.scale, rotation: f.rotation + 3 / (d + 1) };
     }
     tl.to(card, { ...to, duration: 0.5, ease: ELASTIC, overwrite: "auto" }, d * 0.02);
   });
@@ -129,7 +132,7 @@ onMounted(() => {
     .to(
       cards,
       {
-        x: (i: number) => FAN[i].x * u,
+        x: (i: number) => fanX(i) * u,
         y: (i: number) => FAN[i].y * u,
         scale: (i: number) => FAN[i].scale,
         rotation: (i: number) => FAN[i].rotation,
@@ -194,7 +197,6 @@ onBeforeUnmount(() => {
 <style scoped>
 /* Transparent: the off-white WebGL page shows through. */
 .socials {
-  --u: calc(clamp(992px, 100vw, 1920px) / 1728 * 16);
   position: relative;
   padding: calc(var(--u) * 8) calc(var(--u) * 1.25) 0;
   color: #111112;
@@ -292,5 +294,37 @@ onBeforeUnmount(() => {
   font-variation-settings: "wdth" 86;
   line-height: 1;
   text-transform: uppercase;
+}
+
+/* Reference ≤479 at 375 px: 2.6u title, 14 × 24.48u cards centred in a 33.5 × 36u fan. */
+@media (max-width: 767px) {
+  /* Outer fan cards extend past the viewport (as on the reference); clip so they can't widen the page. */
+  .socials {
+    overflow-x: clip;
+  }
+
+  .socials-title {
+    font-size: calc(var(--u) * 2.6);
+    letter-spacing: calc(var(--u) * -0.072);
+  }
+
+  .socials-fan {
+    width: 100%;
+  }
+
+  .socials-card {
+    top: calc(var(--u) * 5.76);
+    width: calc(var(--u) * 14.02);
+    height: calc(var(--u) * 24.48);
+    margin-left: calc(var(--u) * -7.01);
+  }
+
+  .socials-follow {
+    font-size: calc(var(--u) * 1.7);
+  }
+
+  .socials-links {
+    gap: calc(var(--u) * 1.25);
+  }
 }
 </style>

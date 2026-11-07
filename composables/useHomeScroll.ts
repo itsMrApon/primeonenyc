@@ -32,7 +32,9 @@ export function useHomeScroll(options: { getExperience?: () => HeroScrollTarget 
         lerp: 0.1,
         smoothWheel: true,
         syncTouch: true,
-        touchMultiplier: 1.25,
+        // Reference uses 1.25; deliberately 1 so the page tracks the finger 1:1 on phones
+        // (touch only — wheel/trackpad are unaffected).
+        touchMultiplier: 1,
         autoResize: true
       });
       (window as unknown as { lenis?: Lenis }).lenis = lenis;

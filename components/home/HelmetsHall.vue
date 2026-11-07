@@ -26,8 +26,8 @@ const ctaHover = ref(false);
 const triggers: ScrollTrigger[] = [];
 
 function updateGrid(progress: number) {
-  const unit = Math.min(Math.max(window.innerWidth, 992), 1920) / 108;
-  const left = 1 - progress;
+  const unit = fluidUnit();
+  const left = isMobileLayout() ? 0 : 1 - progress; // reference ≤767: cards don't lift
   cards.forEach((card, i) => {
     if (!card) return;
     const lift = (i % 2 === 1 ? 25 : 5) * unit * left;
@@ -121,7 +121,6 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
 
 <style scoped>
 .helmets-group {
-  --u: calc(clamp(992px, 100vw, 1920px) / 1728 * 16);
   --ease: cubic-bezier(0.65, 0.05, 0, 1);
   background: #111112;
   color: #f4f4ed;
@@ -331,5 +330,57 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
   display: block;
   width: calc(var(--u) * 0.78);
   height: calc(var(--u) * 0.78);
+}
+
+/* Reference ≤991 / ≤479 at 375 px: 2-col title and 2-col grid, helmet 12u in a 16.13u card. */
+@media (max-width: 767px) {
+  .helmets {
+    padding: calc(var(--u) * 1.25);
+  }
+
+  .helmets-title {
+    grid-template-columns: 1fr 1fr;
+    column-gap: calc(var(--u) * 2.5);
+  }
+
+  .helmets-headline {
+    grid-column: 1 / 2;
+  }
+
+  .helmets-p {
+    grid-column: 2 / 3;
+    font-size: calc(var(--u) * 1.3);
+  }
+
+  .t-mona {
+    font-size: calc(var(--u) * 2.6);
+    letter-spacing: calc(var(--u) * -0.072);
+  }
+
+  .t-mona :deep(strong) {
+    font-size: calc(var(--u) * 2.4);
+  }
+
+  .helmet-grid {
+    grid-template-columns: 1fr 1fr;
+    margin-top: calc(var(--u) * 8.5);
+  }
+
+  .helmet-img-w {
+    justify-content: center;
+  }
+
+  .helmet-img {
+    width: 74.4%;
+  }
+
+  .helmets-callout {
+    padding: calc(var(--u) * 12) 0 calc(var(--u) * 8.75);
+  }
+
+  .callout-text {
+    width: calc(var(--u) * 29);
+    font-size: calc(var(--u) * 1.7);
+  }
 }
 </style>

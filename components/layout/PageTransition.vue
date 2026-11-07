@@ -111,7 +111,6 @@ onBeforeUnmount(() => tween?.kill());
 <style scoped>
 /* Reference sizing: 1rem = clamp(992px, 100vw, 1920px) / 1728 × 16 on desktop. */
 .transition-w {
-  --u: calc(clamp(992px, 100vw, 1920px) / 1728 * 16);
   --ease: cubic-bezier(0.65, 0.05, 0, 1);
   position: fixed;
   inset: 0;

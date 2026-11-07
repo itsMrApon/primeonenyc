@@ -98,7 +98,6 @@ watch(open, (v) => {
 <style scoped>
 /* Reference metrics at 1440 px: 1u = clamp(992px, 100vw, 1920px) / 1728 × 16 = 13.33 px. */
 .nav {
-  --u: calc(clamp(992px, 100vw, 1920px) / 1728 * 16);
   position: fixed;
   inset: 0 0 auto;
   z-index: 120;
@@ -295,5 +294,47 @@ watch(open, (v) => {
   padding: 0;
   text-transform: lowercase;
   font-size: 0.9rem;
+}
+
+/* Reference ≤991 / ≤479: brand hidden, Store left + hamburger right, LN4 centred below. */
+@media (max-width: 767px) {
+  .nav-brand-link {
+    display: none;
+  }
+
+  /* Reference mobile nav never compacts on scroll (and a full-width row scaled
+     from the right would drag Store inwards). */
+  .btn-layout.is-nav {
+    justify-content: space-between;
+    width: 100%;
+    transform: none;
+  }
+
+  .nav-middle {
+    top: calc(var(--u) * 5.85);
+    width: calc(var(--u) * 2.5);
+    height: calc(var(--u) * 2.5);
+  }
+
+  .btn-w.is-nav {
+    gap: calc(var(--u) * 0.62);
+    height: calc(var(--u) * 4.7);
+    padding: 0 calc(var(--u) * 1.1 - 1px); /* 1.1u inset measured from the outer (border) edge */
+  }
+
+  .btn-icon {
+    width: calc(var(--u) * 1.5);
+    height: calc(var(--u) * 1.5);
+  }
+
+  /* Live at 375 px the label measures as the true "wdth" 86 (3.42u), unlike desktop. */
+  .btn-w.is-nav .btn-text {
+    font-variation-settings: "wdth" 86;
+  }
+
+  .nav-ham {
+    width: calc(var(--u) * 4.7);
+    height: calc(var(--u) * 4.7);
+  }
 }
 </style>

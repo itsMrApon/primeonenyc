@@ -1,6 +1,7 @@
 import {
   Group,
   type Material,
+  MathUtils,
   type Mesh,
   MeshStandardMaterial,
   type Object3D,
@@ -111,6 +112,8 @@ export abstract class HeroStage {
   protected readonly revealRoot = new Group();
 
   #baseZ = 3;
+  /** baseZ relative to the reference distance; scales the scroll dolly to match. */
+  #dolly = 1;
   readonly #offset = { z: 0, y: 0 };
 
   constructor() {
@@ -125,9 +128,21 @@ export abstract class HeroStage {
   resize(width: number, height: number) {
     this.camera.aspect = width / Math.max(height, 1);
     this.camera.updateProjectionMatrix();
-    this.#baseZ = width > 768 ? 3 : 3.75;
+    const refZ = width > 768 ? 3 : 3.75;
+    const aspect = width / Math.max(height, 1);
+    const { z, shiftX } = this.frame(aspect, refZ);
+    this.#baseZ = z;
+    this.#dolly = z / refZ;
     this.root.position.y = this.revealRoot.position.y = width > 768 ? 0 : -0.05;
+    // Pan by shiftX in NDC at the subject's depth.
+    const halfW = z * Math.tan(MathUtils.degToRad(this.camera.fov / 2)) * aspect;
+    this.root.position.x = this.revealRoot.position.x = shiftX * halfW;
     this.#applyCamera();
+  }
+
+  /** Camera distance and horizontal pan (NDC) for this aspect; subclasses can reframe a wide subject. */
+  protected frame(_aspect: number, refZ: number) {
+    return { z: refZ, shiftX: 0 };
   }
 
   /** Scroll-out camera move (reference: camera group z 0 → −1, then y 0 → 0.1). */
@@ -138,7 +153,7 @@ export abstract class HeroStage {
   }
 
   #applyCamera() {
-    this.camera.position.set(0, this.#offset.y, this.#baseZ + this.#offset.z);
+    this.camera.position.set(0, this.#offset.y, this.#baseZ + this.#offset.z * this.#dolly);
   }
 
   /** Environment map set by a subclass; disposed with the scene. */

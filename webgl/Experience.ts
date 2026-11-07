@@ -9,6 +9,7 @@ import {
   WebGLRenderer
 } from "three";
 
+import { fluidUnit, isMobileLayout } from "~/utils/fluid";
 import { FluidSim } from "./fluid/FluidSim";
 import { IdleCursor } from "./fluid/IdleCursor";
 import { ContourNoisePass } from "./passes/ContourNoisePass";
@@ -25,6 +26,8 @@ const easeInOutQuad = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 /** Hero card size at the end of the shrink, in reference units (1u = 13.33 px at 1440). */
 const CARD_U = { w: 472 / (1440 / 108), h: 305 / (1440 / 108) };
+/** Reference ≤767 (live at 375 px): portrait 25 × 29u card, centred. */
+const CARD_U_MOBILE = { w: 25, h: 29 };
 const CURSOR_FADE_S = 0.233;
 /** Hero subject: "umbrella" (home + car under cover) or the backup "taxi". */
 const HERO: "umbrella" | "taxi" = "umbrella";
@@ -163,15 +166,21 @@ export class Experience {
   #applyScroll(dt: number) {
     const { w, h } = this.#size;
     const e = easeInOutQuad(this.#scroll.progress);
-    const unit = Math.min(Math.max(w, 992), 1920) / 108;
-    const cardW = lerp(w, CARD_U.w * unit, e);
-    const cardH = lerp(h, CARD_U.h * unit, e);
+    const unit = fluidUnit(w);
+    const card = isMobileLayout(w) ? CARD_U_MOBILE : CARD_U;
+    const cardW = lerp(w, card.w * unit, e);
+    const cardH = lerp(h, card.h * unit, e);
     const offset = this.#scroll.offset;
 
     setRect(this.#composite.material.uniforms.uRect.value, cardW, cardH, offset, w, h);
     setRect(this.#textPlane.material.uniforms.uRect.value, w, h, offset, w, h);
 
     const u = this.#composite.material.uniforms;
+    // Cover-crop the full-screen render into the card instead of stretching it.
+    const cardAspect = cardW / cardH;
+    const screenAspect = w / h;
+    if (cardAspect > screenAspect) u.uUvScale.value.set(1, screenAspect / cardAspect);
+    else u.uUvScale.value.set(cardAspect / screenAspect, 1);
     u.uFilter.value = e;
     const target = this.#scroll.progress < 0.5 ? 1 : 0;
     const step = dt / CURSOR_FADE_S;

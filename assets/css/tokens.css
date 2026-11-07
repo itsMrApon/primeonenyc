@@ -33,4 +33,18 @@
   --c-dark-green: var(--color-dark-green);
   --c-white: var(--color-white);
   --c-black: var(--color-black);
+
+  /* Fluid unit = the live site's html font-size. Desktop: clamp(992, vw, 1920) / 1728 × 16.
+     Phones use the live portrait unit (vw / 36, capped at 479 px) for all ≤767 px so one
+     mobile layout serves portrait + landscape. 768–991 scales the desktop layout to fit
+     (the live tablet layout is not rebuilt yet). Keep utils/fluid.ts in sync. */
+  --u: calc(clamp(992px, 100vw, 1920px) / 1728 * 16);
+}
+
+@media screen and (max-width: 991px) {
+  :root { --u: calc(100vw / 108); }
+}
+
+@media screen and (max-width: 767px) {
+  :root { --u: calc(clamp(320px, 100vw, 479px) / 36); }
 }
