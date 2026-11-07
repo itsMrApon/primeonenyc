@@ -5,9 +5,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 const content = useHomeContent();
 
 /**
- * Signature Rive is scrubbed by scroll like the reference: trigger is the
+ * Signature (SVG wipe) is scrubbed by scroll like the reference: trigger is the
  * tracker (second 100vh of the track), "top center" → "bottom 80%", scrub 0.5,
- * input `scroll` = progress × 1000.
+ * signatureScroll = progress × 1000.
  */
 const tracker = ref<HTMLElement | null>(null);
 const track = ref<HTMLElement | null>(null);
@@ -67,12 +67,13 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
           />
           <p class="hero-msg">Message from Lando</p>
 
+          <!-- Signature writes itself left → right as the tracker scrolls; full at the very top. -->
           <div class="hero-signature" aria-hidden="true">
-            <RiveCanvas
-              file="signature"
-              artboard="signature"
-              state-machine="signature_scroll"
-              :inputs="{ scroll: signatureScroll }"
+            <img
+              class="hero-signature__img"
+              src="/images/misc/signature-lime.svg"
+              alt=""
+              :style="{ '--p': signatureScroll === 0 ? 1 : signatureScroll / 1000 }"
             />
           </div>
 
@@ -216,6 +217,17 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
   height: calc(var(--u) * 42.86);
   transform: translateX(-50%);
   pointer-events: none;
+}
+
+.hero-signature__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Soft-edged wipe: --p = 0 hides it, 1 shows all of it. */
+  --edge: calc(var(--p) * 110% - 10%);
+  mask-image: linear-gradient(90deg, #000 var(--edge), transparent calc(var(--edge) + 10%));
+  -webkit-mask-image: linear-gradient(90deg, #000 var(--edge), transparent calc(var(--edge) + 10%));
 }
 
 /* Next-race card — reference metrics at 1440 px, 1u = 13.33 px. */

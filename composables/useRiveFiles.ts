@@ -4,7 +4,6 @@
  * Same here: one shared fetch per file, reused by any section that needs it.
  */
 const FILES = {
-  signature: "signature.riv",
   "btn-ui": "btn-ui.riv",
   circuits: "circuits.riv",
   reef: "reef.riv",

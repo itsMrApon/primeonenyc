@@ -2,7 +2,7 @@
 /**
  * Footer (reference `.s.is-footer`, 967 px at 1440): off-white section with a
  * lime radial glow, a dark-green panel cut to the LN4 footer mask holding the
- * contour pattern, signature Rive, "Always bringing the fight.", the 360
+ * contour pattern, signature (SVG wipe), "Always bringing the fight.", the 360
  * helmet portrait, page / social link columns, the partner-logo marquee and
  * the business CTA; legal row sits in the mask's bottom notches.
  * Metrics are the live layout in fluid units (1u = 13.33 px there).
@@ -10,6 +10,30 @@
 const content = useHomeContent();
 const f = computed(() => content.footer);
 const ctaHover = ref(false);
+
+/** Signature writes itself in once, 100 ms after the footer scrolls into view. */
+const signature = ref<HTMLElement | null>(null);
+const signatureDrawn = ref(false);
+let signatureObserver: IntersectionObserver | null = null;
+let signatureTimer = 0;
+
+onMounted(() => {
+  if (!signature.value) return;
+  signatureObserver = new IntersectionObserver(
+    (entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      signatureObserver?.disconnect();
+      signatureTimer = window.setTimeout(() => (signatureDrawn.value = true), 100);
+    },
+    { threshold: 0.1, rootMargin: "0px 0px -10% 0px" }
+  );
+  signatureObserver.observe(signature.value);
+});
+
+onBeforeUnmount(() => {
+  signatureObserver?.disconnect();
+  clearTimeout(signatureTimer);
+});
 
 /** Marquee logos in reference order; widths in px at 1440 (height 35). */
 const LOGOS = [
@@ -49,8 +73,8 @@ const PX = 1440 / 108;
           <img :src="f.bg" alt="" />
         </div>
 
-        <div class="footer-signature">
-          <RiveCanvas file="signature" artboard="signature" state-machine="signature_play" :inputs="{ color_lime: true }" play-on-view />
+        <div ref="signature" class="footer-signature" :class="{ 'is-drawn': signatureDrawn }">
+          <img src="/images/misc/signature-lime.svg" alt="" />
         </div>
 
         <HighLines tag="h2" class="footer-title" :html="f.taglineHtml.replace(/<span[^>]*>([^<]*)<\/span>/g, '<strong>$1</strong>')" color="lime-off" />
@@ -199,6 +223,28 @@ const PX = 1440 / 108;
   z-index: 5;
   width: calc(var(--u) * 13.065);
   height: calc(var(--u) * 8.5);
+}
+
+/* Left → right soft-edged wipe: the mask slides from its transparent half to its opaque half. */
+.footer-signature img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mask-image: linear-gradient(90deg, #000 45%, transparent 55%);
+  mask-size: 220% 100%;
+  mask-repeat: no-repeat;
+  mask-position: 100% 0;
+  -webkit-mask-image: linear-gradient(90deg, #000 45%, transparent 55%);
+  -webkit-mask-size: 220% 100%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: 100% 0;
+  transition: mask-position 1.6s cubic-bezier(0.65, 0.05, 0, 1), -webkit-mask-position 1.6s cubic-bezier(0.65, 0.05, 0, 1);
+}
+
+.footer-signature.is-drawn img {
+  mask-position: 0 0;
+  -webkit-mask-position: 0 0;
 }
 
 .footer-title {

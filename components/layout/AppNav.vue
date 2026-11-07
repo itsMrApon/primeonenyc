@@ -26,7 +26,7 @@ watch(open, (v) => {
 <template>
   <header ref="header" data-app-nav data-nav-theme="dark" class="nav">
     <div class="nav-inner">
-      <a class="nav-brand-link" href="/" aria-label="Lando Home" title="Lando Home">
+      <a class="nav-brand-link" href="/" aria-label="Delowar Hossain Home" title="Delowar Hossain Home">
         <LayoutNavBrand />
       </a>
 
@@ -135,7 +135,8 @@ watch(open, (v) => {
   height: 100%;
 }
 
-.nav-brand-link :deep(path) {
+.nav-brand-link :deep(path),
+.nav-brand-link :deep(text) {
   transition: fill 0.75s cubic-bezier(0.65, 0.05, 0, 1);
 }
 
