@@ -16,7 +16,6 @@ import { HeroCompositePass } from "./passes/HeroCompositePass";
 import { setRect } from "./passes/rect";
 import { TexturePlanePass } from "./passes/TexturePlanePass";
 import { HeadScene } from "./scenes/HeadScene";
-import { HelmetScene } from "./scenes/HelmetScene";
 import { MarqueeTextScene } from "./scenes/MarqueeTextScene";
 
 const easeInOutQuad = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
@@ -32,13 +31,12 @@ export interface ExperienceOptions {
 
 /**
  * Hero pipeline, in the reference's per-frame order (see .reanimate/hero/spec.md):
- *   1. head scene (+ wireframe)      → headTarget (MSAA)
+ *   1. head scene                    → headTarget (MSAA)
  *   2. marquee text                  → textTarget (MSAA)
  *   3. screen: dark contour page, text plane, hero card
- *      (reads last frame's contours / fluid / helmet)
+ *      (reads last frame's contours / fluid)
  *   4. contour noise                 → contourTarget
  *   5. fluid sim (idle sweep or mouse) → fluid.output
- *   6. helmet scene                  → helmetTarget (MSAA)
  *
  * Scroll-out (setHeroScroll): over the first 100vh of the 200vh hero track the
  * card shrinks 1440×900 → 472×305 (eased power1.inOut), filters to grey and
@@ -50,7 +48,6 @@ export class Experience {
   readonly #onProgress?: ExperienceOptions["onProgress"];
 
   readonly head = new HeadScene();
-  readonly helmet = new HelmetScene();
   readonly #fluid = new FluidSim();
   readonly #idle = new IdleCursor();
   readonly #pointer = new Vector2();
@@ -58,7 +55,6 @@ export class Experience {
   readonly marquee = new MarqueeTextScene();
   readonly #headTarget = new WebGLRenderTarget(1, 1, { samples: 4 });
   readonly #textTarget = new WebGLRenderTarget(1, 1, { samples: 4 });
-  readonly #helmetTarget = new WebGLRenderTarget(1, 1, { samples: 4 });
   readonly #contourTarget = new WebGLRenderTarget(1, 1, {
     minFilter: LinearFilter,
     magFilter: LinearFilter,
@@ -70,7 +66,6 @@ export class Experience {
   readonly #composite = new HeroCompositePass({
     contours: this.#contourTarget.texture,
     head: this.#headTarget.texture,
-    helmet: this.#helmetTarget.texture,
     cursorEffect: this.#fluid.output.texture
   });
 
@@ -106,7 +101,7 @@ export class Experience {
 
   async load() {
     this.#onProgress?.(0.15, "Loading head");
-    await Promise.all([this.head.load(this.#renderer), this.helmet.load(), this.marquee.load()]);
+    await Promise.all([this.head.load(this.#renderer), this.marquee.load()]);
     this.#onProgress?.(1, "Ready");
   }
 
@@ -127,7 +122,7 @@ export class Experience {
     this.#renderer.setSize(w, h, false);
     this.#size.w = w;
     this.#size.h = h;
-    for (const t of [this.#headTarget, this.#textTarget, this.#helmetTarget, this.#contourTarget]) t.setSize(w, h);
+    for (const t of [this.#headTarget, this.#textTarget, this.#contourTarget]) t.setSize(w, h);
     this.#fluid.resize(w, h);
     this.#contours.material.uniforms.uAspect.value = w / h;
     this.head.resize(w, h);
@@ -184,7 +179,6 @@ export class Experience {
     this.#disposed = true;
     this.stop();
     this.head.dispose();
-    this.helmet.dispose();
     this.#fluid.dispose();
     this.marquee.dispose();
     this.#darkPage.dispose();
@@ -192,7 +186,7 @@ export class Experience {
     this.#idle.dispose();
     this.#contours.dispose();
     this.#composite.dispose();
-    for (const t of [this.#headTarget, this.#textTarget, this.#helmetTarget, this.#contourTarget]) t.dispose();
+    for (const t of [this.#headTarget, this.#textTarget, this.#contourTarget]) t.dispose();
     this.#renderer.dispose();
   }
 
@@ -208,7 +202,6 @@ export class Experience {
     const heroOnScreen = this.#scroll.offset < this.#size.h;
 
     if (heroOnScreen) {
-      this.head.update(elapsed);
       r.setRenderTarget(this.#headTarget);
       r.clear();
       r.render(this.head.scene, this.head.camera);
@@ -235,10 +228,6 @@ export class Experience {
       const p = this.#idle.isMoving ? this.#pointer : this.#idle.cursor;
       this.#fluid.setPointer(p.x, p.y, this.#idle.isMoving);
       this.#fluid.update(r);
-
-      r.setRenderTarget(this.#helmetTarget);
-      r.clear();
-      r.render(this.helmet.scene, this.head.camera);
     }
 
     this.#frame = requestAnimationFrame(this.#tick);

@@ -1,5 +1,4 @@
 import {
-  BufferGeometry,
   Group,
   HemisphereLight,
   Mesh,
@@ -9,50 +8,21 @@ import {
   PlaneGeometry,
   PointLight,
   Scene,
-  ShaderMaterial,
   SRGBColorSpace,
   TextureLoader,
   type Texture,
   type WebGLRenderer
 } from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
-import { loadModel } from "../loaders";
-
-/** Helmet placement shared by the wireframe here and HelmetScene. */
-export const HELMET_TRANSFORM = { scale: 6.9, rotationX: 0.188496, positionY: 0.05 } as const;
-
-/**
- * Helmet outline around the head: black lines whose alpha is a band that
- * scans upward through the model (object-space y × 10, one band per second).
- */
-function createWireframeMaterial() {
-  return new ShaderMaterial({
-    wireframe: true,
-    transparent: true,
-    uniforms: {
-      uTime: { value: 0 },
-      uOpacity: { value: 1 },
-      uScanning: { value: true }
-    },
-    vertexShader: /* glsl */ `
-      varying float vHeight;
-      void main() {
-        vHeight = position.y;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `,
-    fragmentShader: /* glsl */ `
-      uniform float uTime, uOpacity;
-      uniform bool uScanning;
-      varying float vHeight;
-      void main() {
-        float band = uScanning ? pow(fract(-vHeight * 10.0 - uTime), 4.0) : 1.0;
-        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.1 * band * uOpacity);
-      }
-    `
-  });
-}
+/** Head maps (Delowar). Colour/alpha/normal 2048², shadow variant 2549², depth 512² — same framing. */
+const MAPS = "/gl/textures/head/webp";
+const TEXTURES = {
+  diffuse: `${MAPS}/hero-03-color.webp`,
+  shadow: `${MAPS}/hero-08-lit-deep-shadow.webp`,
+  depth: `${MAPS}/hero-07-depth.webp`,
+  alpha: `${MAPS}/hero-02-alpha-matte.webp`,
+  normal: `${MAPS}/hero-04-normal.webp`
+} as const;
 
 /**
  * 2.5D head: a 128×128 plane displaced by a depth map, lit like the reference
@@ -65,8 +35,6 @@ export class HeadScene {
   readonly root = new Group();
 
   #head: Mesh | null = null;
-  #wireframe: Mesh<BufferGeometry, ShaderMaterial> | null = null;
-  #ready = false;
 
   /** Fluid mask (screen space); where it's active the head shows its shadowed variant. */
   readonly cursorEffect: { value: Texture | null } = { value: null };
@@ -87,13 +55,12 @@ export class HeadScene {
 
   async load(_renderer: WebGLRenderer) {
     const loader = new TextureLoader();
-    const [diffuse, shadow, depth, alpha, normal, helmet] = await Promise.all([
-      loader.loadAsync("/gl/textures/head/webp/diffuse.webp"),
-      loader.loadAsync("/gl/textures/head/webp/shadow-softer-edit.webp"),
-      loader.loadAsync("/gl/textures/head/webp/depth.webp"),
-      loader.loadAsync("/gl/textures/head/webp/alpha.webp"),
-      loader.loadAsync("/gl/textures/head/webp/normal.webp"),
-      loadModel("/gl/models/helmet-21.glb")
+    const [diffuse, shadow, depth, alpha, normal] = await Promise.all([
+      loader.loadAsync(TEXTURES.diffuse),
+      loader.loadAsync(TEXTURES.shadow),
+      loader.loadAsync(TEXTURES.depth),
+      loader.loadAsync(TEXTURES.alpha),
+      loader.loadAsync(TEXTURES.normal)
     ]);
 
     diffuse.colorSpace = SRGBColorSpace;
@@ -142,27 +109,6 @@ export class HeadScene {
 
     this.#head = new Mesh(new PlaneGeometry(1, 1, 128, 128), material);
     this.root.add(this.#head);
-
-    // helmet + glass + plastic merged (28 120 verts, as traced), position only.
-    const parts = ["helmet", "glass", "plastic"].map((name) => {
-      const mesh = helmet.getObjectByName(name) as Mesh;
-      const g = new BufferGeometry();
-      g.setAttribute("position", mesh.geometry.getAttribute("position"));
-      if (mesh.geometry.index) g.setIndex(mesh.geometry.index);
-      return g;
-    });
-    const merged = mergeGeometries(parts);
-    parts.forEach((g) => g.dispose());
-    if (merged) {
-      this.#wireframe = new Mesh(merged, createWireframeMaterial());
-      this.#wireframe.scale.setScalar(HELMET_TRANSFORM.scale);
-      this.#wireframe.rotation.x = HELMET_TRANSFORM.rotationX;
-      this.#wireframe.position.y = HELMET_TRANSFORM.positionY;
-      this.#wireframe.renderOrder = 1; // after the head, depth-tested against it (reference order)
-      this.root.add(this.#wireframe);
-    }
-
-    this.#ready = true;
   }
 
   #baseZ = 3;
@@ -187,24 +133,16 @@ export class HeadScene {
     this.camera.position.set(0, this.#offset.y, this.#baseZ + this.#offset.z);
   }
 
-  /** The reference head does not follow the pointer; only the wireframe scan animates. */
-  update(elapsed: number) {
-    if (!this.#ready) return;
-    if (this.#wireframe) this.#wireframe.material.uniforms.uTime.value = elapsed;
-  }
-
   dispose() {
     this.scene.traverse((obj) => {
       const mesh = obj as Mesh;
       if (!mesh.isMesh) return;
       mesh.geometry?.dispose();
-      const mat = mesh.material as MeshStandardMaterial | ShaderMaterial;
-      if (mat instanceof MeshStandardMaterial) {
-        (mat.userData.textures as Texture[] | undefined)?.forEach((t) => t.dispose());
-        mat.alphaMap?.dispose();
-        mat.normalMap?.dispose();
-        mat.displacementMap?.dispose();
-      }
+      const mat = mesh.material as MeshStandardMaterial;
+      (mat.userData.textures as Texture[] | undefined)?.forEach((t) => t.dispose());
+      mat.alphaMap?.dispose();
+      mat.normalMap?.dispose();
+      mat.displacementMap?.dispose();
       mat.dispose();
     });
   }

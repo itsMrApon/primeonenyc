@@ -7,7 +7,6 @@ import { fullRect, rectVert } from "./rect";
 export interface HeroCompositeInputs {
   contours: Texture;
   head: Texture;
-  helmet: Texture;
   cursorEffect: Texture;
 }
 
@@ -16,7 +15,6 @@ export interface HeroCompositeInputs {
  *   paper + 1px contour outlines
  *   → under the fluid mask: banded "cursor paper" (two greys) with its own outline
  *   → lit head on top
- *   → helmet on top of that, only where the fluid mask is active
  *   → uFilter 0 → 1 (scroll-out): fades to a grey, contrasty, olive-tinted
  *     head on near-black (grayscale → contrast 0.8 → ×0.75 → hard light #50593F).
  * Drawn into uRect so the hero can shrink into the marquee card on scroll.
@@ -29,7 +27,6 @@ export class HeroCompositePass extends FullscreenPass {
         uniforms: {
           tContours: { value: inputs.contours },
           tHead: { value: inputs.head },
-          tHelmet: { value: inputs.helmet },
           tCursorEffect: { value: inputs.cursorEffect },
           uRect: { value: fullRect() },
           uReveal: { value: 1 },
@@ -45,7 +42,7 @@ export class HeroCompositePass extends FullscreenPass {
         },
         vertexShader: rectVert,
         fragmentShader: /* glsl */ `
-          uniform sampler2D tContours, tHead, tHelmet, tCursorEffect;
+          uniform sampler2D tContours, tHead, tCursorEffect;
           uniform float uReveal, uCursorIntensity, uEdgeOffset, uFilter;
           uniform vec3 uPaper, uLine, uCursorPaper, uCursorPaperAlt, uCursorLine, uFilterTint;
           varying vec2 vUv;
@@ -81,9 +78,7 @@ export class HeroCompositePass extends FullscreenPass {
             paper = mix(paper, cursorPaper, mask);
 
             vec4 head = texture2D(tHead, vUv);
-            vec4 helmet = texture2D(tHelmet, vUv);
             vec3 color = mix(paper, head.rgb, head.a);
-            color = mix(color, helmet.rgb, clamp(mask, 0.0, 1.0) * helmet.a);
 
             vec3 filtered = grayscale(mix(head.rgb, vec3(0.05), 1.0 - head.a));
             filtered = ((filtered - 0.5) * 0.8 + 0.5) * 0.75;
