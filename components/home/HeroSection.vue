@@ -67,13 +67,13 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
           />
           <p class="hero-msg">Message from Lando</p>
 
-          <!-- Signature writes itself left → right as the tracker scrolls; full at the very top. -->
+          <!-- Signature: hidden at the top, writes itself left → right as the tracker scrolls. -->
           <div class="hero-signature" aria-hidden="true">
             <img
               class="hero-signature__img"
               src="/images/misc/signature-lime.svg"
               alt=""
-              :style="{ '--p': signatureScroll === 0 ? 1 : signatureScroll / 1000 }"
+              :style="{ '--p': signatureScroll / 1000 }"
             />
           </div>
 

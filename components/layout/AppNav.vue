@@ -30,17 +30,14 @@ watch(open, (v) => {
         <LayoutNavBrand />
       </a>
 
-      <a class="nav-middle" href="/" aria-label="Home">
-        <RiveCanvas
-          file="logo"
-          artboard="logo"
-          state-machine="logo"
-          :inputs="{
-            'logo-active': logoShown,
-            'color_dark-green': theme === 'dark',
-            color_white: theme === 'light'
-          }"
-        />
+      <!-- PO monogram (same paths as /images/misc/ln-logo.svg, cropped); colour follows the nav theme. -->
+      <a class="nav-middle" :class="{ 'is-hidden': !logoShown, 'is-light': theme === 'light' }" href="/" aria-label="Home">
+        <svg class="nav-po" viewBox="41 106 430 300" aria-hidden="true">
+          <g transform="translate(256 256) skewX(-14) translate(-178 -150)" fill="currentColor" fill-rule="evenodd">
+            <path d="M0 0H90C128 0 150 24 150 62V108C150 146 128 170 90 170H52V300H0Z M52 48V122H84C94 122 98 116 98 106V64C98 54 94 48 84 48Z" />
+            <path d="M222 0H310C338 0 356 18 356 46V254C356 282 338 300 310 300H222C194 300 176 282 176 254V46C176 18 194 0 222 0Z M242 48C233 48 228 53 228 62V238C228 247 233 252 242 252H290C299 252 304 247 304 238V62C304 53 299 48 290 48Z" />
+          </g>
+        </svg>
       </a>
 
       <div class="btn-layout is-nav">
@@ -160,6 +157,29 @@ watch(open, (v) => {
   width: calc(var(--u) * 2.75);
   height: calc(var(--u) * 2.75);
   transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #282c20;
+  transition: color 0.75s cubic-bezier(0.65, 0.05, 0, 1);
+}
+
+.nav-middle.is-light {
+  color: #ebeee0;
+}
+
+.nav-po {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition:
+    opacity 0.4s cubic-bezier(0.65, 0.05, 0, 1),
+    translate 0.4s cubic-bezier(0.65, 0.05, 0, 1);
+}
+
+.nav-middle.is-hidden .nav-po {
+  opacity: 0;
+  translate: 0 -40%;
 }
 
 .btn-layout.is-nav {

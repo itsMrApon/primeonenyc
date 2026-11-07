@@ -8,7 +8,6 @@ const FILES = {
   circuits: "circuits.riv",
   reef: "reef.riv",
   phrases: "phrases.riv",
-  logo: "ln4.riv",
   "mob-landscape": "mob-landscape.riv"
 } as const;
 
