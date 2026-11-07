@@ -23,6 +23,7 @@ this exact canopy profile).
 
 import argparse
 import math
+import os
 import sys
 
 import bmesh
@@ -33,8 +34,13 @@ argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 ap = argparse.ArgumentParser()
 ap.add_argument("--out", required=True)
 ap.add_argument("--preview", default="")
+ap.add_argument("--closeup", default="", help="extra close-up render of the nameplate")
 ap.add_argument("--samples", type=int, default=96)
 ap.add_argument("--atlas", type=int, default=2048)
+ap.add_argument("--plaque-font", default=os.path.expanduser("~/Library/Fonts/Montserrat-ExtraBold.otf"),
+                help="OFL font for the QUEENS, NY nameplate")
+ap.add_argument("--font", default=os.path.expanduser("~/Library/Fonts/Montserrat-ExtraBoldItalic.otf"),
+                help="OFL font for the canopy wordmark")
 args = ap.parse_args(argv)
 
 UMBRELLA = dict(x=0.35, y=-0.25, radius=3.0, rim_z=3.5, height=0.95)
@@ -387,27 +393,36 @@ def canopy_z(r):
     return UMBRELLA["height"] * (1 - min(r / UMBRELLA["radius"], 1) ** 1.7)
 
 
+PANEL = math.pi / 4  # 8 panels
+
+
 def canopy_point(r, a):
-    """Canopy surface (relative to the apex) at radius r, angle a — scalloped between ribs."""
-    R = UMBRELLA["radius"]
-    k = math.sin(4 * a) ** 2
-    q = r / R
-    shrink = 1 - 0.07 * k * q * q
-    return Vector((math.cos(a) * r * shrink, math.sin(a) * r * shrink,
-                   canopy_z(r) - UMBRELLA["height"] - 0.12 * k * q ** 3))
+    """
+    Canopy surface (relative to the apex) at radius r, angle a. Like real umbrella
+    fabric it is taut between the ribs: across a panel the points lie on the straight
+    chord between the two rib points (an octagonal cross-section), the hem rises in a
+    curve between rib tips, and the panel sags very slightly mid-way down.
+    """
+    R, H = UMBRELLA["radius"], UMBRELLA["height"]
+    local = (a % PANEL) - PANEL / 2          # angle from the panel's centre line
+    chord = math.cos(PANEL / 2) / math.cos(local)  # 1 on a rib, cos(22.5°) mid-panel
+    k = 1 - (local / (PANEL / 2)) ** 2       # 0 on a rib, 1 mid-panel
+    q = min(r / R, 1)
+    z = canopy_z(r) - H + 0.17 * k * q ** 4 - 0.035 * k * math.sin(math.pi * q)
+    return Vector((math.cos(a) * r * chord, math.sin(a) * r * chord, z))
 
 
 umbrella = bpy.data.objects.new("Umbrella", None)
 scene.collection.objects.link(umbrella)
 umbrella.location = (UMBRELLA["x"], UMBRELLA["y"], 0)
 
-# canopy: 24 rings × 64 segments, panels alternate lime tones, single-sided shell with thickness
+# canopy: 24 rings × 96 segments (12 per panel), panels alternate lime tones, thin shell
 bm = bmesh.new()
-RINGS, SEG = 24, 64
+RINGS, SEG = 24, 96
 apex = bm.verts.new((0, 0, 0))
 rings = []
 for i in range(1, RINGS + 1):
-    r = UMBRELLA["radius"] * i / RINGS
+    r = UMBRELLA["radius"] * (i / RINGS) ** 0.9  # a little denser towards the hem
     rings.append([bm.verts.new(canopy_point(r, 2 * math.pi * j / SEG)) for j in range(SEG)])
 for j in range(SEG):
     f = bm.faces.new((apex, rings[0][j], rings[0][(j + 1) % SEG]))
@@ -428,33 +443,99 @@ sol.thickness, sol.offset = 0.025, -1.0
 canopy.parent = umbrella
 canopy.location = (0, 0, APEX_Z)
 
-# frame under the canopy: ribs, stretchers, runner, tips, finial
+
+def sweep(name, pts, radius, mat, closed=False, verts=6):
+    """Tube through a list of points (joined straight rods; dense enough to read as curved)."""
+    parts = [rod(f"{name}{i}", pts[i], pts[i + 1], radius, mat, verts) for i in range(len(pts) - 1)]
+    if closed:
+        parts.append(rod(f"{name}_close", pts[-1], pts[0], radius, mat, verts))
+    return parts
+
+
+# frame and trim, all in canopy space: ribs + stretchers underneath, hem binding,
+# seam piping on top, metal ferrules at the tips, top cap and finial
 frame_parts = []
+R = UMBRELLA["radius"]
 runner_z = -1.55  # relative to the apex
+up = Vector((0, 0, 1))
 for j in range(8):
-    a = j * math.pi / 4
-    pts = [canopy_point(UMBRELLA["radius"] * s / 12, a) - Vector((0, 0, 0.04)) for s in range(13)]
-    for s in range(12):
-        frame_parts.append(rod(f"rib{j}_{s}", pts[s], pts[s + 1], 0.016, M["frame"], verts=6))
-    mid = canopy_point(UMBRELLA["radius"] * 0.5, a) - Vector((0, 0, 0.05))
+    a = j * PANEL
+    rib = [canopy_point(R * s / 16, a) for s in range(17)]
+    frame_parts += sweep(f"rib{j}_", [p - up * 0.045 for p in rib], 0.015, M["frame"])
+    frame_parts += sweep(f"seam{j}_", [p + up * 0.022 for p in rib[1:]], 0.011, M["dark"], verts=5)
+    mid = canopy_point(R * 0.52, a) - up * 0.055
     frame_parts.append(rod(f"stretcher{j}", (0, 0, runner_z), mid, 0.011, M["frame"], verts=6))
-    tip = canopy_point(UMBRELLA["radius"], a)
-    frame_parts.append(icosphere(f"tip{j}", 0.035, tip, M["frame"], subdiv=1))
-frame_parts.append(cylinder("runner", 0.06, 0.2, (0, 0, runner_z), M["frame"], verts=16))
-frame_parts.append(cylinder("finial", 0.045, 0.32, (0, 0, 0.16), M["frame"], verts=16))
-frame_parts.append(icosphere("finial_tip", 0.055, (0, 0, 0.34), M["frame"], subdiv=1))
+    frame_parts.append(icosphere(f"joint{j}", 0.022, mid, M["frame"], subdiv=1))
+    tip = rib[-1]
+    out = Vector((math.cos(a), math.sin(a), -0.35)).normalized()
+    frame_parts.append(rod(f"ferrule{j}", tip, tip + out * 0.13, 0.019, M["chrome"], verts=8))
+hem = [canopy_point(R, 2 * math.pi * i / 192) for i in range(192)]
+frame_parts += sweep("hem", hem, 0.021, M["dark"], closed=True, verts=6)
+frame_parts.append(cylinder("runner", 0.065, 0.22, (0, 0, runner_z), M["frame"], verts=16))
+frame_parts.append(cylinder("top_cap", 0.2, 0.05, (0, 0, 0.015), M["dark"], verts=24))
+frame_parts.append(cylinder("finial", 0.04, 0.3, (0, 0, 0.17), M["chrome"], verts=16))
+frame_parts.append(icosphere("finial_tip", 0.06, (0, 0, 0.34), M["dark"], subdiv=2))
+
+# printed wordmark (dark green), one word per panel going round: PRIME, ONE, PRIME, ONE…
+# conformed to the fabric. Montserrat is OFL-licensed, so its outlines can ship in the GLB.
+def make_logo(name, text, height=0.3):
+    curve = bpy.data.curves.new(name, "FONT")
+    curve.body = text
+    curve.font = bpy.data.fonts.load(args.font)
+    curve.align_x = "CENTER"
+    curve.align_y = "CENTER"
+    curve.space_character = 1.08
+    ob = bpy.data.objects.new(name, curve)
+    scene.collection.objects.link(ob)
+    bpy.ops.object.select_all(action="DESELECT")
+    ob.select_set(True)
+    bpy.context.view_layer.objects.active = ob
+    bpy.ops.object.convert(target="MESH")
+    ob = bpy.context.view_layer.objects.active
+    # centre on the origin; scale by cap height so every word has the same letter size
+    xs = [v.co.x for v in ob.data.vertices]
+    ys = [v.co.y for v in ob.data.vertices]
+    cx, cy, h = (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2, max(ys) - min(ys)
+    for v in ob.data.vertices:
+        v.co = Vector(((v.co.x - cx) / h * height, (v.co.y - cy) / h * height, 0))
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    bmesh.ops.triangulate(bm, faces=bm.faces)
+    for _ in range(2):
+        bmesh.ops.subdivide_edges(bm, edges=bm.edges, cuts=1, use_grid_fill=True)
+    bm.to_mesh(ob.data)
+    bm.free()
+    ob.data.materials.clear()
+    ob.data.materials.append(M["dark"])
+    return ob
+
+
+logos = []
+for j in range(8):
+    am = (j + 0.5) * PANEL
+    r0 = 2.2  # nearer the hem, where the panel is widest
+    centre = canopy_point(r0, am)
+    c, s_ = math.cos(am), math.sin(am)
+    slope = (canopy_point(r0 - 0.05, am).z - canopy_point(r0 + 0.05, am).z) / 0.1
+    x_axis = Vector((-s_, c, 0)).normalized()             # reads left → right from outside
+    y_axis = Vector((-c, -s_, slope)).normalized()        # letters' top points up the slope
+    z_axis = x_axis.cross(y_axis).normalized()
+    rot = Matrix((x_axis, y_axis, z_axis)).transposed().to_4x4()
+    logo = make_logo(f"logo{j}", "PRIME" if j % 2 == 0 else "ONE")
+    logo.matrix_world = Matrix.Translation(centre + z_axis * 0.06) @ rot
+    logos.append(logo)
 
 shaft_bottom = 0.6
 shaft = cylinder("Umbrella_Shaft", 0.04, APEX_Z - shaft_bottom, (0, 0, (APEX_Z + shaft_bottom) / 2), M["frame"], verts=16)
 shaft.parent = umbrella
 
-# J handle as a swept curve
+# J handle as a swept curve, with a chrome collar and an end cap
 curve = bpy.data.curves.new("handle", "CURVE")
 curve.dimensions = "3D"
-curve.bevel_depth = 0.05
-curve.bevel_resolution = 4
+curve.bevel_depth = 0.065
+curve.bevel_resolution = 5
 sp = curve.splines.new("BEZIER")
-handle_pts = [(0, 0, shaft_bottom + 0.02), (0, 0, 0.32), (0.22, 0, 0.12), (0.42, 0, 0.32)]
+handle_pts = [(0, 0, shaft_bottom + 0.02), (0, 0, 0.3), (0.24, 0, 0.1), (0.46, 0, 0.3)]
 sp.bezier_points.add(len(handle_pts) - 1)
 for bp, p in zip(sp.bezier_points, handle_pts):
     bp.co = p
@@ -469,7 +550,10 @@ handle.name = "Umbrella_Handle"
 handle.data.materials.clear()
 handle.data.materials.append(M["dark"])
 handle.parent = umbrella
-
+collar = cylinder("Umbrella_Collar", 0.075, 0.07, (0, 0, shaft_bottom + 0.02), M["chrome"], verts=20)
+collar.parent = umbrella
+end_cap = icosphere("Umbrella_HandleCap", 0.068, handle_pts[-1], M["chrome"], subdiv=2)
+end_cap.parent = umbrella
 
 def join(name, objs):
     bpy.ops.object.select_all(action="DESELECT")
@@ -493,6 +577,80 @@ canopy_frame = join("Canopy_Frame", frame_parts)
 canopy_frame.parent = canopy
 canopy_frame.location = (0, 0, 0)
 
+# logos were placed in canopy space at the world origin; parent them, then shrinkwrap
+# onto the fabric (offset so they sit printed on top, not z-fighting)
+for logo in logos:
+    m = logo.matrix_world.copy()
+    logo.parent = canopy
+    logo.matrix_parent_inverse = Matrix.Identity(4)
+    logo.matrix_basis = m
+bpy.context.view_layer.update()
+for logo in logos:
+    sw = logo.modifiers.new("wrap", "SHRINKWRAP")
+    sw.target = canopy
+    sw.wrap_method = "NEAREST_SURFACEPOINT"
+    sw.wrap_mode = "OUTSIDE_SURFACE"
+    sw.offset = 0.008
+    bpy.context.view_layer.objects.active = logo
+    bpy.ops.object.modifier_apply(modifier=sw.name)
+canopy_logo = join("Canopy_Logo", logos)
+
+# ----------------------------------------------------------------- "QUEENS, NY" nameplate
+
+def text_mesh(name, text, font_path, height, depth):
+    """Raised lettering: a font curve converted to mesh, centred, scaled to cap height."""
+    curve = bpy.data.curves.new(name, "FONT")
+    curve.body = text
+    curve.font = bpy.data.fonts.load(font_path)
+    curve.align_x = "CENTER"
+    curve.space_character = 1.06
+    curve.extrude = depth / 2
+    ob = bpy.data.objects.new(name, curve)
+    scene.collection.objects.link(ob)
+    bpy.ops.object.select_all(action="DESELECT")
+    ob.select_set(True)
+    bpy.context.view_layer.objects.active = ob
+    bpy.ops.object.convert(target="MESH")
+    ob = bpy.context.view_layer.objects.active
+    xs = [v.co.x for v in ob.data.vertices]
+    ys = [v.co.y for v in ob.data.vertices]
+    cx, cy, h = (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2, max(ys) - min(ys)
+    for v in ob.data.vertices:
+        v.co = Vector(((v.co.x - cx) / h * height, (v.co.y - cy) / h * height, v.co.z))
+    return ob
+
+
+# Freestanding NYC-style nameplate on the sidewalk, right of the hydrant. Kept as real
+# geometry (not in the baked atlas) so the small lettering stays sharp.
+PLAQUE = dict(x=3.15, y=-1.42, w=1.08, h=0.36, t=0.04, post=0.36, yaw=math.radians(-12))
+plaque_parts = []
+panel_z = PLAQUE["post"] + PLAQUE["h"] / 2
+plaque_parts.append(box("plaque_panel", (PLAQUE["w"], PLAQUE["t"], PLAQUE["h"]), (0, 0, panel_z), M["dark"], bevel=0.012))
+# fine paper-white border, inset from the edge, on the front face
+inset, line = 0.035, 0.012
+fy = -PLAQUE["t"] / 2 - 0.004
+for sx, sz, lx, lz in (
+    (PLAQUE["w"] - 2 * inset, line, 0, PLAQUE["h"] / 2 - inset),
+    (PLAQUE["w"] - 2 * inset, line, 0, -PLAQUE["h"] / 2 + inset),
+    (line, PLAQUE["h"] - 2 * inset, PLAQUE["w"] / 2 - inset, 0),
+    (line, PLAQUE["h"] - 2 * inset, -PLAQUE["w"] / 2 + inset, 0),
+):
+    plaque_parts.append(box(f"plaque_border{lx:.2f}{lz:.2f}", (sx, 0.008, sz), (lx, fy, panel_z + lz), M["paper"]))
+for sx in (-1, 1):
+    x = sx * (PLAQUE["w"] / 2 - 0.12)
+    plaque_parts.append(box(f"plaque_post{sx}", (0.05, 0.05, PLAQUE["post"] + 0.04), (x, 0.0, (PLAQUE["post"] + 0.04) / 2), M["dark"], bevel=0.008))
+    plaque_parts.append(box(f"plaque_foot{sx}", (0.11, 0.11, 0.03), (x, 0.0, 0.015), M["dark"], bevel=0.006))
+letters = text_mesh("plaque_text", "QUEENS, NY", args.plaque_font, height=0.1, depth=0.012)
+letters.rotation_euler = (math.pi / 2, 0, 0)          # stand the text up on the front face
+letters.location = (0, -PLAQUE["t"] / 2 - 0.006, panel_z)
+bpy.context.view_layer.objects.active = letters
+bpy.ops.object.select_all(action="DESELECT")
+letters.select_set(True)
+bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+letters.data.materials.clear()
+letters.data.materials.append(M["paper"])
+plaque_parts.append(letters)
+
 # car: group parts by material into a few meshes, then place
 by_mat = {}
 for o in car_parts:
@@ -504,6 +662,10 @@ for mat_name, objs in by_mat.items():
     ob.parent = car_root
 car_root.location = CAR_LOC
 car_root.scale = (CAR_SCALE,) * 3
+
+plaque = join("Plaque", plaque_parts)
+plaque.location = (PLAQUE["x"], PLAQUE["y"], 0)
+plaque.rotation_euler = (0, 0, PLAQUE["yaw"])
 
 # ----------------------------------------------------------------- bake static atlas (colour × AO)
 
@@ -600,6 +762,13 @@ if args.preview:
         e.identifier for e in scene.view_settings.bl_rna.properties["view_transform"].enum_items] else "Standard"
     scene.render.filepath = args.preview
     bpy.ops.render.render(write_still=True)
+    if args.closeup:
+        target = Vector((PLAQUE["x"] - 0.4, PLAQUE["y"], 0.45))
+        cam.location = target + Vector((0.6, -3.2, 1.0))
+        cam.rotation_euler = (target - cam.location).to_track_quat("-Z", "Y").to_euler()
+        cam_data.angle = math.radians(32)
+        scene.render.filepath = args.closeup
+        bpy.ops.render.render(write_still=True)
     for o in (sun, cam):
         bpy.data.objects.remove(o)
 
