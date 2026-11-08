@@ -14,13 +14,27 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+import type { HomeContent } from "~/composables/useHomeContent";
+
+const props = withDefaults(
+  defineProps<{
+    /** Defaults to the home copy; /on-track passes the original Lando helmets. */
+    helmets?: HomeContent["helmets"];
+    /** Home closes the group with the reef callout; /on-track has its own callout sections. */
+    callout?: boolean;
+    /** "Hall of Fame" colour: home #B2C73A, on-track grey #B9BBAD. */
+    accent?: string;
+  }>(),
+  { helmets: undefined, callout: true, accent: "#b2c73a" }
+);
+
 const content = useHomeContent();
-const h = computed(() => content.helmets);
+const h = computed(() => props.helmets ?? content.helmets);
 
 const grid = ref<HTMLElement | null>(null);
 const cards: (HTMLElement | null)[] = [];
 const setCard = (i: number) => (el: unknown) => (cards[i] = el as HTMLElement | null);
-const callout = ref<HTMLElement | null>(null);
+const calloutEl = ref<HTMLElement | null>(null);
 const reefScroll = ref(0);
 const ctaHover = ref(false);
 const triggers: ScrollTrigger[] = [];
@@ -47,12 +61,13 @@ onMounted(() => {
   triggers.push(st);
   updateGrid(st.progress);
 
+  if (!props.callout) return;
   const state = { p: 0 };
   const tween = gsap.to(state, {
     p: 1,
     ease: "none",
     onUpdate: () => (reefScroll.value = state.p * 1000),
-    scrollTrigger: { trigger: callout.value, start: "top bottom", end: "bottom center", scrub: 0.5 }
+    scrollTrigger: { trigger: calloutEl.value, start: "top bottom", end: "bottom center", scrub: 0.5 }
   });
   if (tween.scrollTrigger) triggers.push(tween.scrollTrigger);
 });
@@ -61,7 +76,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
 </script>
 
 <template>
-  <div class="helmets-group" data-nav-theme-target="light">
+  <div class="helmets-group" data-nav-theme-target="light" :style="{ '--accent': accent }">
     <section class="helmets">
       <div class="helmets-title">
         <div class="helmets-headline">
@@ -94,7 +109,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
       </div>
     </section>
 
-    <section ref="callout" class="helmets-callout">
+    <section v-if="callout" ref="calloutEl" class="helmets-callout">
       <div class="callout-icon">
         <RiveCanvas
           file="reef"
@@ -156,7 +171,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
   font-size: calc(var(--u) * 4.6875);
   font-weight: 700;
   letter-spacing: normal;
-  color: #b2c73a;
+  color: var(--accent);
 }
 
 .helmets-p {

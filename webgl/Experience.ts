@@ -21,6 +21,8 @@ import type { HeroStage } from "./scenes/HeroStage";
 import { TaxiScene } from "./scenes/TaxiScene";
 import { UmbrellaScene } from "./scenes/UmbrellaScene";
 import { MarqueeTextScene } from "./scenes/MarqueeTextScene";
+import { HelmetScrollScene, type HelmetScrollState } from "./scenes/HelmetScrollScene";
+import { TracksScene } from "./scenes/TracksScene";
 
 const easeInOutQuad = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -32,8 +34,12 @@ const CURSOR_FADE_S = 0.233;
 /** Hero subject: "umbrella" (home + car under cover) or the backup "taxi". */
 const HERO: "umbrella" | "taxi" = "umbrella";
 
+/** Which page's GL runs: the home hero pipeline, or the On Track helmet flight. */
+export type ExperiencePage = "home" | "on-track";
+
 export interface ExperienceOptions {
   canvas: HTMLCanvasElement;
+  page?: ExperiencePage;
   onProgress?: (progress: number, label: string) => void;
 }
 
@@ -55,6 +61,10 @@ export class Experience {
   readonly #renderer: WebGLRenderer;
   readonly #clock = new Clock();
   readonly #onProgress?: ExperienceOptions["onProgress"];
+  readonly #page: ExperiencePage;
+  readonly #helmetScroll = new HelmetScrollScene();
+  /** On Track calendar circuits (attach a DOM target with `tracks.attach`). */
+  readonly tracks = new TracksScene();
 
   readonly hero: HeroStage = HERO === "taxi" ? new TaxiScene() : new UmbrellaScene();
   readonly #fluid = new FluidSim();
@@ -90,6 +100,7 @@ export class Experience {
 
   constructor(options: ExperienceOptions) {
     this.#onProgress = options.onProgress;
+    this.#page = options.page ?? "home";
 
     this.#renderer = new WebGLRenderer({
       canvas: options.canvas,
@@ -115,6 +126,12 @@ export class Experience {
   }
 
   async load() {
+    if (this.#page === "on-track") {
+      this.#onProgress?.(0.15, "Loading helmet");
+      await Promise.all([this.#helmetScroll.load(), this.tracks.load()]);
+      this.#onProgress?.(1, "Ready");
+      return;
+    }
     this.#onProgress?.(0.15, "Loading hero");
     await Promise.all([this.hero.load(this.#renderer), this.marquee.load()]);
     this.#onProgress?.(1, "Ready");
@@ -141,6 +158,9 @@ export class Experience {
     this.#renderer.setSize(w, h, false);
     this.#size.w = w;
     this.#size.h = h;
+    this.#helmetScroll.resize(w, h, dpr);
+    if (this.#page === "on-track") this.tracks.resize(w, h, dpr, this.#renderer);
+    if (this.#page === "on-track") return;
     const pw = Math.round(w * dpr);
     const ph = Math.round(h * dpr);
     for (const t of [this.#headTarget, this.#textTarget, this.#revealTarget, this.#contourTarget]) t.setSize(pw, ph);
@@ -196,6 +216,11 @@ export class Experience {
     this.hero.setCameraOffset(-e, (offset / h) * 0.1);
   }
 
+  /** On Track: helmet plane centre/side (page px) and scroll progress (useHelmetFlip). */
+  setHelmetScroll(state: HelmetScrollState) {
+    this.#helmetScroll.set(state);
+  }
+
   /** Real pointer in NDC (−1..1, y up). */
   setPointer(nx: number, ny: number) {
     this.#pointer.set(nx, ny);
@@ -205,6 +230,8 @@ export class Experience {
   dispose() {
     this.#disposed = true;
     this.stop();
+    this.#helmetScroll.dispose();
+    this.tracks.dispose();
     this.hero.dispose();
     this.#fluid.dispose();
     this.marquee.dispose();
@@ -222,6 +249,15 @@ export class Experience {
     const dt = Math.min(this.#clock.getDelta(), 0.1);
     const elapsed = this.#clock.elapsedTime;
     const r = this.#renderer;
+
+    if (this.#page === "on-track") {
+      r.setRenderTarget(null);
+      r.clear();
+      this.#helmetScroll.render(r);
+      this.tracks.render(r, elapsed);
+      this.#frame = requestAnimationFrame(this.#tick);
+      return;
+    }
 
     this.#applyScroll(dt);
     // The dark contour page stays on behind the transparent sections below the

@@ -15,8 +15,20 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+import type { HomeContent } from "~/composables/useHomeContent";
+
+const props = withDefaults(
+  defineProps<{
+    /** Defaults to the home copy; /on-track passes its own card images. */
+    socials?: HomeContent["socials"];
+    /** Reference "dark-mode" variant (/on-track): black page, light text, light nav. */
+    dark?: boolean;
+  }>(),
+  { socials: undefined, dark: false }
+);
+
 const content = useHomeContent();
-const s = computed(() => content.socials);
+const s = computed(() => props.socials ?? content.socials);
 
 /** Fan layout in units (reference desktop values). */
 const FAN = [
@@ -153,7 +165,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="socials" data-nav-theme-target="dark">
+  <section class="socials" :class="{ 'is-dark': dark }" :data-nav-theme-target="dark ? 'light' : 'dark'">
     <div class="socials-layout">
       <div class="socials-icon">
         <RiveCanvas
@@ -200,6 +212,10 @@ onBeforeUnmount(() => {
   position: relative;
   padding: calc(var(--u) * 8) calc(var(--u) * 1.25) 0;
   color: #111112;
+}
+
+.socials.is-dark {
+  color: #f4f4ed;
 }
 
 .socials-layout {

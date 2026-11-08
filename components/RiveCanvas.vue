@@ -3,7 +3,17 @@
  * One Rive artboard on a canvas, fed from the shared preloaded files
  * (useRiveFiles). State-machine inputs (boolean or number) are reactive.
  */
-import { Alignment, Fit, Layout, Rive, RuntimeLoader, type StateMachineInput } from "@rive-app/canvas";
+import {
+  Alignment,
+  Fit,
+  Layout,
+  Rive,
+  RuntimeLoader,
+  type StateMachineInput,
+  StateMachineInputType
+} from "@rive-app/canvas";
+
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { loadAllRiveFiles, type RiveFileKey } from "~/composables/useRiveFiles";
 
@@ -18,8 +28,15 @@ const props = withDefaults(
     playOnView?: boolean;
     /** false: stays on its first frame until play() (e.g. a scroll trigger in the parent). */
     autoplay?: boolean;
+    /** circuits.riv: on load, set every boolean input except color_* / weight_* false before `inputs` (reference). */
+    exclusive?: boolean;
+    /**
+     * Reference in-page Rives (bundle CH): hidden on their first frame until the canvas
+     * reaches this ScrollTrigger start (e.g. "top 80%"), then shown (opacity .1 s) and played.
+     */
+    playAt?: string;
   }>(),
-  { inputs: () => ({}), fit: "contain", playOnView: false, autoplay: true }
+  { inputs: () => ({}), fit: "contain", playOnView: false, autoplay: true, exclusive: false, playAt: undefined }
 );
 
 const canvas = ref<HTMLCanvasElement | null>(null);
@@ -27,6 +44,8 @@ let rive: Rive | null = null;
 let byName: Record<string, StateMachineInput> = {};
 let observer: ResizeObserver | null = null;
 let viewObserver: IntersectionObserver | null = null;
+let playTrigger: ScrollTrigger | null = null;
+let hideTimer = 0;
 
 function applyInputs() {
   for (const [name, value] of Object.entries(props.inputs)) {
@@ -43,14 +62,37 @@ onMounted(async () => {
     canvas: canvas.value,
     artboard: props.artboard,
     stateMachines: props.stateMachine,
-    autoplay: props.autoplay && !props.playOnView,
+    autoplay: props.autoplay && !props.playOnView && !props.playAt,
     layout: new Layout({ fit: props.fit === "cover" ? Fit.Cover : Fit.Contain, alignment: Alignment.Center }),
     onLoad: () => {
       if (!rive) return;
       rive.resizeDrawingSurfaceToCanvas();
-      byName = Object.fromEntries(rive.stateMachineInputs(props.stateMachine).map((i) => [i.name, i]));
+      const all = rive.stateMachineInputs(props.stateMachine);
+      byName = Object.fromEntries(all.map((i) => [i.name, i]));
+      if (props.exclusive) {
+        for (const i of all) {
+          if (i.type === StateMachineInputType.Boolean && !/^(color|weight)_/.test(i.name)) i.value = false;
+        }
+      }
       applyInputs();
       if (pendingPlay) rive.play();
+      if (props.playAt && canvas.value) {
+        const el = canvas.value;
+        el.style.opacity = "0";
+        el.style.transition = "opacity 0.1s ease-in-out";
+        rive.play();
+        hideTimer = window.setTimeout(() => rive?.pause(), 50);
+        playTrigger = ScrollTrigger.create({
+          trigger: el,
+          start: props.playAt,
+          once: true,
+          onEnter: () => {
+            clearTimeout(hideTimer);
+            el.style.opacity = "1";
+            rive?.play();
+          }
+        });
+      }
       if (props.playOnView && canvas.value) {
         viewObserver = new IntersectionObserver(
           (entries) => {
@@ -80,6 +122,8 @@ defineExpose({ play });
 onBeforeUnmount(() => {
   observer?.disconnect();
   viewObserver?.disconnect();
+  clearTimeout(hideTimer);
+  playTrigger?.kill();
   rive?.cleanup();
   rive = null;
 });
