@@ -21,7 +21,8 @@ import type { HeroStage } from "./scenes/HeroStage";
 import { TaxiScene } from "./scenes/TaxiScene";
 import { UmbrellaScene } from "./scenes/UmbrellaScene";
 import { MarqueeTextScene } from "./scenes/MarqueeTextScene";
-import { HelmetScrollScene, type HelmetScrollState } from "./scenes/HelmetScrollScene";
+import type { HelmetScrollState } from "./scenes/HelmetScrollScene";
+import { PapersScrollScene } from "./scenes/PapersScrollScene";
 import { TracksScene } from "./scenes/TracksScene";
 
 const easeInOutQuad = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
@@ -62,7 +63,8 @@ export class Experience {
   readonly #clock = new Clock();
   readonly #onProgress?: ExperienceOptions["onProgress"];
   readonly #page: ExperiencePage;
-  readonly #helmetScroll = new HelmetScrollScene();
+  /** On Track flying object: the tax-paper pile (top view) on the reference helmet path. */
+  readonly #helmetScroll = new PapersScrollScene();
   /** On Track calendar circuits (attach a DOM target with `tracks.attach`). */
   readonly tracks = new TracksScene();
 
