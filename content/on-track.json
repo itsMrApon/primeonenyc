@@ -35,7 +35,7 @@
   },
   "impact": {
     "eyebrow": "mclaren f1 since 2019",
-    "html": "Challenging<br>the <strong>limits</strong>, <strong>winning</strong> races. Bringing <strong>it all</strong> each and every weekend."
+    "html": "Challenging <br>the <strong>limits</strong>, <strong>winning</strong> races. Bringing <strong>it all</strong> each and every weekend."
   },
   "podiums": {
     "count": "49",
@@ -128,8 +128,8 @@
     }
   },
   "highlights": {
-    "title": "f1 result<br><strong>highlights</strong>",
-    "body": "Throughout his seven seasons in<br>Formula 1, Lando has achieved a range<br>of memorable results on tracks across<br>the world.",
+    "title": "f1 result <br><strong>highlights</strong>",
+    "body": "Throughout his seven seasons in <br>Formula 1, Lando has achieved a range <br>of memorable results on tracks across <br>the world.",
     "columns": [
       "series",
       "Name",
@@ -263,8 +263,12 @@
     }
   },
   "preF1": {
-    "title": "pre-f1 career<br><strong>2007-2019</strong>",
-    "body": "Prior to starting his Formula 1 career,<br>Lando had an illustrious junior career<br>in karting and junior formulae, winning<br>multiple titles on his way to the pinnacle<br>of motorsport.",
+    "title": "pre-f1 career <br><strong>2007-2019</strong>",
+    "body": "Prior to starting his Formula 1 career, <br>Lando had an illustrious junior career <br>in karting and junior formulae, winning <br>multiple titles on his way to the pinnacle <br>of motorsport.",
+    "mobileImage": {
+      "src": "/images/on-track/pre-f1/champagne.webp",
+      "alt": "Lando spraying champagne"
+    },
     "image": {
       "src": "/images/on-track/pre-f1/celebrating.webp",
       "alt": "Lando in celebrating win"
@@ -335,8 +339,8 @@
       "ukTime": "*uk time",
       "unit": "km"
     },
-    "title": "upcominG<br><strong>2026 schedule</strong>",
-    "body": "Lando's upcoming racing schedule, as he<br>takes on the 2025 Formula 1 season.",
+    "title": "upcominG <br><strong>2026 schedule</strong>",
+    "body": "Lando's upcoming racing schedule, as he <br>takes on the 2025 Formula 1 season.",
     "standing": {
       "label": "Standing",
       "value": "6",

@@ -67,14 +67,13 @@ const onScroll = () => updateMouse();
 
 onMounted(() => {
   gsap.registerPlugin(ScrollTrigger);
-  const u = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--u")) || window.innerWidth / 108;
-  const unit = () => (window.innerWidth >= 992 ? Math.min(Math.max(window.innerWidth, 992), 1920) / 108 : u);
+  const unit = () => fluidUnit();
 
-  // "49" / "podiums" scroll
-  gsap.set(podText.value, { y: 17.5 * unit() });
+  // "49" / "podiums" scroll (bundle L_: text from 17.5rem at ≥992 else 4rem; the 9 to −17.5rem at ≥480 else −6rem)
+  gsap.set(podText.value, { y: (window.innerWidth >= 992 ? 17.5 : 4) * unit() });
   const scrub = { trigger: wrap.value, start: "top bottom", end: "bottom center", scrub: true };
   anims.push(gsap.to(podText.value, { y: 0, ease: "power1.in", scrollTrigger: scrub }));
-  anims.push(gsap.to(nine.value, { y: -17.5 * unit(), ease: "power1.in", scrollTrigger: { ...scrub } }));
+  anims.push(gsap.to(nine.value, { y: (window.innerWidth >= 480 ? -17.5 : -6) * unit(), ease: "power1.in", scrollTrigger: { ...scrub } }));
 
   // Cursor photo
   mouseTl = gsap.timeline({ paused: true });
@@ -523,5 +522,84 @@ onBeforeUnmount(() => {
 
 .season-row.is-top .row-reveal {
   display: none;
+}
+/* Reference ≤479 (live at 375 px; 1u = the phone rem). */
+@media (max-width: 767px) {
+  .mouse-w {
+    display: none;
+  }
+
+  .podium-num {
+    font-size: calc(var(--u) * 38.8);
+  }
+
+  .podium-col {
+    padding-bottom: calc(var(--u) * 1.8);
+  }
+
+  .large-number {
+    font-size: calc(var(--u) * 10);
+  }
+
+  .large-number.is-podium {
+    font-size: calc(var(--u) * 5.6);
+  }
+
+  .large-number.is-fixed {
+    width: calc(var(--u) * 5);
+  }
+
+  .title-layout.grid-main {
+    grid-template-columns: 1fr;
+    gap: calc(var(--gap) * 2);
+    margin-bottom: calc(var(--gap) * 2);
+  }
+
+  .headline-w,
+  .stats-grid {
+    grid-column: 1 / -1;
+  }
+
+  .headline-w {
+    gap: var(--gap);
+  }
+
+  .title-lg {
+    order: 1;
+    font-size: calc(var(--u) * 2.6);
+  }
+
+  .title-lg :deep(strong) {
+    font-size: calc(var(--u) * 2.6);
+  }
+
+  /* Reference phone title runs on one line ("f1 career" + zero-width joiner + "since 2019"). */
+  .title-lg :deep(br) {
+    display: none;
+  }
+
+  .car-img-w {
+    width: 100%;
+    height: calc(var(--u) * 24);
+    aspect-ratio: auto;
+  }
+
+  .stats-item {
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .win-rive {
+    left: 0;
+    width: calc(var(--u) * 10);
+  }
+
+  .stat-label {
+    font-size: calc(var(--u) * 1.6);
+  }
+
+  .eyebrow {
+    font-size: calc(var(--u) * 0.8);
+  }
 }
 </style>

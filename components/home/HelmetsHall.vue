@@ -4,8 +4,8 @@
  * in fluid units (1u = 13.33 px there).
  *   - title / copy highlighter reveals (lime; copy +0.2 s);
  *   - 4×4 grid of masked helmet cards; over the grid's "top bottom" →
- *     "bottom top" every card rises 5u → 0, columns 2 and 4 rise 25u → 0
- *     (linear scrub);
+ *     "bottom top" every card rises 5u → 0, odd cards 25u → 0 (linear scrub,
+ *     at every width — bundle ZZ over the nested .helmet-grid-item-w pairs);
  *   - hover: lime outline, helmet ×1.1, photo revealed by an ellipse clip
  *     (0.75 s cubic-bezier(0.65, 0.05, 0, 1));
  *   - callout: reef helmet Rive scrubbed by scroll ("top bottom" →
@@ -24,8 +24,10 @@ const props = withDefaults(
     callout?: boolean;
     /** "Hall of Fame" colour: home #B2C73A, on-track grey #B9BBAD. */
     accent?: string;
+    /** Live /on-track keeps the card lift on phones (its init runs bundle ZZ at every width); home doesn't. */
+    liftOnPhones?: boolean;
   }>(),
-  { helmets: undefined, callout: true, accent: "#b2c73a" }
+  { helmets: undefined, callout: true, accent: "#b2c73a", liftOnPhones: false }
 );
 
 const content = useHomeContent();
@@ -39,9 +41,13 @@ const reefScroll = ref(0);
 const ctaHover = ref(false);
 const triggers: ScrollTrigger[] = [];
 
+/**
+ * Reference bundle ZZ: it lifts each `.helmet-grid-item-w` by (index % 4) × 5rem, and the markup nests
+ * two of them per card, so even cards start 5u low and odd cards 25u. Live home skips it on phones.
+ */
 function updateGrid(progress: number) {
   const unit = fluidUnit();
-  const left = isMobileLayout() ? 0 : 1 - progress; // reference ≤767: cards don't lift
+  const left = isMobileLayout() && !props.liftOnPhones ? 0 : 1 - progress;
   cards.forEach((card, i) => {
     if (!card) return;
     const lift = (i % 2 === 1 ? 25 : 5) * unit * left;

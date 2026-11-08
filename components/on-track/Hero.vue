@@ -103,7 +103,7 @@ onBeforeUnmount(() => {
 
         <div class="info-grid grid-main">
           <div class="sub-w">
-            <HighLines :ref="setHigh" manual class="stat-label" :html="hero.meta.nickname" />
+            <HighLines :ref="setHigh" manual class="stat-label hide-m" :html="hero.meta.nickname" />
             <div class="sub-col">
               <HighLines :ref="setHigh" manual class="stat-label" :html="hero.meta.age" />
               <div class="label-flex">
@@ -133,7 +133,7 @@ onBeforeUnmount(() => {
 
               <div class="ui-w">
                 <!-- Previous race card -->
-                <div class="ui-sec">
+                <div class="ui-sec hide-m">
                   <svg class="ui-sec-outline" width="100%" height="100%" viewBox="0 0 119 244" fill="none" aria-hidden="true">
                     <path
                       d="M118.5 6v232a5.5 5.5 0 0 1-5.5 5.5H6A5.5 5.5 0 0 1 .5 238V25A5.5 5.5 0 0 1 6 19.5h46.346c4.695 0 9.167-2 12.297-5.498l7.46-8.337A15.5 15.5 0 0 1 83.653.5H113a5.5 5.5 0 0 1 5.5 5.5Z"
@@ -764,5 +764,145 @@ onBeforeUnmount(() => {
   width: calc(var(--u) * 77.5625);
   height: calc(var(--u) * 66);
   pointer-events: auto;
+}
+/* Reference ≤479 (live at 375 px; 1u = the phone rem, vw / 36). One phone layout for ≤767. */
+@media (max-width: 767px) {
+  .hide-m {
+    display: none;
+  }
+
+  .ot-hero-c {
+    height: 100vh;
+    padding: calc(var(--u) * 6.375) var(--u) 0; /* reference --padding--container: 1rem */
+  }
+
+  .title-layout {
+    min-height: auto;
+  }
+
+  .title-rive-w {
+    height: auto;
+  }
+
+  .title-rive {
+    inset: auto auto auto calc(var(--u) * -1.4);
+    width: calc(var(--u) * 13.5);
+    height: auto;
+    aspect-ratio: 46.0625 / 32.75;
+  }
+
+  .title {
+    font-size: calc(var(--u) * 7.7);
+  }
+
+  .info-grid.grid-main {
+    grid-template-columns: 23.55% 23.55%;
+  }
+
+  .sub-w {
+    display: flex;
+    justify-content: space-between;
+    max-width: 100%;
+  }
+
+  .sub-col {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .stat-label {
+    font-size: calc(var(--u) * 1.6);
+  }
+
+  .eyebrow {
+    font-size: calc(var(--u) * 0.8);
+  }
+
+  .flag.is-md {
+    border-radius: calc(var(--u) * 0.3);
+  }
+
+  .stats-grid.grid-main {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0;
+  }
+
+  .stats-w {
+    grid-column-start: 1;
+    justify-content: flex-start;
+    align-items: flex-start;
+    max-width: 100%;
+    margin-top: auto;
+  }
+
+  .spacer {
+    flex: 1;
+    height: 100%;
+    min-height: calc(var(--u) * 2);
+    max-height: none;
+  }
+
+  .stats-layout {
+    max-width: 100%;
+  }
+
+  .para-w {
+    max-width: 100%;
+    margin-bottom: var(--u);
+  }
+
+  .body-lg :deep(strong) {
+    font-size: calc(var(--u) * 1.9);
+  }
+
+  .ui-w {
+    height: calc(var(--u) * 13.3);
+    margin-top: 0;
+  }
+
+  .img-fill.is-1 {
+    width: var(--u);
+  }
+
+  .box1 {
+    width: calc(var(--u) * 14.9);
+    height: 100%;
+    aspect-ratio: auto;
+    margin-left: 0;
+  }
+
+  .box1-item.is-1,
+  .box1-item.is-2 {
+    width: calc(var(--u) * 7);
+  }
+
+  .box2 {
+    width: auto;
+  }
+
+  .box2-col-1 {
+    width: calc(var(--u) * 12);
+  }
+
+  .box2-row.is-1 {
+    padding-inline: calc(var(--u) * 1.1);
+  }
+
+  .signature-rive {
+    position: absolute;
+    height: calc(var(--u) * 4);
+  }
+
+  .helm-pos1 {
+    position: relative;
+    inset: 0 auto auto;
+    flex: none;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 77.5625 / 66;
+    margin-top: calc(var(--u) * -3);
+    pointer-events: none;
+  }
 }
 </style>

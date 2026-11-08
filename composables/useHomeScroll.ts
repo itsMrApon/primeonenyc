@@ -3,6 +3,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 
 gsap.registerPlugin(ScrollTrigger);
+// Reference (lando-by-OFF+BRAND) turns lag smoothing off: tweens keep wall-clock time when
+// frames drop (e.g. the nav menu's first heavy frame) instead of stretching.
+gsap.ticker.lagSmoothing(0);
 
 /**
  * Homepage scroll choreography:

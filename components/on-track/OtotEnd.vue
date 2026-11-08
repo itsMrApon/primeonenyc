@@ -60,4 +60,14 @@ onBeforeUnmount(() => {
   height: 120vh;
   object-fit: cover;
 }
+/* Reference ≤479: a 60vh window onto an 80vh photo. */
+@media (max-width: 767px) {
+  .img-w {
+    min-height: 60vh;
+  }
+
+  .img {
+    height: 80vh;
+  }
+}
 </style>

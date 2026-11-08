@@ -283,6 +283,10 @@ onBeforeUnmount(() => {
             </svg>
           </div>
           <div class="f1-logo"><img :src="cal.frame.f1Logo" alt="" /></div>
+          <!-- Reference .calendar-mobile-frame top / middle / bottom (phones only). -->
+          <img class="mobile-frame is-top" src="/images/on-track/calendar/frame-mobile-top.svg" alt="" />
+          <img class="mobile-frame is-middle" src="/images/on-track/calendar/frame-mobile-middle.svg" alt="" />
+          <img class="mobile-frame is-bottom" src="/images/on-track/calendar/frame-mobile-bottom.svg" alt="" />
           <div ref="glTarget" data-gl="tracks" class="gl-target" />
         </div>
         <div class="title-w">
@@ -367,7 +371,7 @@ onBeforeUnmount(() => {
               </div>
               <div class="hl-item">
                 <div class="stat-major">{{ it.dateNum }}</div>
-                <div class="stat-major">{{ it.dateMonth }}</div>
+                <div class="stat-major mob-small">{{ it.dateMonth }}</div>
               </div>
               <div class="hl-item"><div class="text-layout"><div class="stat-major">{{ it.laps }}</div></div></div>
               <div class="hl-item">
@@ -665,6 +669,10 @@ onBeforeUnmount(() => {
   height: calc(var(--u) * 1.6875);
 }
 
+.mobile-frame {
+  display: none;
+}
+
 .gl-target {
   position: absolute;
   inset: 20% 5% 0;
@@ -956,6 +964,186 @@ onBeforeUnmount(() => {
 .circuit-rive-bg {
   position: absolute;
   inset: 0;
+}
+/* Reference ≤479 (live at 375 px; 1u = the phone rem): stacked card, 4-column list. */
+@media (max-width: 767px) {
+  .mouse-w,
+  .frame,
+  .f1-logo,
+  .frame-segment,
+  .btn-outer-w,
+  .hl-grid.is-top > :nth-child(5),
+  .hl-grid.is-row > .hl-item:nth-child(5) {
+    display: none;
+  }
+
+  .track-mask {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(var(--u) * 40);
+    aspect-ratio: auto;
+    padding: 0 var(--gap) var(--gap);
+  }
+
+  .mobile-frame {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .mobile-frame.is-top {
+    inset: auto 0;
+    top: 0;
+  }
+
+  .mobile-frame.is-middle {
+    inset: 30% 0 auto;
+  }
+
+  .mobile-frame.is-bottom {
+    inset: auto 0 0;
+  }
+
+  .title-w {
+    top: var(--gap);
+    left: var(--gap);
+    width: auto;
+    min-height: auto;
+  }
+
+  .title-layout {
+    flex-direction: row;
+  }
+
+  .title-vertical {
+    font-size: calc(var(--u) * 2.6);
+    writing-mode: inherit;
+    transform: rotate(0);
+  }
+
+  .flag-ui {
+    top: 0;
+    left: calc(var(--u) * -0.7);
+    width: calc(var(--u) * 1.7);
+    height: auto;
+    aspect-ratio: 2.12438 / 1.27438;
+  }
+
+  .controls {
+    inset: 0 0 auto auto;
+  }
+
+  .icon-btn {
+    width: calc(var(--u) * 3.3);
+    height: calc(var(--u) * 3.3);
+  }
+
+  .gl-target {
+    inset: calc(var(--u) * 3) 0 auto;
+    height: calc(var(--u) * 23);
+  }
+
+  .info-pos {
+    position: relative;
+    width: 100%;
+    margin-top: calc(var(--u) * 25);
+    padding: 0;
+  }
+
+  .info-layout {
+    flex-direction: column;
+    margin-top: auto;
+  }
+
+  .info-item {
+    flex: none;
+    min-width: auto;
+  }
+
+  .info-left-group {
+    min-width: auto;
+  }
+
+  .info-right-w {
+    flex: none;
+    max-width: none;
+  }
+
+  .info-left-row.is-mh {
+    min-height: calc(var(--u) * 3);
+  }
+
+  .sched-row.last {
+    padding-top: calc(var(--gap) * 0.2);
+  }
+
+  .eyebrow {
+    font-size: calc(var(--u) * 0.8);
+  }
+
+  .stat-major {
+    font-size: calc(var(--u) * 2.2);
+  }
+
+  .stat-major.mob-small {
+    position: relative;
+    top: calc(var(--u) * 0.2);
+    font-size: var(--u);
+  }
+
+  .stat-major.no-wrap {
+    flex: none;
+  }
+
+  .stat-sm {
+    position: relative;
+    top: calc(var(--u) * 0.1);
+    font-size: calc(var(--u) * 1.3);
+  }
+
+  .stat-reg {
+    font-size: calc(var(--u) * 1.6);
+  }
+
+  .grid-main {
+    grid-template-columns: 1fr 1fr;
+    gap: calc(var(--gap) * 2);
+    margin-bottom: calc(var(--gap) * 2);
+  }
+
+  .headline-w {
+    grid-column: 1 / span 1;
+  }
+
+  .para-layout {
+    grid-column: 2 / span 1;
+  }
+
+  .para-w {
+    max-width: none;
+  }
+
+  .title-lg,
+  .title-lg :deep(strong) {
+    font-size: calc(var(--u) * 2.6);
+  }
+
+  .body-reg :deep(br) {
+    display: none;
+  }
+
+  .hl-grid {
+    grid-template-columns: minmax(0, 0.4fr) minmax(0, 2fr) minmax(0, 1fr) minmax(0, 0.6fr);
+  }
+
+  .flag-row {
+    flex: none;
+    top: calc(var(--u) * 0.2);
+    width: calc(var(--u) * 1.4);
+    height: calc(var(--u) * 0.9);
+    border-radius: calc(var(--u) * 0.1);
+  }
 }
 </style>
 

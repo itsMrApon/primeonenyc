@@ -79,4 +79,11 @@ onBeforeUnmount(() => {
   letter-spacing: calc(var(--u) * 0.05);
   text-align: center;
 }
+/* Same phone sizes as home's helmets callout (reference ≤479). */
+@media (max-width: 767px) {
+  .callout-text {
+    width: calc(var(--u) * 29);
+    font-size: calc(var(--u) * 1.7);
+  }
+}
 </style>

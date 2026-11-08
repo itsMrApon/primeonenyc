@@ -33,7 +33,7 @@ useHelmetFlip(track, getExperience);
       <OnTrackCalendar />
       <OnTrackOtotEnd />
       <div class="group-bg-black">
-        <HomeHelmetsHall class="helmets-z6" :helmets="content.helmets" :callout="false" accent="#b9bbad" />
+        <HomeHelmetsHall class="helmets-z6" :helmets="content.helmets" :callout="false" accent="#b9bbad" lift-on-phones />
         <HomeSocialsSection class="socials-z5" :socials="content.socials" dark />
         <OnTrackCallout />
       </div>
@@ -45,6 +45,7 @@ useHelmetFlip(track, getExperience);
 <style scoped>
 .on-track {
   position: relative;
+  overflow-x: clip; /* reference .page-w overflow-clip="x": wide parts never widen the phone viewport */
   background-color: #111112;
   color: #f4f4ed;
 }
@@ -72,6 +73,22 @@ useHelmetFlip(track, getExperience);
 .socials-z5 {
   position: relative;
   z-index: 5;
+}
+
+/* On-track reference ≤479: title margin 2.5u + spacer 8.75u above the helmet grid (home uses 8.5u). */
+@media (max-width: 767px) {
+  .helmets-z6 :deep(.helmet-grid) {
+    margin-top: calc(var(--u) * 11.25);
+  }
+
+  /* Grey Brier (.text-title-lg-brier) is 2.6rem on phones; home's lime-off variant is 2.4rem. */
+  .helmets-z6 :deep(.t-mona) {
+    letter-spacing: calc(var(--u) * -0.125);
+  }
+
+  .helmets-z6 :deep(.t-mona strong) {
+    font-size: calc(var(--u) * 2.6);
+  }
 }
 </style>
 

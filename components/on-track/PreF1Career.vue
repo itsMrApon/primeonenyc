@@ -36,6 +36,10 @@ onBeforeUnmount(() => {
   <section class="ot-pref1">
     <div class="c">
       <div class="spacer h14" />
+      <!-- Reference .f1-car-img-w.mobile: phone-only photo above the title (no highlight reveal). -->
+      <div class="car-img-w is-mobile">
+        <img class="car-img" :src="p.mobileImage.src" :alt="p.mobileImage.alt" />
+      </div>
       <div class="grid-main">
         <div class="headline-w">
           <HighLines tag="h2" class="title-lg" :html="p.title" />
@@ -170,6 +174,10 @@ onBeforeUnmount(() => {
   align-items: flex-start;
 }
 
+.car-img-w.is-mobile {
+  display: none;
+}
+
 .car-img-w {
   height: calc(var(--u) * 28.5625);
   aspect-ratio: 407 / 457;
@@ -252,5 +260,63 @@ onBeforeUnmount(() => {
   font-variation-settings: "wght" 800, "wdth" 87.5;
   line-height: 0.97;
   text-transform: uppercase;
+}
+/* Reference ≤479 (live at 375 px; 1u = the phone rem). */
+@media (max-width: 767px) {
+  .car-img-w.is-mobile {
+    display: block;
+    width: 100%;
+    height: calc(var(--u) * 24);
+    aspect-ratio: auto;
+    margin-bottom: var(--gap);
+  }
+
+  .img-col .car-img-w {
+    display: none;
+  }
+
+  .grid-main {
+    grid-template-columns: 1fr 1fr;
+    gap: calc(var(--gap) * 2);
+    margin-bottom: calc(var(--gap) * 2);
+  }
+
+  .headline-w {
+    grid-column: 1 / span 1;
+  }
+
+  .para-w {
+    grid-column: 2 / span 1;
+  }
+
+  .img-col,
+  .stats-list {
+    grid-column: 1 / -1;
+  }
+
+  .title-lg,
+  .title-lg :deep(strong) {
+    font-size: calc(var(--u) * 2.6);
+  }
+
+  .body-reg {
+    font-size: calc(var(--u) * 1.3);
+  }
+
+  .body-reg :deep(br) {
+    display: none;
+  }
+
+  .reef {
+    position: relative;
+    flex: none;
+    transform: none;
+  }
+
+  .stat-label {
+    position: relative;
+    top: calc(var(--u) * 0.1);
+    font-size: calc(var(--u) * 1.3);
+  }
 }
 </style>

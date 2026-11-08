@@ -18,9 +18,25 @@ onMounted(() => {
 });
 onBeforeUnmount(() => themeObserver?.disconnect());
 
+/** Reference kL: while open the nav goes light (brand, ham), the PO monogram fades out. */
+let themeBeforeOpen: string | undefined;
 watch(open, (v) => {
   document.documentElement.classList.toggle("nav-open", v);
+  const el = header.value;
+  if (!el) return;
+  if (v) {
+    themeBeforeOpen = el.dataset.navTheme;
+    el.dataset.navTheme = "light";
+  } else if (themeBeforeOpen) {
+    el.dataset.navTheme = themeBeforeOpen;
+  }
 });
+
+const hamInputs = computed(() =>
+  open.value
+    ? { hover: hover.value, close: true, "color-transparent": true, "color-white": false }
+    : { hover: hover.value, close: false, "color-transparent": theme.value === "dark", "color-white": theme.value === "light" }
+);
 </script>
 
 <template>
@@ -31,7 +47,7 @@ watch(open, (v) => {
       </a>
 
       <!-- PO monogram (same paths as /images/misc/ln-logo.svg, cropped); colour follows the nav theme. -->
-      <a class="nav-middle" :class="{ 'is-hidden': !logoShown, 'is-light': theme === 'light' }" href="/" aria-label="Home">
+      <a class="nav-middle" :class="{ 'is-hidden': !logoShown, 'is-light': theme === 'light', 'is-menu-open': open }" href="/" aria-label="Home">
         <svg class="nav-po" viewBox="41 106 430 300" aria-hidden="true">
           <g transform="translate(256 256) skewX(-14) translate(-178 -150)" fill="currentColor" fill-rule="evenodd">
             <path d="M0 0H90C128 0 150 24 150 62V108C150 146 128 170 90 170H52V300H0Z M52 48V122H84C94 122 98 116 98 106V64C98 54 94 48 84 48Z" />
@@ -67,31 +83,13 @@ watch(open, (v) => {
             file="btn-ui"
             artboard="hamburger"
             state-machine="hamburger"
-            :inputs="{ hover, close: open, 'color-transparent': theme === 'dark', 'color-white': theme === 'light' }"
+            :inputs="hamInputs"
           />
         </button>
       </div>
     </div>
 
-    <nav id="site-menu" class="nav-menu-w" :class="{ 'is-open': open }">
-      <div class="nav-menu-inner">
-        <ul class="nav-menu-links-list">
-          <li v-for="link in content.nav.links" :key="link.href">
-            <a class="nav-menu-link-w" :href="link.href" @click="open = false">
-              {{ link.label }}
-            </a>
-          </li>
-        </ul>
-        <a class="nav-business" :href="content.nav.business.href">
-          {{ content.nav.business.label }}
-        </a>
-        <ul class="nav-menu-social-w">
-          <li v-for="s in content.nav.socials" :key="s.href">
-            <a :href="s.href" target="_blank" rel="noopener">{{ s.label }}</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+    <LayoutNavMenu :open="open" @close="open = false" />
   </header>
 </template>
 
@@ -106,6 +104,7 @@ watch(open, (v) => {
 
 .nav-inner {
   position: relative;
+  z-index: 50; /* above the menu (z 25), like the reference */
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -165,6 +164,18 @@ watch(open, (v) => {
 
 .nav-middle.is-light {
   color: #ebeee0;
+}
+
+.nav-middle.is-menu-open {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.nav-middle {
+  transition:
+    color 0.75s cubic-bezier(0.65, 0.05, 0, 1),
+    opacity 0.4s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 .nav-po {
@@ -230,70 +241,6 @@ watch(open, (v) => {
   border: 0;
   background: transparent;
   cursor: pointer;
-}
-
-.nav-menu-w {
-  position: fixed;
-  inset: 0;
-  z-index: 110;
-  background: var(--color-dark-green);
-  color: var(--color-white);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.35s ease, visibility 0.35s ease;
-}
-
-.nav-menu-w.is-open {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.nav-menu-inner {
-  min-height: 100%;
-  display: grid;
-  place-content: center;
-  gap: 2rem;
-  padding: var(--pad-x);
-  text-align: center;
-}
-
-.nav-menu-links-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.nav-menu-link-w {
-  display: block;
-  padding: 0.35rem 0;
-  font-size: clamp(2rem, 6vw, 4rem);
-  font-weight: 650;
-  letter-spacing: -0.03em;
-}
-
-.nav-menu-link-w:hover {
-  color: var(--color-lime);
-}
-
-.nav-business {
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.8rem;
-  color: var(--color-lime);
-}
-
-.nav-menu-social-w {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  text-transform: lowercase;
-  font-size: 0.9rem;
 }
 
 /* Reference ≤991 / ≤479: brand hidden, Store left + hamburger right, LN4 centred below. */

@@ -15,6 +15,7 @@
       { "label": "Off Track", "href": "/off-track" },
       { "label": "Calendar", "href": "/calendar" }
     ],
+    "tagline": "mclaren f1 since 2019",
     "business": {
       "label": "business enquiries",
       "href": "mailto:business@landonorris.com"

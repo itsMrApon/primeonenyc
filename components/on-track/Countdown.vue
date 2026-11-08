@@ -185,4 +185,32 @@ onBeforeUnmount(() => clearInterval(timer));
 .large-number.seconds {
   width: calc(var(--u) * 16);
 }
+/* Reference ≤479 (live at 375 px; 1u = the phone rem): digits wrap to two rows. */
+@media (max-width: 767px) {
+  .c {
+    padding-bottom: calc(var(--u) * 10);
+  }
+
+  .eyebrow {
+    font-size: calc(var(--u) * 0.8);
+  }
+
+  .digits-w {
+    flex-wrap: wrap;
+  }
+
+  .large-number {
+    font-size: calc(var(--u) * 10);
+  }
+
+  .large-number.seconds {
+    width: calc(var(--u) * 9.1);
+  }
+
+  .phrase-rive {
+    width: calc(var(--u) * 28);
+    height: auto;
+    aspect-ratio: 57 / 35.125;
+  }
+}
 </style>

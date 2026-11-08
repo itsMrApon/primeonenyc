@@ -405,4 +405,80 @@ onBeforeUnmount(() => {
   height: 100%;
   object-fit: cover;
 }
+/* Reference ≤479 (live at 375 px; 1u = the phone rem): series, year and time columns hidden. */
+@media (max-width: 767px) {
+  .mouse-w {
+    display: none;
+  }
+
+  .title-layout.grid-main {
+    grid-template-columns: 1fr 1fr;
+    gap: calc(var(--gap) * 2);
+    margin-bottom: calc(var(--gap) * 2);
+  }
+
+  .headline-w {
+    grid-column: 1 / span 1;
+  }
+
+  .para-w {
+    grid-column: 2 / span 1;
+  }
+
+  .title-lg,
+  .title-lg :deep(strong) {
+    font-size: calc(var(--u) * 2.6);
+  }
+
+  .body-reg {
+    font-size: calc(var(--u) * 1.3);
+  }
+
+  /* The desktop line breaks are frozen for 1440 px only. */
+  .body-reg :deep(br) {
+    display: none;
+  }
+
+  .spacer.h875 {
+    height: calc(var(--u) * 4);
+  }
+
+  .eyebrow {
+    font-size: calc(var(--u) * 0.8);
+  }
+
+  .hl-grid {
+    grid-template-columns: 2fr 1fr 0.6fr;
+  }
+
+  .hl-grid.is-top > :nth-child(1),
+  .hl-grid.is-top > :nth-child(5),
+  .hl-grid.is-row > .hl-item:nth-child(1),
+  .hl-grid.is-row > .hl-item:nth-child(5),
+  .hl-grid.is-row > .hl-item:nth-child(3) > .label-major:nth-child(2) {
+    display: none;
+  }
+
+  .label-major {
+    font-size: calc(var(--u) * 2.2);
+  }
+
+  .label-sm {
+    top: calc(var(--u) * 0.1);
+    font-size: calc(var(--u) * 1.3);
+  }
+
+  .flag {
+    flex: none;
+    top: calc(var(--u) * 0.2);
+    width: calc(var(--u) * 1.4);
+    height: calc(var(--u) * 0.9);
+    border-radius: calc(var(--u) * 0.1);
+  }
+
+  .trophy-w {
+    display: flex;
+    left: calc(var(--u) * -2.6);
+  }
+}
 </style>

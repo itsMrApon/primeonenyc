@@ -188,4 +188,28 @@ onBeforeUnmount(() => {
   z-index: 10;
   transform: translate(0, calc(var(--u) * -1));
 }
+/* Reference ≤479 (live at 375 px; 1u = the phone rem). */
+@media (max-width: 767px) {
+  .impact-content {
+    max-width: none;
+    padding-inline: var(--gap);
+  }
+
+  .eyebrow {
+    font-size: calc(var(--u) * 0.8);
+  }
+
+  .quote {
+    font-size: calc(var(--u) * 3.5);
+    line-height: 0.9;
+  }
+
+  .quote :deep(strong) {
+    font-size: calc(var(--u) * 3.5);
+  }
+
+  .reef-rive {
+    width: calc(var(--u) * 9);
+  }
+}
 </style>
