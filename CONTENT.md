@@ -2,8 +2,7 @@
 
 Source of truth for rebuild overlays. Machine-readable twin: `content/home.json`.
 
-Live reference: https://landonorris.com/  
-Crawl mirror: `../noomo/output-lando/mirror/index.html`
+Layout reference: the boilerplate clone (`~/Dev/web/crawl/boilerplate_agency`, `boilerplate` config on port 3002).
 
 ## Brand
 
