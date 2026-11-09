@@ -8,8 +8,9 @@
  *   - Intro (reference: page init, then +750 ms): TRACK lines/chars drop −40 % → 0
  *     (1.5 s power2.inOut) from init; at +0.75 s the oval clip opens, every
  *     highlighter plays and every hero Rive starts.
- *   - Circuits (circuits.riv) autoplay with their track; hovering the "5th" row
- *     switches both to the row's hover track (reference data-rive-circuit-hover).
+ *   - "Previous" circuit (circuits.riv) autoplays with its track; hovering the "5th" row
+ *     switches it to the row's hover track (reference data-rive-circuit-hover). The current
+ *     box shows the office outline (OutletIcon) instead of a circuit.
  *   - [data-heroflip="pos1"]: where the GL helmet starts (useHelmetFlip).
  */
 import gsap from "gsap";
@@ -31,6 +32,8 @@ const circuitInputs = (own: string) => {
 };
 
 const chars = hero.title.toUpperCase().split("");
+/** "Tax" brush word in place of the phrases.riv "ON" (strokes shared with the countdown phrase). */
+const TAX_WORD = ["T-bar", "T-stem", "a", "x-1", "x-2"];
 const tweens: gsap.core.Animation[] = [];
 let clip: gsap.core.Timeline | null = null;
 
@@ -82,12 +85,12 @@ onBeforeUnmount(() => {
 <template>
   <div class="ot-hero" data-hero-animation-container>
     <div class="ot-hero-c">
-      <h1 class="sr-only">On Track</h1>
+      <h1 class="sr-only">Tax Consultant</h1>
       <div class="title-layout">
         <div class="title-w">
           <div class="title-rive-w">
             <div class="title-rive">
-              <RiveCanvas :ref="setRive" file="phrases" artboard="phrase_on" state-machine="phrase_on" :autoplay="false" />
+              <BrushPhrase :ref="setRive" :only="TAX_WORD" view-box="9 160 402 205" :autoplay="false" />
             </div>
           </div>
           <div ref="title" class="title" :aria-label="hero.title">
@@ -108,7 +111,7 @@ onBeforeUnmount(() => {
               <HighLines :ref="setHigh" manual class="stat-label" :html="hero.meta.age" />
               <div class="label-flex">
                 <HighLines :ref="setHigh" manual class="stat-label" :html="hero.meta.hometown" />
-                <div class="flag is-sm"><img src="/images/on-track/flag-uk.svg" alt="UK Flag" /></div>
+                <div class="flag is-sm"><img src="/images/on-track/calendar/flag-usa.svg" alt="US Flag" /></div>
               </div>
             </div>
           </div>
@@ -185,7 +188,7 @@ onBeforeUnmount(() => {
                         <div class="img-fill is-2" />
                       </div>
                       <div class="box1-item is-2">
-                        <div class="flag is-md"><img src="/images/on-track/flag-brazil.png" alt="" /></div>
+                        <div class="flag is-md"><img :src="hero.current.flag" alt="" /></div>
                         <HighLines :ref="setHigh" manual class="eyebrow" :html="hero.current.city" />
                       </div>
                     </div>
@@ -219,13 +222,7 @@ onBeforeUnmount(() => {
                 <div class="box2">
                   <div class="box2-col-1">
                     <div class="box2-rive-w">
-                      <RiveCanvas
-                        file="circuits"
-                        artboard="circuits"
-                        state-machine="circuits"
-                        exclusive
-                        :inputs="circuitInputs(hero.current.circuit)"
-                      />
+                      <OutletIcon :src="hero.current.outline" color="#b9bbad" />
                     </div>
                     <div class="box2-flag">
                       <div>
@@ -249,14 +246,7 @@ onBeforeUnmount(() => {
                     </div>
                     <div class="box2-row is-2">
                       <div class="signature-rive">
-                        <RiveCanvas
-                          :ref="setRive"
-                          file="signature"
-                          artboard="signature"
-                          state-machine="signature_play"
-                          :inputs="{ 'color_grey-on-track': true }"
-                          :autoplay="false"
-                        />
+                        <SignatureDraw :ref="setRive" :autoplay="false" />
                       </div>
                     </div>
                   </div>
@@ -312,29 +302,31 @@ onBeforeUnmount(() => {
   align-items: center;
 }
 
+/* "Tax" brush (402 x 205 viewBox) left of CONSULTANT, overlapping its first letter like the reference "ON". */
 .title-rive-w {
   position: relative;
   display: flex;
   align-items: center;
   width: 100%;
-  height: calc(var(--u) * 16.75);
+  height: calc(var(--u) * 10.8);
 }
 
 .title-rive {
   position: absolute;
-  bottom: calc(var(--u) * -6);
-  left: calc(var(--u) * -4);
+  bottom: calc(var(--u) * -5.7);
+  left: calc(var(--u) * -0.5);
   z-index: 10;
   display: flex;
   flex: none;
-  width: calc(var(--u) * 46.0625);
-  height: calc(var(--u) * 32.75);
+  width: calc(var(--u) * 26);
+  height: calc(var(--u) * 13.26);
 }
 
+/* CONSULTANT is 6.48 em wide: 12.2u keeps it to ~79u, the reference TRACK's right-aligned slot. */
 .title {
   flex: none;
   font-family: var(--font-mona);
-  font-size: calc(var(--u) * 22.3);
+  font-size: calc(var(--u) * 12.2);
   font-variation-settings: "wdth" 95, "wght" 700;
   line-height: 0.886;
   letter-spacing: calc(var(--u) * -0.1875);
@@ -780,19 +772,25 @@ onBeforeUnmount(() => {
     min-height: auto;
   }
 
+  /* Phone: "Tax" brush on its own row, CONSULTANT full width under it (6.32 em → 34u). */
+  .title-w {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .title-rive-w {
-    height: auto;
+    height: calc(var(--u) * 6);
   }
 
   .title-rive {
-    inset: auto auto auto calc(var(--u) * -1.4);
-    width: calc(var(--u) * 13.5);
+    inset: auto auto calc(var(--u) * -2.2) calc(var(--u) * -0.4);
+    width: calc(var(--u) * 15);
     height: auto;
-    aspect-ratio: 46.0625 / 32.75;
+    aspect-ratio: 402 / 205;
   }
 
   .title {
-    font-size: calc(var(--u) * 7.7);
+    font-size: calc(var(--u) * 5.35);
   }
 
   .info-grid.grid-main {

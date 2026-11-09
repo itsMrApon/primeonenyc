@@ -2,7 +2,7 @@
 /**
  * On Track impact (reference .impact-content-w.on-track), second half of the
  * helmet-flight track. See .reanimate/on-track/01-impact/spec.md.
- *   - signature.riv (grey) hidden until "top 80%", then plays (bundle CH); eyebrow + quote highlighters (lime).
+ *   - Signature (SignatureDraw, grey) written on at "top 80%" (bundle CH: signature.riv); eyebrow + quote highlighters (lime).
  *   - [data-heroflip="pos2"] centred on the quote, raised 13u; "pos3" over the
  *     reef Rive: where the GL helmet passes and lands (useHelmetFlip).
  *   - reef.riv 3d-helmet-reef_scroll: scroll = progress × 1000 over
@@ -51,13 +51,7 @@ onBeforeUnmount(() => {
     <div class="impact-content">
       <div class="impact-icon">
         <div class="signature-rive">
-          <RiveCanvas
-            file="signature"
-            artboard="signature"
-            state-machine="signature_play"
-            :inputs="{ 'color_grey-on-track': true }"
-            play-at="top 80%"
-          />
+          <SignatureDraw play-at="top 80%" />
         </div>
         <div class="eyebrow-w">
           <HighLines class="eyebrow" :html="impact.eyebrow" />

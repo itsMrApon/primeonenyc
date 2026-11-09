@@ -23,7 +23,7 @@ import { UmbrellaScene } from "./scenes/UmbrellaScene";
 import { MarqueeTextScene } from "./scenes/MarqueeTextScene";
 import type { HelmetScrollState } from "./scenes/HelmetScrollScene";
 import { PapersScrollScene } from "./scenes/PapersScrollScene";
-import { TracksScene } from "./scenes/TracksScene";
+import { OutletsScene } from "./scenes/OutletsScene";
 
 const easeInOutQuad = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -65,8 +65,8 @@ export class Experience {
   readonly #page: ExperiencePage;
   /** On Track flying object: the tax-paper pile (top view) on the reference helmet path. */
   readonly #helmetScroll = new PapersScrollScene();
-  /** On Track calendar circuits (attach a DOM target with `tracks.attach`). */
-  readonly tracks = new TracksScene();
+  /** On Track calendar card: neon office storefronts (attach a DOM target with `tracks.attach`). */
+  readonly tracks = new OutletsScene();
 
   readonly hero: HeroStage = HERO === "taxi" ? new TaxiScene() : new UmbrellaScene();
   readonly #fluid = new FluidSim();

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 766 482" width="766" height="482" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <title>Tax outlet 3: gable house</title>
+  <g id="roof">
+    <path id="roof-outline" pathLength="1" d="M110 214 L383 40 L656 214 H110 Z"/>
+    <path id="roof-fascia" pathLength="1" d="M136 214 L383 58 L630 214"/>
+    <path id="chimney" pathLength="1" d="M520 127 V72 H560 V153"/>
+    <path id="porch-roof" pathLength="1" d="M130 276 H636 V292 H130 Z"/>
+  </g>
+  <g id="sign">
+    <path id="sign-board" pathLength="1" d="M303 118 H463 V192 H303 Z"/>
+    <path id="sign-text" pathLength="1" d="M316.0 132 H350.0 M333.0 132 V178 M366.0 178 L383.0 132 L400.0 178 M372.8 161.4 H393.2 M416.0 132 L450.0 178 M450.0 132 L416.0 178"/>
+  </g>
+  <g id="wall">
+    <path id="wall-outline" pathLength="1" d="M160 214 V276 M606 214 V276 M170 292 V440 M596 292 V440"/>
+    <path id="porch-posts" pathLength="1" d="M146 292 V440 M154 292 V440 M612 292 V440 M620 292 V440"/>
+    <path id="ground-line" pathLength="1" d="M90 452 H676"/>
+  </g>
+  <g id="door">
+    <path id="door-frame" pathLength="1" d="M337 440 V310 H429 V440"/>
+    <path id="door" pathLength="1" d="M345 318 H421 V440 H345 Z"/>
+    <path id="door-glass" pathLength="1" d="M359 372 V346 A24 24 0 0 1 407 346 V372 Z"/>
+    <path id="door-handle" pathLength="1" d="M412 392 V408"/>
+  </g>
+  <g id="windows">
+    <path id="window-left" pathLength="1" d="M200 312 H296 V384 H200 Z"/>
+    <path id="window-right" pathLength="1" d="M470 312 H566 V384 H470 Z"/>
+  </g>
+  <g id="bars">
+    <path id="window-shutters" pathLength="1" d="M182 312 H196 V384 H182 Z M300 312 H314 V384 H300 Z M452 312 H466 V384 H452 Z M570 312 H584 V384 H570 Z M248 312 V384 M200 348 H296 M518 312 V384 M470 348 H566"/>
+    <path id="porch-railing" pathLength="1" d="M154 404 H326 M440 404 H612 M172 404 V440 M190 404 V440 M208 404 V440 M226 404 V440 M244 404 V440 M262 404 V440 M280 404 V440 M298 404 V440 M316 404 V440 M458 404 V440 M476 404 V440 M494 404 V440 M512 404 V440 M530 404 V440 M548 404 V440 M566 404 V440 M584 404 V440 M602 404 V440"/>
+  </g>
+  <g id="details">
+    <path id="steps" pathLength="1" d="M327 440 V452 H439 V440 M333 446 H433"/>
+    <path id="house-number" pathLength="1" d="M360 296 H406 V306 H360 Z"/>
+  </g>
+</svg>

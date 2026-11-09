@@ -257,8 +257,9 @@ const hamInputs = computed(() =>
     transform: none;
   }
 
+  /* Centred on the store / menu buttons' row. */
   .nav-middle {
-    top: calc(var(--u) * 5.85);
+    top: calc(var(--u) * 2.3);
     width: calc(var(--u) * 2.5);
     height: calc(var(--u) * 2.5);
   }

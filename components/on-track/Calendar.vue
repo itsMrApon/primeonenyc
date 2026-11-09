@@ -36,12 +36,9 @@ if (first === -1) first = items.length - 1;
 
 const current = ref(first);
 const item = computed(() => items[current.value]);
-const hoverTrack = ref(cal.cursor.track);
-const circuitIds = [...new Set([cal.cursor.track, ...items.map((it) => it.circuit)])];
-const cursorInputs = computed(() => ({
-  ...Object.fromEntries(circuitIds.map((id) => [id, id === hoverTrack.value])),
-  color_black: true
-}));
+/** Cursor card: outline of the last hovered office (first office before any hover). */
+const hoverTrack = ref(items[0].circuit);
+const hoverOutline = computed(() => items.find((it) => it.circuit === hoverTrack.value)?.outline ?? items[0].outline);
 
 const trackWrap = ref<HTMLElement | null>(null);
 const glTarget = ref<HTMLElement | null>(null);
@@ -62,6 +59,7 @@ function attach() {
     return;
   }
   attached = exp;
+  exp.tracks.define(items.map((it) => ({ name: it.circuit, svg: it.outline })));
   exp.tracks.attach(glTarget.value);
   exp.tracks.setTrack(item.value.circuit, "forward", true);
 }
@@ -392,7 +390,7 @@ onBeforeUnmount(() => {
           <div class="eyebrow-w grey"><div class="eyebrow">{{ cal.cursor.eyebrow }}</div></div>
           <div class="circuit-rive-w">
             <div class="circuit-rive">
-              <RiveCanvas file="circuits" artboard="circuits" state-machine="circuits" exclusive :inputs="cursorInputs" />
+              <img class="outlet-img" :src="hoverOutline" alt="" />
             </div>
             <img class="circuit-rive-bg" :src="cal.cursor.bg" alt="" />
           </div>
@@ -959,6 +957,12 @@ onBeforeUnmount(() => {
   width: calc(var(--u) * 11.5);
   height: calc(var(--u) * 11.5);
   margin-inline: auto;
+}
+
+.outlet-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .circuit-rive-bg {

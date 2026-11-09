@@ -124,10 +124,10 @@ onBeforeUnmount(() => {
         </template>
         <!-- eslint-disable-next-line vue/no-v-html -- trusted copy from content/on-track.json -->
         <div class="htrack-quote" :style="at(QUOTE, M_QUOTE)" v-html="t.quote.text" />
-        <img class="htrack-signature" :style="at(SIGNATURE, M_SIGNATURE)" :src="t.quote.signature" alt="Lando's signature in lime color" />
+        <img class="htrack-signature" :style="at(SIGNATURE, M_SIGNATURE)" :src="t.quote.signature" :alt="t.quote.signatureAlt" />
         <div class="htrack-pill" :style="at(PILL, M_PILL)">
           <span class="htrack-pill-box is-side">{{ t.pill.text }}</span>
-          <span class="htrack-pill-box"><img :src="t.pill.icon" :alt="t.pill.alt" /></span>
+          <span class="htrack-pill-box" role="img" :aria-label="t.pill.alt"><span class="htrack-pill-icon"><OutletIcon :src="t.pill.icon" color="#b9bbad" /></span></span>
         </div>
       </div>
     </div>
@@ -226,9 +226,10 @@ onBeforeUnmount(() => {
   border-left: 1px solid #b9bbad;
 }
 
-.htrack-pill-box img {
+.htrack-pill-icon {
+  display: flex;
   width: calc(var(--u) * 1.5);
-  height: auto;
+  height: calc(var(--u) * 1.5);
 }
 /* Phone: the track is a static 93.34u block (reference ≤479 flex column, no pin, no parallax). */
 @media (max-width: 767px) {

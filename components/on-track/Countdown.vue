@@ -2,23 +2,17 @@
 /**
  * On Track "next race" countdown (reference section[data-countdown-wrap]).
  * See .reanimate/on-track/06-on-track-countdown/spec.md.
- *   - Circuit Rive (circuits.riv, track + color_lime) over the "next race begins in..." eyebrow.
- *   - Digits (bundle S$): target "d/m/yyyy HH:MM" read as UTC; days/hours/minutes/seconds
- *     zero-padded, refreshed every second; "00" everywhere once the date has passed.
- *   - "Race Day" phrase Rive (phrases.riv race-day) centred over the digits, plays at "top 80%".
+ *   - Office outline (OutletIcon, lime) over the eyebrow (reference: circuits.riv track, color_lime).
+ *   - Digits (bundle S$): target is an ISO date with offset (New York tax deadline, ET);
+ *     days/hours/minutes/seconds zero-padded, refreshed every second; "00" once it has passed.
+ *   - "Tax Day" brush phrase (BrushPhrase, rebuilt from the phrases.riv race-day strokes) centred
+ *     over the digits, plays at "top 80%".
  */
 import content from "~/content/on-track.json";
 
 const cd = content.countdown;
 
-function parseTarget(s: string) {
-  const [date, time] = s.split(" ");
-  const [d, m, y] = date.split("/").map((v) => parseInt(v, 10));
-  const [h, min] = time.split(":").map((v) => parseInt(v, 10));
-  return Date.UTC(y, m - 1, d, h, min, 0);
-}
-
-const target = parseTarget(cd.date);
+const target = Date.parse(cd.date);
 const digits = ref(["00", "00", "00", "00"]);
 let timer: ReturnType<typeof setInterval> | undefined;
 
@@ -51,13 +45,7 @@ onBeforeUnmount(() => clearInterval(timer));
       <div class="inner">
         <div class="eyebrow-layout">
           <div class="circuit-rive">
-            <RiveCanvas
-              file="circuits"
-              artboard="circuits"
-              state-machine="circuits"
-              exclusive
-              :inputs="{ [cd.circuit]: true, color_lime: true }"
-            />
+            <OutletIcon :src="cd.outline" color="#d2ff00" />
           </div>
           <div class="eyebrow-w">
             <HighLines class="eyebrow" :html="cd.eyebrow" />
@@ -66,7 +54,7 @@ onBeforeUnmount(() => clearInterval(timer));
         <div class="digits-w">
           <div class="phrase-rive-w">
             <div class="phrase-rive">
-              <RiveCanvas file="phrases" artboard="race-day" state-machine="race-day" play-at="top 80%" />
+              <BrushPhrase play-at="top 80%" />
             </div>
           </div>
           <div v-for="(unit, i) in cd.units" :key="unit" class="digits-item">

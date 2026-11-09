@@ -1,11 +1,12 @@
 <script setup lang="ts">
 /**
- * Helmets Hall of Fame (reference `.s-group.bg-black`), live layout at 1440 px
+ * Helmets Hall of Fame — one shared section for home and /on-track; edit content/hall-of-fame.json
+ * (copy + card images) and both pages change. Reference `.s-group.bg-black`, live layout at 1440 px
  * in fluid units (1u = 13.33 px there).
  *   - title / copy highlighter reveals (lime; copy +0.2 s);
  *   - 4×4 grid of masked helmet cards; over the grid's "top bottom" →
- *     "bottom top" every card rises 5u → 0, odd cards 25u → 0 (linear scrub,
- *     at every width — bundle ZZ over the nested .helmet-grid-item-w pairs);
+ *     "bottom top" every card rises 5u → 0, odd cards 25u → 0 (linear scrub;
+ *     bundle ZZ over the nested .helmet-grid-item-w pairs; phones: no lift, like live home);
  *   - hover: lime outline, helmet ×1.1, photo revealed by an ellipse clip
  *     (0.75 s cubic-bezier(0.65, 0.05, 0, 1));
  *   - callout: reef helmet Rive scrubbed by scroll ("top bottom" →
@@ -14,24 +15,18 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import type { HomeContent } from "~/composables/useHomeContent";
+import hallOfFame from "~/content/hall-of-fame.json";
 
 const props = withDefaults(
   defineProps<{
-    /** Defaults to the home copy; /on-track passes the original Lando helmets. */
-    helmets?: HomeContent["helmets"];
-    /** Home closes the group with the reef callout; /on-track has its own callout sections. */
+    /** Home closes the group with the reef callout; /on-track (same section) has its own callout sections. */
     callout?: boolean;
-    /** "Hall of Fame" colour: home #B2C73A, on-track grey #B9BBAD. */
-    accent?: string;
-    /** Live /on-track keeps the card lift on phones (its init runs bundle ZZ at every width); home doesn't. */
-    liftOnPhones?: boolean;
   }>(),
-  { helmets: undefined, callout: true, accent: "#b2c73a", liftOnPhones: false }
+  { callout: true }
 );
 
-const content = useHomeContent();
-const h = computed(() => props.helmets ?? content.helmets);
+/** One source for every page that shows this section: content/hall-of-fame.json. */
+const h = hallOfFame;
 
 const grid = ref<HTMLElement | null>(null);
 const cards: (HTMLElement | null)[] = [];
@@ -47,7 +42,7 @@ const triggers: ScrollTrigger[] = [];
  */
 function updateGrid(progress: number) {
   const unit = fluidUnit();
-  const left = isMobileLayout() && !props.liftOnPhones ? 0 : 1 - progress;
+  const left = isMobileLayout() ? 0 : 1 - progress; // live home: no lift on phones
   cards.forEach((card, i) => {
     if (!card) return;
     const lift = (i % 2 === 1 ? 25 : 5) * unit * left;
@@ -82,7 +77,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
 </script>
 
 <template>
-  <div class="helmets-group" data-nav-theme-target="light" :style="{ '--accent': accent }">
+  <div class="helmets-group" data-nav-theme-target="light">
     <section class="helmets">
       <div class="helmets-title">
         <div class="helmets-headline">
@@ -101,7 +96,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
           role="listitem"
         >
           <div class="helmet-card">
-            <HomeHelmetFrame />
+            <SectionsHallOfFameFrame />
             <div class="helmet-img-w">
               <img class="helmet-img" :src="item.src" alt="" loading="lazy" />
             </div>
@@ -177,7 +172,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
   font-size: calc(var(--u) * 4.6875);
   font-weight: 700;
   letter-spacing: normal;
-  color: var(--accent);
+  color: #b2c73a;
 }
 
 .helmets-p {

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 766 482" width="766" height="482" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <title>Tax outlet 2: brownstone</title>
+  <g id="roof">
+    <path id="cornice" pathLength="1" d="M135 62 H631 V80 H135 Z"/>
+    <path id="parapet" pathLength="1" d="M150 62 V44 H616 V62"/>
+    <path id="cornice-dentils" pathLength="1" d="M160 80 V88 M178 80 V88 M196 80 V88 M214 80 V88 M232 80 V88 M250 80 V88 M268 80 V88 M286 80 V88 M304 80 V88 M322 80 V88 M340 80 V88 M358 80 V88 M376 80 V88 M394 80 V88 M412 80 V88 M430 80 V88 M448 80 V88 M466 80 V88 M484 80 V88 M502 80 V88 M520 80 V88 M538 80 V88 M556 80 V88 M574 80 V88 M592 80 V88 M610 80 V88"/>
+  </g>
+  <g id="sign">
+    <path id="sign-board" pathLength="1" d="M190 262 H576 V314 H190 Z"/>
+    <path id="sign-text" pathLength="1" d="M322.0 272 H352.0 M337.0 272 V304 M368.0 304 L383.0 272 L398.0 304 M374.0 292.5 H392.0 M414.0 272 L444.0 304 M444.0 272 L414.0 304"/>
+  </g>
+  <g id="wall">
+    <path id="wall-outline" pathLength="1" d="M150 440 V80 M616 80 V440"/>
+    <path id="floor-band" pathLength="1" d="M150 246 H616 M150 252 H616"/>
+    <path id="ground-line" pathLength="1" d="M100 452 H666"/>
+  </g>
+  <g id="door">
+    <path id="door-frame" pathLength="1" d="M496 440 V328 H574 V440"/>
+    <path id="door-transom" pathLength="1" d="M502 334 H568 V352 H502 Z"/>
+    <path id="door" pathLength="1" d="M504 358 H566 V440 H504 Z"/>
+    <path id="door-glass" pathLength="1" d="M514 368 H556 V410 H514 Z"/>
+    <path id="door-handle" pathLength="1" d="M560 396 V412"/>
+  </g>
+  <g id="windows">
+    <path id="upper-windows" pathLength="1" d="M195 222 V152 A35 35 0 0 1 265 152 V222 Z M348 222 V152 A35 35 0 0 1 418 152 V222 Z M501 222 V152 A35 35 0 0 1 571 152 V222 Z"/>
+    <path id="shop-window" pathLength="1" d="M190 330 H478 V422 H190 Z"/>
+  </g>
+  <g id="bars">
+    <path id="window-mullions" pathLength="1" d="M230 117 V222 M195 168 H265 M383 117 V222 M348 168 H418 M536 117 V222 M501 168 H571 M286 330 V422 M382 330 V422 M182 428 H486 M190 222 H270 M343 222 H423 M496 222 H576"/>
+  </g>
+  <g id="details">
+    <path id="stoop" pathLength="1" d="M486 440 H584 V452 M486 440 V452"/>
+    <path id="window-poster" pathLength="1" d="M206 346 H262 V390 H206 Z"/>
+  </g>
+</svg>

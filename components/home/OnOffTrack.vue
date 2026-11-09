@@ -24,6 +24,8 @@ const col2 = ref<HTMLElement | null>(null);
 const rightImg = ref<HTMLImageElement | null>(null);
 const endImg = ref<HTMLImageElement | null>(null);
 const phrase = ref<{ play: () => void } | null>(null);
+/** "Tax" brush word in place of the phrases.riv "ON" (same strokes as the Tax Consultant hero). */
+const TAX_WORD = ["T-bar", "T-stem", "a", "x-1", "x-2"];
 const phraseBox = ref<HTMLElement | null>(null);
 const hover = reactive({ on: false, off: false });
 const triggers: ScrollTrigger[] = [];
@@ -90,16 +92,16 @@ onBeforeUnmount(() => {
           <div ref="col1" class="otot-col is-1">
             <div class="otot-titles">
               <HighLines tag="h2" class="otot-t-brier" :html="on.titleTop" color="dark-green-tint-1" />
-              <HighLines tag="h2" class="otot-t-mona" :html="on.titleBottom" color="dark-green-tint-1" />
+              <HighLines tag="h2" class="otot-t-mona is-long" :html="on.titleBottom" color="dark-green-tint-1" />
               <div ref="phraseBox" class="otot-phrase">
-                <RiveCanvas ref="phrase" file="phrases" artboard="phrase_on" state-machine="phrase_on" :autoplay="false" />
+                <BrushPhrase ref="phrase" :only="TAX_WORD" view-box="9 160 402 205" :autoplay="false" />
               </div>
             </div>
             <HighLines tag="p" class="otot-p" :html="on.body" color="dark-green-tint-1" :delay="0.2" />
             <a
               class="otot-btn is-flipped"
               :href="on.href"
-              title="On Track page"
+              title="Tax Consultant page"
               @pointerenter="hover.on = true"
               @pointerleave="hover.on = false"
             >
@@ -244,12 +246,19 @@ onBeforeUnmount(() => {
   margin-inline: 0;
 }
 
+/* CONSULTANT (6.48 em) sized to the column the reference TRACK filled. */
+.otot-t-mona.is-long {
+  font-size: calc(var(--u) * 3.2);
+  letter-spacing: calc(var(--u) * -0.1);
+}
+
+/* "Tax" brush (402 x 205) over the serif TAX, like the reference "ON" brush over "ON". */
 .otot-phrase {
   position: absolute;
-  top: 0;
+  top: calc(var(--u) * -1);
   left: calc(var(--u) * 6.315);
   width: calc(var(--u) * 15.94);
-  height: calc(var(--u) * 12.13);
+  height: calc(var(--u) * 8.13);
   pointer-events: none;
 }
 
@@ -348,7 +357,15 @@ onBeforeUnmount(() => {
   }
 
   .otot-phrase {
-    left: calc(var(--u) * 0.56);
+    top: calc(var(--u) * -0.6);
+    left: calc(var(--u) * 5);
+    width: calc(var(--u) * 10.5);
+    height: calc(var(--u) * 5.35);
+  }
+
+  .otot-t-mona.is-long {
+    font-size: calc(var(--u) * 2.35);
+    letter-spacing: calc(var(--u) * -0.05);
   }
 
   .otot-p {

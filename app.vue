@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const route = useRoute();
 /** Each route is a full page load (nav uses plain links), so the GL page is fixed per boot. */
-const glPage = route.path.replace(/\/$/, "") === "/on-track" ? "on-track" : "home";
+const glPage = route.path.replace(/\/$/, "") === "/tax-consultant" ? "on-track" : "home";
 const booted = ref(false);
 const ready = ref(false);
 const failure = ref<string | null>(null);

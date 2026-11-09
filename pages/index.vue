@@ -12,7 +12,7 @@ useHomeScroll({
     <HomeImpactSection />
     <HomeHorizontalTrack />
     <HomeOnOffTrack />
-    <HomeHelmetsHall />
+    <SectionsHallOfFame />
     <HomePartnersMarquee />
     <HomeSocialsSection />
     <HomeSiteFooter />

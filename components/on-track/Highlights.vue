@@ -1,6 +1,7 @@
 <script setup lang="ts">
 /**
- * On Track "F1 result highlights" (reference .c.is-f1-highlight-outer).
+ * Tax Consultant "NY tax dates & rates" (reference .c.is-f1-highlight-outer, "F1 result highlights"):
+ * level / tax / due date / rate (reference finish) / sticker note (reference time-gap column).
  * See .reanimate/on-track/03-f1-highlight-outer/spec.md.
  *   - Title + paragraph highlighters; header eyebrows (grey). The paragraph's <br>s
  *     reproduce the reference's line breaks, which are narrower than its 331 px box
@@ -119,6 +120,8 @@ onBeforeUnmount(() => {
             <div class="hl-item">
               <div class="label-major">{{ row.name }}</div>
               <div class="flag"><img :src="row.flag" alt="" /></div>
+              <span class="m-break" />
+              <span class="sticker is-m">{{ row.sticker }}</span>
             </div>
             <div class="hl-item">
               <div class="label-major">{{ row.date }}</div>
@@ -130,10 +133,9 @@ onBeforeUnmount(() => {
                   {{ row.position }}<span class="label-sm">{{ row.suffix }}</span>
                 </div>
               </div>
-              <div class="trophy-w"><img class="trophy" :src="row.trophy" alt="" /></div>
             </div>
             <div class="hl-item">
-              <div class="item-text is-gap"><div class="stat-label">{{ row.time }}</div></div>
+              <div class="item-text is-gap"><span class="sticker">{{ row.sticker }}</span></div>
             </div>
             <div class="hl-line" />
             <div class="row-reveal" />
@@ -343,30 +345,31 @@ onBeforeUnmount(() => {
   align-items: flex-end;
 }
 
-.trophy-w {
-  position: absolute;
-  inset: 0 auto auto calc(var(--u) * -5.6);
-  display: flex;
-  justify-content: flex-end;
+/* Note sticker (reference time / gap column): lime tag, slightly tilted; inverts on the lime hover row. */
+.sticker {
+  display: inline-flex;
   align-items: center;
-  height: 100%;
-  aspect-ratio: 1;
-}
-
-.trophy {
-  display: block;
-  width: 100%;
-  height: 90%;
-  object-fit: contain;
-}
-
-.stat-label {
+  padding: calc(var(--u) * 0.35) calc(var(--u) * 0.7);
+  border-radius: calc(var(--u) * 0.3);
+  background-color: var(--color-lime);
+  color: #111;
   font-family: var(--font-mona);
-  font-size: calc(var(--u) * 2.0625);
-  font-variation-settings: "wght" 700, "wdth" 75;
-  line-height: 0.97;
-  letter-spacing: calc(var(--u) * -0.00625);
+  font-size: calc(var(--u) * 0.75);
+  font-variation-settings: "wdth" 100, "wght" 700;
+  line-height: 1;
+  white-space: nowrap;
   text-transform: uppercase;
+  transform: rotate(-3deg);
+}
+
+.hl-grid.is-row:hover .sticker {
+  background-color: #111;
+  color: var(--color-lime);
+}
+
+.sticker.is-m,
+.m-break {
+  display: none;
 }
 
 .hl-line {
@@ -463,6 +466,21 @@ onBeforeUnmount(() => {
     font-size: calc(var(--u) * 2.2);
   }
 
+  .hl-grid.is-row > .hl-item:nth-child(2) {
+    flex-wrap: wrap;
+  }
+
+  .m-break {
+    display: block;
+    flex-basis: 100%;
+    height: 0;
+  }
+
+  .sticker.is-m {
+    display: inline-flex;
+    font-size: calc(var(--u) * 0.7);
+  }
+
   .label-sm {
     top: calc(var(--u) * 0.1);
     font-size: calc(var(--u) * 1.3);
@@ -474,11 +492,6 @@ onBeforeUnmount(() => {
     width: calc(var(--u) * 1.4);
     height: calc(var(--u) * 0.9);
     border-radius: calc(var(--u) * 0.1);
-  }
-
-  .trophy-w {
-    display: flex;
-    left: calc(var(--u) * -2.6);
   }
 }
 </style>

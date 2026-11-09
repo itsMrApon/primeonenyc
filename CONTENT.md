@@ -63,7 +63,7 @@ Quotes in track:
 
 - Title: Helmets / Hall of Fame
 - Body: From his iconic blobs to innovative one-off designs, Lando has always been passionate about designing innovative and memorable helmets.
-- Grid: see `home.json` → `helmets`
+- Grid + copy: `content/hall-of-fame.json` — one shared section (`components/sections/HallOfFame.vue`) used by home and `/on-track`
 
 ## Store / Champion
 

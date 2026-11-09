@@ -1,10 +1,10 @@
 {
   "hero": {
-    "title": "Track",
+    "title": "Consultant",
     "meta": {
       "nickname": "last lap lando",
-      "age": "26 y.o",
-      "hometown": "Bristol, UK"
+      "age": "25 y. expert",
+      "hometown": "Queens, US"
     },
     "eyebrow": "bringing the fight",
     "intro": "Since his F1 debut with McLaren in 2019, Lando Norris has been all in – pushing limits, chasing wins, and bringing the",
@@ -23,10 +23,11 @@
     "current": {
       "label": "Current",
       "round": "20",
-      "city": "Sāo Paulo",
+      "city": "USA",
+      "flag": "/images/on-track/calendar/flag-usa.svg",
       "team": "mclaren f1 since 2019",
-      "circuit": "sao-paulo",
-      "country": "Brazil",
+      "outline": "/images/on-track/calendar/outlets/united-states.svg",
+      "country": "USA",
       "dates": [
         "06-08",
         "Nov"
@@ -128,138 +129,154 @@
     }
   },
   "highlights": {
-    "title": "f1 result <br><strong>highlights</strong>",
-    "body": "Throughout his seven seasons in <br>Formula 1, Lando has achieved a range <br>of memorable results on tracks across <br>the world.",
+    "title": "ny tax <br><strong>dates & rates</strong>",
+    "body": "Key deadlines and rates for New York <br>filers: federal, state, city and Long <br>Island. Not sure which apply to you? <br>Ask us before you file.",
     "columns": [
-      "series",
-      "Name",
-      "When",
-      "Finish",
-      "Time / Gap"
+      "level",
+      "Tax",
+      "Due",
+      "Rate",
+      "Note"
     ],
     "rows": [
       {
-        "series": "F1",
-        "name": "Brazil",
-        "flag": "/images/on-track/highlights/flag-brazil.png",
-        "date": "9 Nov",
-        "year": "25",
-        "position": "1",
-        "suffix": "st",
-        "trophy": "/images/on-track/highlights/trophy-shanghai.svg",
-        "time": "1:32:01.596",
-        "hover": "/images/on-track/highlights/hover-brazil-25.webp"
+        "series": "NYC",
+        "name": "NYC sales tax",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "21 Dec",
+        "year": "26",
+        "position": "8.875",
+        "suffix": "%",
+        "sticker": "Quarterly",
+        "hover": "/images/horiz/05.webp"
       },
       {
-        "series": "F1",
-        "name": "United Kingdom",
-        "flag": "/images/on-track/highlights/flag-uk.svg",
-        "date": "6 Jul",
-        "year": "25",
-        "position": "1",
-        "suffix": "st",
-        "trophy": "/images/on-track/highlights/trophy-silverstone.svg",
-        "time": "1:37:15.735",
-        "hover": "/images/on-track/highlights/hover-uk-25.jpg"
+        "series": "LI",
+        "name": "Long Island sales",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "21 Dec",
+        "year": "26",
+        "position": "8.625",
+        "suffix": "%",
+        "sticker": "Nassau · Suffolk",
+        "hover": "/images/horiz/09.webp"
       },
       {
-        "series": "F1",
-        "name": "Monaco",
-        "flag": "/images/on-track/highlights/flag-monaco.svg",
-        "date": "25 May",
-        "year": "25",
-        "position": "1",
-        "suffix": "st",
-        "trophy": "/images/on-track/highlights/trophy-monaco.svg",
-        "time": "1:40:33.843",
-        "hover": "/images/on-track/highlights/hover-monaco-25.jpg"
+        "series": "FED",
+        "name": "Q4 estimated tax",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "15 Jan",
+        "year": "27",
+        "position": "90",
+        "suffix": "%",
+        "sticker": "Safe harbor",
+        "hover": "/images/horiz/06.webp"
       },
       {
-        "series": "F1",
-        "name": "Australia",
-        "flag": "/images/on-track/highlights/flag-australia.svg",
-        "date": "16 Mar",
-        "year": "25",
-        "position": "1",
-        "suffix": "st",
-        "trophy": "/images/on-track/highlights/trophy-melbourne.svg",
-        "time": "1:42:06.304",
-        "hover": "/images/on-track/highlights/hover-australia-25.webp"
+        "series": "NYS",
+        "name": "PTET election",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "15 Mar",
+        "year": "27",
+        "position": "10.9",
+        "suffix": "%",
+        "sticker": "Business",
+        "hover": "/images/horiz/07.webp"
       },
       {
-        "series": "F1",
-        "name": "Abu Dhabi",
-        "flag": "/images/on-track/highlights/flag-abu-dhabi.svg",
-        "date": "8 Dec",
-        "year": "24",
-        "position": "1",
-        "suffix": "st",
-        "trophy": "/images/on-track/highlights/trophy-yas-marina.svg",
-        "time": "1:26:33.291",
-        "hover": "/images/on-track/highlights/hover-abu-dhabi-24.webp"
+        "series": "FED",
+        "name": "Federal income",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "15 Apr",
+        "year": "27",
+        "position": "37",
+        "suffix": "%",
+        "sticker": "Top rate",
+        "hover": "/images/horiz/01.webp"
       },
       {
-        "series": "F1",
-        "name": "Singapore",
-        "flag": "/images/on-track/highlights/flag-singapore.svg",
-        "date": "22 Sep",
-        "year": "24",
-        "position": "1",
-        "suffix": "st",
-        "trophy": "/images/on-track/highlights/trophy-singapore.svg",
-        "time": "1:40:52.571",
-        "hover": "/images/on-track/highlights/hover-singapore-24.webp"
+        "series": "NYS",
+        "name": "NY State income",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "15 Apr",
+        "year": "27",
+        "position": "10.9",
+        "suffix": "%",
+        "sticker": "Top rate",
+        "hover": "/images/horiz/02.webp"
       },
       {
-        "series": "F1",
-        "name": "Miami",
-        "flag": "/images/on-track/highlights/flag-usa.svg",
-        "date": "5 May",
-        "year": "24",
-        "position": "1",
-        "suffix": "st",
-        "trophy": "/images/on-track/highlights/trophy-miami.svg",
-        "time": "1:30:49.876",
-        "hover": "/images/on-track/highlights/hover-miami-24.webp"
+        "series": "NYC",
+        "name": "NYC income",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "15 Apr",
+        "year": "27",
+        "position": "3.876",
+        "suffix": "%",
+        "sticker": "5 boroughs",
+        "hover": "/images/horiz/03.webp"
+      },
+      {
+        "series": "YNK",
+        "name": "Yonkers surcharge",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "15 Apr",
+        "year": "27",
+        "position": "16.75",
+        "suffix": "%",
+        "sticker": "Of state tax",
+        "hover": "/images/horiz/04.webp"
+      },
+      {
+        "series": "FED",
+        "name": "Extension",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "15 Oct",
+        "year": "27",
+        "position": "0.5",
+        "suffix": "%",
+        "sticker": "Late fee / mo",
+        "hover": "/images/horiz/08.webp"
       }
     ]
   },
   "track": {
     "items": [
       {
-        "caption": "Miami, 2024",
-        "src": "/images/on-track/track/1.webp",
-        "alt": "Lando lifting trophy"
+        "caption": "Meet us",
+        "src": "/images/horiz/05.webp",
+        "alt": "Delowar Hossain and Kamrun Bithi, your local agents on Woodside Ave."
       },
       {
-        "caption": "netherlands, 2024",
-        "src": "/images/on-track/track/2.webp",
-        "alt": "Lando in F1 car"
+        "caption": "One office",
+        "src": "/images/horiz/09.webp",
+        "alt": "One office, eight errands: insurance, TLC, DMV, immigration forms, tax filing, air tickets, courses and notary"
       },
       {
-        "caption": "miami, 2024",
-        "src": "/images/on-track/track/3.webp",
-        "alt": "Lando drenching self in champagne"
+        "caption": "Friends & family tax",
+        "src": "/images/horiz/06.webp",
+        "alt": "Tax season made easy with Kamrun Bithi, e-file authorized provider"
       },
       {
-        "caption": "US GP, 2024",
-        "src": "/images/on-track/track/4.webp",
-        "alt": "Lando in F1 helmet"
+        "caption": "In the community",
+        "src": "/images/horiz/07.webp",
+        "alt": "Meet us at an event or come by the office"
       },
       {
-        "caption": "Abu Dhabi GP, 2024",
-        "src": "/images/on-track/track/5.webp",
-        "alt": "Lando lifting Abu Dhabi trophy"
+        "caption": "Real clients",
+        "src": "/images/horiz/01.webp",
+        "alt": "Client Ahmed B. Hassan: professional, helpful and nice people"
       }
     ],
     "quote": {
       "text": "It doesn’t matter <strong>where</strong> you start, it’s <strong>how</strong> you progress from there.",
-      "signature": "/images/on-track/signature-placeholder.svg"
+      "signature": "/images/misc/signature-kamrun-lime.svg",
+      "signatureAlt": "Kamrun Nahar's signature in lime"
     },
     "pill": {
       "text": "1",
-      "icon": "/images/on-track/track/crossed-flags.svg",
-      "alt": "checkered flags icon"
+      "icon": "/images/on-track/calendar/outlets/united-states.svg",
+      "alt": "Queens office outline"
     }
   },
   "preF1": {
@@ -317,9 +334,9 @@
     ]
   },
   "countdown": {
-    "circuit": "sao-paulo",
-    "eyebrow": "next race begins in...",
-    "date": "8/11/2026 17:00",
+    "outline": "/images/on-track/calendar/outlets/united-states.svg",
+    "eyebrow": "new york tax day in...",
+    "date": "2027-04-15T23:59:59-04:00",
     "units": [
       "D",
       "h",
@@ -334,8 +351,8 @@
       "firstCompeted": "First Competed",
       "distance": "Distance",
       "laps": "Laps",
-      "landoAt": "lando at",
-      "schedule": "Schedule",
+      "landoAt": "primeone at",
+      "schedule": "Representative",
       "ukTime": "*uk time",
       "unit": "km"
     },
@@ -366,8 +383,7 @@
       "Distance"
     ],
     "cursor": {
-      "eyebrow": "circuit",
-      "track": "monaco",
+      "eyebrow": "office",
       "bg": "/images/on-track/calendar/list-track-bg.svg"
     },
     "frame": {
@@ -377,170 +393,134 @@
     },
     "items": [
       {
-        "circuit": "sao-paulo",
-        "round": "20",
-        "country": "Brazil",
-        "flag": "/images/on-track/calendar/flag-brazil.png",
-        "dateNum": "06-08",
-        "dateMonth": "Nov",
-        "laps": "71",
-        "distance": "305.939",
-        "name": "Sāo Paulo",
-        "length": "4.309",
-        "about": "Since first racing at the legendary Interlagos, Lando has had solid results, including a podium in 2023 and pole in 2024.",
-        "firstCompeted": "2019",
-        "dateActual": "8/11/2026 17:00",
-        "schedule": [
-          {
-            "label": "Practice 1",
-            "date": "6 Nov",
-            "time": "15:30"
-          },
-          {
-            "label": "Practice 2",
-            "date": "6 Nov",
-            "time": "19:00"
-          },
-          {
-            "label": "Practice 3",
-            "date": "7 Nov",
-            "time": "14:30"
-          },
-          {
-            "label": "Qualifying",
-            "date": "7 Nov",
-            "time": "18:00"
-          },
-          {
-            "label": "Race",
-            "date": "8 Nov",
-            "time": "17:00"
-          }
-        ]
-      },
-      {
-        "circuit": "las-vegas",
-        "round": "21",
-        "country": "Las Vegas",
+        "circuit": "united-states",
+        "outline": "/images/on-track/calendar/outlets/united-states.svg",
+        "round": "01",
+        "country": "United States",
         "flag": "/images/on-track/calendar/flag-usa.svg",
-        "dateNum": "19-21",
-        "dateMonth": "Nov",
-        "laps": "50",
-        "distance": "310.05",
-        "name": "Las Vegas",
-        "length": "6.201",
-        "about": "Since its arrival to the F1 calendar in 2023, Lando has had mixed results around the Las Vegas Strip.",
-        "firstCompeted": "2024",
-        "dateActual": "22/11/2026 4:00",
+        "dateNum": "TBC",
+        "dateMonth": "",
+        "laps": "TBC",
+        "distance": "TBC",
+        "name": "USA",
+        "length": "TBC",
+        "about": "Office details for United States coming soon.",
+        "firstCompeted": "TBC",
+        "dateActual": "1/1/2099 0:00",
         "schedule": [
           {
-            "label": "Practice 1",
-            "date": "20 Nov",
-            "time": "0:30"
+            "label": "Representative",
+            "date": "TBC",
+            "time": "TBC"
           },
           {
-            "label": "Practice 2",
-            "date": "20 Nov",
-            "time": "4:00"
+            "label": "Representative",
+            "date": "TBC",
+            "time": "TBC"
           },
           {
-            "label": "Practice 3",
-            "date": "21 Nov",
-            "time": "0:30"
-          },
-          {
-            "label": "Qualifying",
-            "date": "21 Nov",
-            "time": "4:00"
-          },
-          {
-            "label": "Race",
-            "date": "22 Nov",
-            "time": "4:00"
+            "label": "Representative",
+            "date": "TBC",
+            "time": "TBC"
           }
         ]
       },
       {
-        "circuit": "lusail",
-        "round": "22",
-        "country": "Qatar",
-        "flag": "/images/on-track/calendar/flag-qatar.svg",
-        "dateNum": "27-29",
-        "dateMonth": "Nov",
-        "laps": "57",
-        "distance": "308.883",
-        "name": "Lusail",
-        "length": "5.419",
-        "about": "First held in 2021, Lando has delivered solid results, including a 3rd place in 2023 at the floodlit desert circuit. ",
-        "firstCompeted": "2021",
-        "dateActual": "29/11/2026 16:00",
+        "circuit": "united-kingdom",
+        "outline": "/images/on-track/calendar/outlets/united-kingdom.svg",
+        "round": "02",
+        "country": "United Kingdom",
+        "flag": "/images/on-track/flag-uk.svg",
+        "dateNum": "TBC",
+        "dateMonth": "",
+        "laps": "TBC",
+        "distance": "TBC",
+        "name": "UK",
+        "length": "TBC",
+        "about": "Office details for United Kingdom coming soon.",
+        "firstCompeted": "TBC",
+        "dateActual": "1/1/2099 0:00",
         "schedule": [
           {
-            "label": "Practice 1",
-            "date": "27 Nov",
-            "time": "13:30"
+            "label": "Representative",
+            "date": "TBC",
+            "time": "TBC"
           },
           {
-            "label": "Practice 2",
-            "date": "27 Nov",
-            "time": "17:00"
+            "label": "Representative",
+            "date": "TBC",
+            "time": "TBC"
           },
           {
-            "label": "Practice 3",
-            "date": "28 Nov",
-            "time": "14:30"
-          },
-          {
-            "label": "Qualifying",
-            "date": "28 Nov",
-            "time": "18:00"
-          },
-          {
-            "label": "Race",
-            "date": "29 Nov",
-            "time": "16:00"
+            "label": "Representative",
+            "date": "TBC",
+            "time": "TBC"
           }
         ]
       },
       {
-        "circuit": "yas-marina",
-        "round": "23",
-        "country": "Abu Dhabi",
-        "flag": "/images/on-track/calendar/flag-abu-dhabi.svg",
-        "dateNum": "04-06",
-        "dateMonth": "Dec",
-        "laps": "58",
-        "distance": "306.298",
-        "name": "Yas Marina",
-        "length": "5.281",
-        "about": "Lando has a strong record around Yas Marina, highlighted by a win in 2024 that sealed the Constructor's Championship for McLaren. ",
-        "firstCompeted": "2019",
-        "dateActual": "6/12/2026 13:00",
+        "circuit": "canada",
+        "outline": "/images/on-track/calendar/outlets/canada.svg",
+        "round": "03",
+        "country": "Canada",
+        "flag": "/images/on-track/calendar/flag-canada.svg",
+        "dateNum": "TBC",
+        "dateMonth": "",
+        "laps": "TBC",
+        "distance": "TBC",
+        "name": "Canada",
+        "length": "TBC",
+        "about": "Office details for Canada coming soon.",
+        "firstCompeted": "TBC",
+        "dateActual": "1/1/2099 0:00",
         "schedule": [
           {
-            "label": "Practice 1",
-            "date": "4 Dec",
-            "time": "9:30"
+            "label": "Representative",
+            "date": "TBC",
+            "time": "TBC"
           },
           {
-            "label": "Practice 2",
-            "date": "4 Dec",
-            "time": "13:00"
+            "label": "Representative",
+            "date": "TBC",
+            "time": "TBC"
           },
           {
-            "label": "Practice 3",
-            "date": "5 Dec",
-            "time": "10:30"
+            "label": "Representative",
+            "date": "TBC",
+            "time": "TBC"
+          }
+        ]
+      },
+      {
+        "circuit": "bangladesh",
+        "outline": "/images/on-track/calendar/outlets/bangladesh.svg",
+        "round": "04",
+        "country": "Bangladesh",
+        "flag": "/images/on-track/calendar/flag-bangladesh.svg",
+        "dateNum": "TBC",
+        "dateMonth": "",
+        "laps": "TBC",
+        "distance": "TBC",
+        "name": "Bangladesh",
+        "length": "TBC",
+        "about": "Office details for Bangladesh coming soon.",
+        "firstCompeted": "TBC",
+        "dateActual": "1/1/2099 0:00",
+        "schedule": [
+          {
+            "label": "Representative",
+            "date": "TBC",
+            "time": "TBC"
           },
           {
-            "label": "Qualifying",
-            "date": "5 Dec",
-            "time": "14:00"
+            "label": "Representative",
+            "date": "TBC",
+            "time": "TBC"
           },
           {
-            "label": "Race",
-            "date": "6 Dec",
-            "time": "13:00"
+            "label": "Representative",
+            "date": "TBC",
+            "time": "TBC"
           }
         ]
       }
@@ -549,116 +529,6 @@
   "end": {
     "src": "/images/on-track/otot-end.webp",
     "alt": "Lando Norris hodling up a helmet with flight cases in the background"
-  },
-  "helmets": {
-    "eyebrow": "Helmets",
-    "title": "Hall of Fame",
-    "body": "From his iconic blobs to innovative one-off designs, Lando has always been passionate about designing innovative and memorable helmets.",
-    "callout": {
-      "text": "See more helmets and highlights from Lando on the track",
-      "cta": {
-        "label": "view on track",
-        "href": "/on-track"
-      }
-    },
-    "items": [
-      {
-        "name": "Season",
-        "year": "2025",
-        "src": "/images/on-track/helmets/2025-Season-base.webp",
-        "hover": "/images/on-track/helmets/2025-Season-hover.webp"
-      },
-      {
-        "name": "Discoball",
-        "year": "2025",
-        "src": "/images/on-track/helmets/2025-Discoball-base.webp",
-        "hover": "/images/on-track/helmets/2025-Discoball-hover.webp"
-      },
-      {
-        "name": "Dark Glitter",
-        "year": "2025",
-        "src": "/images/on-track/helmets/2025-DarkGlitter-base.webp",
-        "hover": "/images/on-track/helmets/2025-DarkGlitter-hover.webp"
-      },
-      {
-        "name": "Season",
-        "year": "2024",
-        "src": "/images/on-track/helmets/2024-Season-base.webp",
-        "hover": "/images/on-track/helmets/2024-Season-hover.webp"
-      },
-      {
-        "name": "Porcelain",
-        "year": "2024",
-        "src": "/images/on-track/helmets/2024-Porcelain-base.webp",
-        "hover": "/images/on-track/helmets/2024-Porcelain-hover.webp"
-      },
-      {
-        "name": "Japan",
-        "year": "2024",
-        "src": "/images/on-track/helmets/2024-Japan-base.webp",
-        "hover": "/images/on-track/helmets/2024-Japan-hover.webp"
-      },
-      {
-        "name": "GIF",
-        "year": "2024",
-        "src": "/images/on-track/helmets/2024-GIF-Helmet-base.webp",
-        "hover": "/images/on-track/helmets/2024-GIF-Helmet-hover.webp"
-      },
-      {
-        "name": "Dark Mode",
-        "year": "2024",
-        "src": "/images/on-track/helmets/2024-DarkMode-base.webp",
-        "hover": "/images/on-track/helmets/2024-DarkMode-hover.webp"
-      },
-      {
-        "name": "Race",
-        "year": "2023",
-        "src": "/images/on-track/helmets/2023-Race-100-base.webp",
-        "hover": "/images/on-track/helmets/2023-Race-100-hover.webp"
-      },
-      {
-        "name": "Las Vegas",
-        "year": "2023",
-        "src": "/images/on-track/helmets/2023-Las-Vegas-base.webp",
-        "hover": "/images/on-track/helmets/2023-Las-Vegas-hover.webp"
-      },
-      {
-        "name": "Chrome",
-        "year": "2023",
-        "src": "/images/on-track/helmets/2023-Chrome-base.webp",
-        "hover": "/images/on-track/helmets/2023-Chrome-hover.webp"
-      },
-      {
-        "name": "Beachball",
-        "year": "2023",
-        "src": "/images/on-track/helmets/2023-Beach-Ball-base.webp",
-        "hover": "/images/on-track/helmets/2023-Beach-Ball-hover.webp"
-      },
-      {
-        "name": "Basketball",
-        "year": "2022",
-        "src": "/images/on-track/helmets/2022-Basketball-base.webp",
-        "hover": "/images/on-track/helmets/2022-Basketball-hover.webp"
-      },
-      {
-        "name": "Season",
-        "year": "2021",
-        "src": "/images/on-track/helmets/2021-base.webp",
-        "hover": "/images/on-track/helmets/2021-hover.webp"
-      },
-      {
-        "name": "Silverstone",
-        "year": "2020",
-        "src": "/images/on-track/helmets/2020-Silverstone-base.webp",
-        "hover": "/images/on-track/helmets/2020-Silverstone-hover.webp"
-      },
-      {
-        "name": "Season",
-        "year": "2019",
-        "src": "/images/on-track/helmets/2019-base.webp",
-        "hover": "/images/on-track/helmets/2019-hover.webp"
-      }
-    ]
   },
   "socials": {
     "titleTop": "what’s up",
