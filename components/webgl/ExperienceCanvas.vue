@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Experience } from "~/webgl/Experience";
+import { Experience, type ExperiencePage } from "~/webgl/Experience";
 
 /** Begin loading only once the boot screen is up (reference load order). */
-const props = defineProps<{ start: boolean }>();
+const props = defineProps<{ start: boolean; page?: ExperiencePage }>();
 
 const emit = defineEmits<{
   progress: [number, string];
@@ -30,6 +30,7 @@ async function init() {
 
   const instance = new Experience({
     canvas: canvas.value,
+    page: props.page,
     onProgress: (p, label) => emit("progress", p, label)
   });
   experience.value = instance;

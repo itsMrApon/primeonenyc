@@ -11,10 +11,11 @@
     },
     "links": [
       { "label": "Home", "href": "/" },
-      { "label": "On Track", "href": "/on-track" },
-      { "label": "Off Track", "href": "/off-track" },
+      { "label": "Tax Consultant", "href": "/tax-consultant" },
+      { "label": "NYC Insurance", "href": "/nyc-insurance" },
       { "label": "Calendar", "href": "/calendar" }
     ],
+    "tagline": "mclaren f1 since 2019",
     "business": {
       "label": "business enquiries",
       "href": "mailto:business@landonorris.com"
@@ -71,49 +72,25 @@
   },
   "onOffTrack": {
     "on": {
-      "titleTop": "ON",
-      "titleBottom": "TRACK",
+      "titleTop": "TAX",
+      "titleBottom": "CONSULTANT",
       "body": "Most recent <strong>results</strong>, career stats and photos from trackside.",
-      "href": "/on-track",
+      "href": "/tax-consultant",
       "image": "/images/misc/hp-lando-helmet.webp",
       "imageAlt": "Lando Norris wearing a lime helmet, side profile"
     },
     "off": {
-      "titleTop": "OFF",
-      "titleBottom": "TRACK",
+      "titleTop": "NYC",
+      "titleBottom": "INSURANCE",
       "body": "<strong>Campaigns</strong>, shoots and other such promotional materials for fans",
-      "href": "/off-track",
+      "href": "/nyc-insurance",
       "image": "/images/misc/hp-lando-head.webp",
       "imageAlt": "Lando Norris wearing a fleece, side profile"
     },
     "featureImage": "/images/misc/home-helm-large.webp",
     "featureImageMobile": "/images/misc/home-helm-large-mobile.webp"
   },
-  "helmets": {
-    "eyebrow": "Helmets",
-    "title": "Hall of Fame",
-    "body": "From his iconic blobs to innovative one-off designs, Lando has always been passionate about designing innovative and memorable helmets.",
-    "callout": { "text": "See more helmets and highlights from Lando on the track", "cta": { "label": "view on track", "href": "/on-track" } },
-    "items": [
-      { "name": "Season", "year": "2025", "src": "/images/helmets/2025-Season-base.webp", "hover": "/images/helmets/2025-Season-hover.webp" },
-      { "name": "Discoball", "year": "2025", "src": "/images/helmets/2025-Discoball-base.webp", "hover": "/images/helmets/2025-Discoball-hover.webp" },
-      { "name": "Dark Glitter", "year": "2025", "src": "/images/helmets/2025-DarkGlitter-base.webp", "hover": "/images/helmets/2025-DarkGlitter-hover.webp" },
-      { "name": "Season", "year": "2024", "src": "/images/helmets/2024-Season-base.webp", "hover": "/images/helmets/2024-Season-hover.webp" },
-      { "name": "Porcelain", "year": "2024", "src": "/images/helmets/2024-Porcelain-base.webp", "hover": "/images/helmets/2024-Porcelain-hover.webp" },
-      { "name": "Japan", "year": "2024", "src": "/images/helmets/2024-Japan-base.webp", "hover": "/images/helmets/2024-Japan-hover.webp" },
-      { "name": "GIF", "year": "2024", "src": "/images/helmets/2024-GIF-Helmet-base.webp", "hover": "/images/helmets/2024-GIF-Helmet-hover.webp" },
-      { "name": "Dark Mode", "year": "2024", "src": "/images/helmets/2024-DarkMode-base.webp", "hover": "/images/helmets/2024-DarkMode-hover.webp" },
-      { "name": "Race", "year": "2023", "src": "/images/helmets/2023-Race-100-base.webp", "hover": "/images/helmets/2023-Race-100-hover.webp" },
-      { "name": "Las Vegas", "year": "2023", "src": "/images/helmets/2023-Las-Vegas-base.webp", "hover": "/images/helmets/2023-Las-Vegas-hover.webp" },
-      { "name": "Chrome", "year": "2023", "src": "/images/helmets/2023-Chrome-base.webp", "hover": "/images/helmets/2023-Chrome-hover.webp" },
-      { "name": "Beachball", "year": "2023", "src": "/images/helmets/2023-Beach-Ball-base.webp", "hover": "/images/helmets/2023-Beach-Ball-hover.webp" },
-      { "name": "Basketball", "year": "2022", "src": "/images/helmets/2022-Basketball-base.webp", "hover": "/images/helmets/2022-Basketball-hover.webp" },
-      { "name": "Season", "year": "2021", "src": "/images/helmets/2021-base.webp", "hover": "/images/helmets/2021-hover.webp" },
-      { "name": "Silverstone", "year": "2020", "src": "/images/helmets/2020-Silverstone-base.webp", "hover": "/images/helmets/2020-Silverstone-hover.webp" },
-      { "name": "Season", "year": "2019", "src": "/images/helmets/2019-base.webp", "hover": "/images/helmets/2019-hover.webp" }
-    ]
-  },
-  "store": {
+"store": {
     "eyebrow": "LANDO STORE",
     "titleHtml": "World Drivers' <span class=\"text-brier\">Champion</span>",
     "body": "Celebrate this incredible moment with a collection designed for the fans who never stopped believing. Wear it, frame it, treasure it forever.",

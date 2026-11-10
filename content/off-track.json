@@ -1,0 +1,36 @@
+{
+  "hero": {
+    "titleBrier": "NYC",
+    "title": "Insurance",
+    "name": "Lando Norris",
+    "age": "26 y.o",
+    "eyebrow": "bringing the fight",
+    "intro": "Since his F1 debut with McLaren in 2019, Lando Norris has been all in – pushing limits, chasing podiums, and bringing the",
+    "introAccent": "fight to every race",
+    "sub": "Recently, Lando has been getting ready for the new season trying the new ways to stay at Hilton hotels.",
+    "images": [
+      "/images/horiz/01.webp",
+      "/images/horiz/02.webp",
+      "/images/horiz/03.webp",
+      "/images/horiz/04.webp",
+      "/images/horiz/05.webp",
+      "/images/horiz/06.webp",
+      "/images/horiz/07.webp",
+      "/images/horiz/08.webp",
+      "/images/horiz/09.webp",
+      "/images/horiz/10.webp"
+    ],
+    "logos": [
+      { "src": "/images/partners/logo-ralph.svg", "alt": "Ralph Lauren" },
+      { "src": "/images/partners/logo-mind.svg", "alt": "Mind" },
+      { "src": "/images/partners/logo-ps4.svg", "alt": "PlayStation" },
+      { "src": "/images/partners/logo-quadrant.svg", "alt": "Quadrant" },
+      { "src": "/images/partners/logo-tumi.svg", "alt": "Tumi" },
+      { "src": "/images/partners/logo-hilton.svg", "alt": "Hilton" }
+    ]
+  },
+  "impact": {
+    "eyebrow": "mclaren f1 since 2019",
+    "html": "Challenging<br>the <strong>limits</strong>, <strong>winning</strong> races. Bringing <strong>it all</strong> each and every weekend."
+  }
+}

@@ -1,11 +1,12 @@
 <script setup lang="ts">
 /**
- * Helmets Hall of Fame (reference `.s-group.bg-black`), live layout at 1440 px
+ * Helmets Hall of Fame — one shared section for home and /on-track; edit content/hall-of-fame.json
+ * (copy + card images) and both pages change. Reference `.s-group.bg-black`, live layout at 1440 px
  * in fluid units (1u = 13.33 px there).
  *   - title / copy highlighter reveals (lime; copy +0.2 s);
  *   - 4×4 grid of masked helmet cards; over the grid's "top bottom" →
- *     "bottom top" every card rises 5u → 0, columns 2 and 4 rise 25u → 0
- *     (linear scrub);
+ *     "bottom top" every card rises 5u → 0, odd cards 25u → 0 (linear scrub;
+ *     bundle ZZ over the nested .helmet-grid-item-w pairs; phones: no lift, like live home);
  *   - hover: lime outline, helmet ×1.1, photo revealed by an ellipse clip
  *     (0.75 s cubic-bezier(0.65, 0.05, 0, 1));
  *   - callout: reef helmet Rive scrubbed by scroll ("top bottom" →
@@ -14,20 +15,34 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const content = useHomeContent();
-const h = computed(() => content.helmets);
+import hallOfFame from "~/content/hall-of-fame.json";
+
+const props = withDefaults(
+  defineProps<{
+    /** Home closes the group with the reef callout; /on-track (same section) has its own callout sections. */
+    callout?: boolean;
+  }>(),
+  { callout: true }
+);
+
+/** One source for every page that shows this section: content/hall-of-fame.json. */
+const h = hallOfFame;
 
 const grid = ref<HTMLElement | null>(null);
 const cards: (HTMLElement | null)[] = [];
 const setCard = (i: number) => (el: unknown) => (cards[i] = el as HTMLElement | null);
-const callout = ref<HTMLElement | null>(null);
+const calloutEl = ref<HTMLElement | null>(null);
 const reefScroll = ref(0);
 const ctaHover = ref(false);
 const triggers: ScrollTrigger[] = [];
 
+/**
+ * Reference bundle ZZ: it lifts each `.helmet-grid-item-w` by (index % 4) × 5rem, and the markup nests
+ * two of them per card, so even cards start 5u low and odd cards 25u. Live home skips it on phones.
+ */
 function updateGrid(progress: number) {
   const unit = fluidUnit();
-  const left = isMobileLayout() ? 0 : 1 - progress; // reference ≤767: cards don't lift
+  const left = isMobileLayout() ? 0 : 1 - progress; // live home: no lift on phones
   cards.forEach((card, i) => {
     if (!card) return;
     const lift = (i % 2 === 1 ? 25 : 5) * unit * left;
@@ -47,12 +62,13 @@ onMounted(() => {
   triggers.push(st);
   updateGrid(st.progress);
 
+  if (!props.callout) return;
   const state = { p: 0 };
   const tween = gsap.to(state, {
     p: 1,
     ease: "none",
     onUpdate: () => (reefScroll.value = state.p * 1000),
-    scrollTrigger: { trigger: callout.value, start: "top bottom", end: "bottom center", scrub: 0.5 }
+    scrollTrigger: { trigger: calloutEl.value, start: "top bottom", end: "bottom center", scrub: 0.5 }
   });
   if (tween.scrollTrigger) triggers.push(tween.scrollTrigger);
 });
@@ -80,7 +96,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
           role="listitem"
         >
           <div class="helmet-card">
-            <HomeHelmetFrame />
+            <SectionsHallOfFameFrame />
             <div class="helmet-img-w">
               <img class="helmet-img" :src="item.src" alt="" loading="lazy" />
             </div>
@@ -94,7 +110,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
       </div>
     </section>
 
-    <section ref="callout" class="helmets-callout">
+    <section v-if="callout" ref="calloutEl" class="helmets-callout">
       <div class="callout-icon">
         <RiveCanvas
           file="reef"

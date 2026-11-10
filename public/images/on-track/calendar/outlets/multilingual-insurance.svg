@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 766 482" width="766" height="482" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <title>Insurance store outline</title>
+  <g id="roof">
+    <path id="roof-outline" pathLength="1" d="M55 44 H725 L737 192 H40 Z"/>
+    <path id="awning-edge" pathLength="1" d="M40 192 V198 H737 V192"/>
+    <path id="soffit" pathLength="1" d="M60 198 L66 224 H712 L718 198"/>
+    <path id="awning-ribs" pathLength="1" d="M78.9 44 L64.9 192 M102.9 44 L89.8 192 M126.8 44 L114.7 192 M150.7 44 L139.6 192 M174.6 44 L164.5 192 M198.6 44 L189.4 192 M217.7 130 L214.2 192 M242.2 130 L239.1 192 M266.7 130 L264.0 192 M291.2 130 L288.9 192 M315.7 130 L313.8 192 M340.2 130 L338.7 192 M364.6 130 L363.6 192 M389.1 130 L388.5 192 M413.6 130 L413.4 192 M438.1 130 L438.3 192 M462.6 130 L463.2 192 M487.1 130 L488.1 192 M511.6 130 L513.0 192 M536.1 130 L537.9 192 M560.6 130 L562.8 192 M581.4 44 L587.6 192 M605.4 44 L612.5 192 M629.3 44 L637.4 192 M653.2 44 L662.3 192 M677.1 44 L687.2 192 M701.1 44 L712.1 192"/>
+  </g>
+  <g id="sign">
+    <path id="sign-board" pathLength="1" d="M198 27 H585 V130 H198 Z"/>
+    <path id="sign-brackets" pathLength="1" d="M216 130 V162 M391 130 V162 M567 130 V162"/>
+    <path id="sign-text" pathLength="1" d="M232 52 V108 M246 108 V52 L276 108 V52 M317 58 C314 53 308 52 303 52 C294 52 289 57 289 65 C289 75 317 82 317 94 C317 103 310 108 303 108 C296 108 291 105 289 101 M330 52 V95 C330 103 336 108 345 108 C354 108 360 103 360 95 V52 M372 108 V52 H390 C398 52 402 57 402 65 C402 73 398 78 390 78 H372 M388 78 L402 108 M414 108 L429 52 L444 108 M420 88 H438 M456 108 V52 L486 108 V52 M528 60 C525 54 519 52 514 52 C504 52 498 60 498 80 C498 100 504 108 514 108 C519 108 525 106 528 100 M570 52 H540 V108 H570 M540 80 H564"/>
+  </g>
+  <g id="wall">
+    <path id="wall-outline" pathLength="1" d="M100 200 V440 H668 V200"/>
+    <path id="ground-line" pathLength="1" d="M70 440 H700"/>
+  </g>
+  <g id="door">
+    <path id="door-frame" pathLength="1" d="M172 232 H250 V440 M172 440 V232"/>
+    <path id="door-transom" pathLength="1" d="M178 237 H245 V267 H178 Z"/>
+    <path id="door" pathLength="1" d="M180 276 H244 V436 H180 Z"/>
+    <path id="door-glass" pathLength="1" d="M190 286 H236 V424 H190 Z"/>
+    <path id="door-handle" pathLength="1" d="M240 334 V352"/>
+  </g>
+  <g id="windows">
+    <path id="window-frame" pathLength="1" d="M260 232 H616 V388 H260 Z"/>
+    <path id="window-left" pathLength="1" d="M266 238 H437 V383 H266 Z"/>
+    <path id="window-right" pathLength="1" d="M444 238 H611 V383 H444 Z"/>
+  </g>
+  <g id="bars">
+    <path id="security-bars" pathLength="1" d="M285.0 252 V374 M304.0 252 V374 M323.0 252 V374 M342.0 252 V374 M361.0 252 V374 M380.0 252 V374 M399.0 252 V374 M418.0 252 V374 M266 252 H437 M266 374 H437 M462.6 252 V374 M481.1 252 V374 M499.7 252 V374 M518.2 252 V374 M536.8 252 V374 M555.3 252 V374 M573.9 252 V374 M592.4 252 V374 M444 252 H611 M444 374 H611"/>
+  </g>
+  <g id="details">
+    <path id="open-sign" pathLength="1" d="M346 268 H412 V298 H346 Z"/>
+    <path id="posters" pathLength="1" d="M286 276 H330 V308 H286 Z M286 315 H330 V347 H286 Z"/>
+    <path id="no-smoking" pathLength="1" d="M545 345 H588 V374 H545 Z"/>
+  </g>
+</svg>

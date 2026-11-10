@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 766 482" width="766" height="482" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <title>Insured driver with money</title>
+  <g id="car" data-delay="0">
+    <path id="car-body" pathLength="1" d="M70 400 L110 400 A60 60 0 0 1 230 400 L530 400 A60 60 0 0 1 650 400 L700 400 C712 380 715 335 700 300 L680 250 C650 215 625 195 600 188 C555 176 420 176 360 190 L270 282 C200 288 140 296 105 308 C70 320 58 345 60 372 Z"/>
+    <path id="door-lines" pathLength="1" d="M290 282 V392 M480 196 V392 M290 392 H480"/>
+    <path id="body-crease" pathLength="1" d="M248 322 H688"/>
+    <path id="door-handles" pathLength="1" d="M440 300 H464 M620 300 H644"/>
+    <path id="headlight" pathLength="1" d="M74 332 C90 319 114 313 134 315 C124 331 100 339 76 340 Z"/>
+    <path id="taillight" pathLength="1" d="M688 296 H704 L708 330 H694 Z"/>
+    <path id="mirror" pathLength="1" d="M300 270 C288 264 287 252 298 249 H318 L312 272 Z"/>
+  </g>
+  <g id="windows" data-delay="0.5">
+    <path id="front-window" pathLength="1" d="M300 280 L368 202 H470 V280 Z"/>
+    <path id="rear-window" pathLength="1" d="M490 202 H588 C614 208 637 228 654 262 H490 Z"/>
+    <path id="glass-shine" pathLength="1" d="M520 214 L548 254 M540 214 L568 254"/>
+  </g>
+  <g id="wheels" data-delay="0.7">
+    <path id="tires-rims" pathLength="1" d="M122 400 A48 48 0 1 0 218 400 A48 48 0 1 0 122 400 Z M140 400 A30 30 0 1 0 200 400 A30 30 0 1 0 140 400 Z M542 400 A48 48 0 1 0 638 400 A48 48 0 1 0 542 400 Z M560 400 A30 30 0 1 0 620 400 A30 30 0 1 0 560 400 Z"/>
+    <path id="spokes" pathLength="1" d="M178.0 400.0 L198.0 400.0 M175.7 405.7 L189.8 419.8 M170.0 408.0 L170.0 428.0 M164.3 405.7 L150.2 419.8 M162.0 400.0 L142.0 400.0 M164.3 394.3 L150.2 380.2 M170.0 392.0 L170.0 372.0 M175.7 394.3 L189.8 380.2 M598.0 400.0 L618.0 400.0 M595.7 405.7 L609.8 419.8 M590.0 408.0 L590.0 428.0 M584.3 405.7 L570.2 419.8 M582.0 400.0 L562.0 400.0 M584.3 394.3 L570.2 380.2 M590.0 392.0 L590.0 372.0 M595.7 394.3 L609.8 380.2"/>
+  </g>
+  <g id="driver" data-delay="1.1">
+    <path id="head" pathLength="1" d="M398 236 A22 22 0 1 0 442 236 A22 22 0 1 0 398 236 Z"/>
+    <path id="hair" pathLength="1" d="M398 232 C398 214 412 206 424 210 C432 204 446 210 444 224 C438 218 428 216 420 220 C412 214 404 220 398 232"/>
+    <path id="face" pathLength="1" d="M413 234 V236 M427 234 V236 M412 246 C417 251 424 251 429 246"/>
+    <path id="shoulders" pathLength="1" d="M386 280 C392 264 410 258 420 258 C432 258 448 264 456 280"/>
+    <path id="steering-wheel" pathLength="1" d="M366 244 C376 242 380 258 378 274 C376 290 368 294 363 282 C358 268 358 248 366 244 Z M370 268 L392 270"/>
+    <path id="arm" pathLength="1" d="M404 276 C396 272 386 270 376 268"/>
+  </g>
+  <g id="shield" data-delay="1.5">
+    <path id="shield-outline" pathLength="1" d="M130 82 C150 96 176 102 192 102 V160 C192 196 162 222 130 236 C98 222 68 196 68 160 V102 C84 102 110 96 130 82 Z"/>
+    <path id="shield-inner" pathLength="1" d="M130 98 C146 108 166 114 178 114 V160 C178 188 155 208 130 220 C105 208 82 188 82 160 V114 C94 114 114 108 130 98 Z"/>
+    <path id="check" pathLength="1" d="M104 158 L124 178 L160 136"/>
+  </g>
+  <g id="money" data-delay="1.9">
+    <path id="bill-1" pathLength="1" d="M564.9 113.1 L644.8 87.1 L659.1 130.9 L579.2 156.9 Z M573.8 117.6 L640.3 96.0 L650.2 126.4 L583.7 148.0 Z M601.5 125.4 A11 11 0 1 0 622.5 118.6 A11 11 0 1 0 601.5 125.4 Z M614.3 116.0 L610.8 115.0 L607.3 117.2 L607.3 120.4 L611.0 122.3 L615.2 122.0 L617.0 124.6 L615.1 128.3 L611.0 128.6 L609.4 127.0 M609.2 113.4 L614.8 130.6"/>
+    <path id="bill-2" pathLength="1" d="M671.0 147.9 L747.7 182.1 L729.0 224.1 L652.3 189.9 Z M674.5 157.1 L738.5 185.6 L725.5 214.9 L661.5 186.4 Z M690.0 181.5 A11 11 0 1 0 710.0 190.5 A11 11 0 1 0 690.0 181.5 Z M705.7 183.1 L703.8 180.0 L699.7 179.3 L697.6 181.6 L699.1 185.6 L702.3 188.1 L702.0 191.3 L698.1 192.8 L694.8 190.3 L694.7 188.0 M703.7 177.8 L696.3 194.2"/>
+    <path id="bill-3" pathLength="1" d="M650.7 90.6 L705.9 47.5 L729.3 77.4 L674.1 120.5 Z M660.5 91.8 L704.7 57.3 L719.5 76.2 L675.3 110.7 Z M681.3 90.8 A11 11 0 1 0 698.7 77.2 A11 11 0 1 0 681.3 90.8 Z M690.1 77.6 L686.5 77.9 L683.9 81.1 L685.0 84.1 L689.2 84.6 L693.0 82.9 L695.6 84.7 L695.1 88.9 L691.3 90.6 L689.3 89.6 M684.5 76.9 L695.5 91.1"/>
+    <path id="motion-lines" pathLength="1" d="M720 250 H752 M716 276 H744 M560 140 L540 150 M650 216 L640 232"/>
+  </g>
+  <g id="ground" data-delay="0.2">
+    <path id="ground-line" pathLength="1" d="M30 452 H740"/>
+  </g>
+</svg>

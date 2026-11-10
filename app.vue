@@ -1,4 +1,9 @@
 <script setup lang="ts">
+const route = useRoute();
+/** Each route is a full page load (nav uses plain links), so the GL page is fixed per boot. */
+const path = route.path.replace(/\/$/, "");
+const glPage =
+  path === "/tax-consultant" ? "on-track" : path === "/calendar" || path === "/nyc-insurance" ? "calendar" : "home";
 const booted = ref(false);
 const ready = ref(false);
 const failure = ref<string | null>(null);
@@ -16,6 +21,12 @@ onBeforeUnmount(() => {
   window.removeEventListener("resize", syncAppVh);
 });
 
+/** Pages that run an intro once the boot screen has opened (reference hero containers). */
+const onRevealed = () => {
+  (window as unknown as { pageRevealed?: boolean }).pageRevealed = true;
+  window.dispatchEvent(new Event("page:revealed"));
+};
+
 const onError = (error: Error) => {
   failure.value = error.message;
   console.error("[Experience] failed to start", error);
@@ -26,6 +37,7 @@ const onError = (error: Error) => {
   <div class="app-root">
     <WebglExperienceCanvas
       :start="booted"
+      :page="glPage"
       @ready="ready = true"
       @error="onError"
     />
@@ -35,7 +47,7 @@ const onError = (error: Error) => {
       <NuxtPage />
     </div>
 
-    <LayoutPageTransition :ready="ready || !!failure" @booted="booted = true" />
+    <LayoutPageTransition :ready="ready || !!failure" @booted="booted = true" @revealed="onRevealed" />
 
     <p v-if="failure" class="startup-error" role="alert">
       The experience failed to start: {{ failure }}

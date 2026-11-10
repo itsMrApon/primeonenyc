@@ -1,0 +1,544 @@
+{
+  "hero": {
+    "title": "Consultant",
+    "meta": {
+      "nickname": "last lap lando",
+      "age": "25 y. expert",
+      "hometown": "Queens, US"
+    },
+    "eyebrow": "bringing the fight",
+    "intro": "Since his F1 debut with McLaren in 2019, Lando Norris has been all in – pushing limits, chasing wins, and bringing the",
+    "introAccent": "fight to every race",
+    "previous": {
+      "label": "previous",
+      "circuit": "mexico-city",
+      "name": [
+        "Mexico",
+        "gp"
+      ],
+      "position": "5",
+      "suffix": "th",
+      "hoverTrack": "australia"
+    },
+    "current": {
+      "label": "Current",
+      "round": "20",
+      "city": "USA",
+      "flag": "/images/on-track/calendar/flag-usa.svg",
+      "team": "mclaren f1 since 2019",
+      "outline": "/images/on-track/calendar/outlets/united-states.svg",
+      "country": "USA",
+      "dates": [
+        "06-08",
+        "Nov"
+      ]
+    }
+  },
+  "impact": {
+    "eyebrow": "mclaren f1 since 2019",
+    "html": "Challenging <br>the <strong>limits</strong>, <strong>winning</strong> races. Bringing <strong>it all</strong> each and every weekend."
+  },
+  "podiums": {
+    "count": "49",
+    "label": "podiums",
+    "media": [
+      "/images/on-track/podiums/emilia-romagna-2022.webp",
+      "/images/on-track/podiums/singapore-2024.webp",
+      "/images/on-track/podiums/abu-dhabi-2024.webp",
+      "/images/on-track/podiums/united-states-2023.webp",
+      "/images/on-track/podiums/lando-6-on-track.webp",
+      "/images/on-track/podiums/miami-2024.webp",
+      "/images/on-track/podiums/dutch-2024.webp",
+      "/images/on-track/podiums/australian-2025.webp",
+      "/images/on-track/podiums/austrian-2020.webp",
+      "/images/on-track/podiums/monaco-2021.webp"
+    ],
+    "career": {
+      "title": "f1 career<br><strong>since 2019</strong>",
+      "image": {
+        "src": "/images/on-track/podiums/lando-australia-2025.webp",
+        "alt": "Lando in F1 car"
+      },
+      "wins": {
+        "label": "formula 1  wins",
+        "value": "13"
+      },
+      "poles": {
+        "label": "pole positions",
+        "value": "19"
+      },
+      "average": {
+        "label": "average finish",
+        "value": "6",
+        "decimals": "28"
+      },
+      "fastest": {
+        "label": "fastest laps",
+        "value": "18"
+      },
+      "seasons": {
+        "label": "F1 Seasons",
+        "columns": [
+          "Year",
+          "Finish",
+          "Podiums"
+        ],
+        "rows": [
+          {
+            "year": "2024",
+            "finish": "2",
+            "suffix": "nd",
+            "podiums": "13"
+          },
+          {
+            "year": "2023",
+            "finish": "6",
+            "suffix": "th",
+            "podiums": "7"
+          },
+          {
+            "year": "2022",
+            "finish": "7",
+            "suffix": "th",
+            "podiums": "1"
+          },
+          {
+            "year": "2021",
+            "finish": "6",
+            "suffix": "th",
+            "podiums": "4"
+          },
+          {
+            "year": "2020",
+            "finish": "9",
+            "suffix": "th",
+            "podiums": "1"
+          },
+          {
+            "year": "2019",
+            "finish": "11",
+            "suffix": "th",
+            "podiums": "0"
+          }
+        ]
+      },
+      "cta": {
+        "label": "full schedule & results",
+        "href": "/calendar"
+      }
+    }
+  },
+  "highlights": {
+    "title": "ny tax <br><strong>dates & rates</strong>",
+    "body": "Key deadlines and rates for New York <br>filers: federal, state, city and Long <br>Island. Not sure which apply to you? <br>Ask us before you file.",
+    "columns": [
+      "level",
+      "Tax",
+      "Due",
+      "Rate",
+      "Note"
+    ],
+    "rows": [
+      {
+        "series": "NYC",
+        "name": "NYC sales tax",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "21 Dec",
+        "year": "26",
+        "position": "8.875",
+        "suffix": "%",
+        "sticker": "Quarterly",
+        "hover": "/images/horiz/05.webp"
+      },
+      {
+        "series": "LI",
+        "name": "Long Island sales",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "21 Dec",
+        "year": "26",
+        "position": "8.625",
+        "suffix": "%",
+        "sticker": "Nassau · Suffolk",
+        "hover": "/images/horiz/09.webp"
+      },
+      {
+        "series": "FED",
+        "name": "Q4 estimated tax",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "15 Jan",
+        "year": "27",
+        "position": "90",
+        "suffix": "%",
+        "sticker": "Safe harbor",
+        "hover": "/images/horiz/06.webp"
+      },
+      {
+        "series": "NYS",
+        "name": "PTET election",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "15 Mar",
+        "year": "27",
+        "position": "10.9",
+        "suffix": "%",
+        "sticker": "Business",
+        "hover": "/images/horiz/07.webp"
+      },
+      {
+        "series": "FED",
+        "name": "Federal income",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "15 Apr",
+        "year": "27",
+        "position": "37",
+        "suffix": "%",
+        "sticker": "Top rate",
+        "hover": "/images/horiz/01.webp"
+      },
+      {
+        "series": "NYS",
+        "name": "NY State income",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "15 Apr",
+        "year": "27",
+        "position": "10.9",
+        "suffix": "%",
+        "sticker": "Top rate",
+        "hover": "/images/horiz/02.webp"
+      },
+      {
+        "series": "NYC",
+        "name": "NYC income",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "15 Apr",
+        "year": "27",
+        "position": "3.876",
+        "suffix": "%",
+        "sticker": "5 boroughs",
+        "hover": "/images/horiz/03.webp"
+      },
+      {
+        "series": "YNK",
+        "name": "Yonkers surcharge",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "15 Apr",
+        "year": "27",
+        "position": "16.75",
+        "suffix": "%",
+        "sticker": "Of state tax",
+        "hover": "/images/horiz/04.webp"
+      },
+      {
+        "series": "FED",
+        "name": "Extension",
+        "flag": "/images/on-track/calendar/flag-usa.svg",
+        "date": "15 Oct",
+        "year": "27",
+        "position": "0.5",
+        "suffix": "%",
+        "sticker": "Late fee / mo",
+        "hover": "/images/horiz/08.webp"
+      }
+    ]
+  },
+  "track": {
+    "items": [
+      {
+        "caption": "Meet us",
+        "src": "/images/horiz/05.webp",
+        "alt": "Delowar Hossain and Kamrun Bithi, your local agents on Woodside Ave."
+      },
+      {
+        "caption": "One office",
+        "src": "/images/horiz/09.webp",
+        "alt": "One office, eight errands: insurance, TLC, DMV, immigration forms, tax filing, air tickets, courses and notary"
+      },
+      {
+        "caption": "Friends & family tax",
+        "src": "/images/horiz/06.webp",
+        "alt": "Tax season made easy with Kamrun Bithi, e-file authorized provider"
+      },
+      {
+        "caption": "In the community",
+        "src": "/images/horiz/07.webp",
+        "alt": "Meet us at an event or come by the office"
+      },
+      {
+        "caption": "Real clients",
+        "src": "/images/horiz/01.webp",
+        "alt": "Client Ahmed B. Hassan: professional, helpful and nice people"
+      }
+    ],
+    "quote": {
+      "text": "It doesn’t matter <strong>where</strong> you start, it’s <strong>how</strong> you progress from there.",
+      "signature": "/images/misc/signature-kamrun-lime.svg",
+      "signatureAlt": "Kamrun Nahar's signature in lime"
+    },
+    "pill": {
+      "text": "1",
+      "icon": "/images/on-track/calendar/outlets/united-states.svg",
+      "alt": "Queens office outline"
+    }
+  },
+  "preF1": {
+    "title": "pre-f1 career <br><strong>2007-2019</strong>",
+    "body": "Prior to starting his Formula 1 career, <br>Lando had an illustrious junior career <br>in karting and junior formulae, winning <br>multiple titles on his way to the pinnacle <br>of motorsport.",
+    "mobileImage": {
+      "src": "/images/on-track/pre-f1/champagne.webp",
+      "alt": "Lando spraying champagne"
+    },
+    "image": {
+      "src": "/images/on-track/pre-f1/celebrating.webp",
+      "alt": "Lando in celebrating win"
+    },
+    "stats": [
+      {
+        "title": "fia formula 3 eu champion",
+        "year": "2017",
+        "color": "lime"
+      },
+      {
+        "title": "formula 2 2nd place",
+        "year": "2018",
+        "color": "grey-on-track"
+      },
+      {
+        "title": "renault 2.0 nec champion",
+        "year": "2016",
+        "color": "lime"
+      },
+      {
+        "title": "renault 2.0 eurocup champion",
+        "year": "2016",
+        "color": "lime"
+      },
+      {
+        "title": "toyota series champion",
+        "year": "2016",
+        "color": "lime"
+      },
+      {
+        "title": "cik-fia karting world champion",
+        "year": "2014",
+        "color": "lime"
+      },
+      {
+        "title": "MSA Formula (british f4) champion",
+        "year": "2015",
+        "color": "lime"
+      },
+      {
+        "title": "World Karting (KFJ) champion",
+        "year": "2013",
+        "color": "lime"
+      }
+    ]
+  },
+  "countdown": {
+    "outline": "/images/on-track/calendar/outlets/united-states.svg",
+    "eyebrow": "new york tax day in...",
+    "date": "2027-04-15T23:59:59-04:00",
+    "units": [
+      "D",
+      "h",
+      "m",
+      "s"
+    ]
+  },
+  "calendar": {
+    "eyebrows": {
+      "when": "Service",
+      "length": "Speakers",
+      "distance": "Reply in",
+      "firstCompeted": "First chat",
+      "laps": "Most spoken",
+      "landoAt": "primeone in",
+      "schedule": "How it works",
+      "ukTime": "*typical times"
+    },
+    "title": "we speak <br><strong>your language</strong>",
+    "body": "English, Bangla, or the language you think in. Different words, same goal: clear answers and problems actually solved.",
+    "standing": {
+      "label": "Languages",
+      "value": "3",
+      "suffix": "+"
+    },
+    "round": {
+      "label": "Countries",
+      "value": "26"
+    },
+    "cta": {
+      "label": "talk to us",
+      "href": "/calendar"
+    },
+    "listCta": {
+      "label": "pick your service",
+      "href": "/calendar"
+    },
+    "columns": [
+      "No.",
+      "Language",
+      "Service",
+      "Most spoken",
+      "Reply in"
+    ],
+    "cursor": {
+      "eyebrow": "service",
+      "bg": "/images/on-track/calendar/list-track-bg.svg"
+    },
+    "frame": {
+      "mask": "/images/on-track/calendar/track-mask.svg",
+      "segment": "/images/on-track/calendar/frame-segment.svg"
+    },
+    "items": [
+      {
+        "dateActual": "1/1/2099 0:00",
+        "distance": "24",
+        "distanceUnit": "hrs",
+        "firstCompeted": "Free",
+        "circuit": "english",
+        "round": "01",
+        "name": "English",
+        "country": "English",
+        "code": "EN",
+        "dateNum": "Auto",
+        "dateMonth": "Cover",
+        "length": "1.5",
+        "lengthUnit": "bn",
+        "laps": "USA",
+        "outline": "/images/on-track/calendar/outlets/english-auto.svg",
+        "about": "Auto insurance in plain English. No jargon, no fine-print surprises: we compare carriers, walk you through every line and get you back on the road.",
+        "schedule": [
+          {
+            "label": "Free quote",
+            "date": "Phone",
+            "time": "15 min"
+          },
+          {
+            "label": "Compare",
+            "date": "Online",
+            "time": "Today"
+          },
+          {
+            "label": "Covered",
+            "date": "Office",
+            "time": "24 hrs"
+          }
+        ]
+      },
+      {
+        "dateActual": "1/1/2099 0:00",
+        "distance": "24",
+        "distanceUnit": "hrs",
+        "firstCompeted": "Free",
+        "circuit": "bangla",
+        "round": "02",
+        "name": "Bangla",
+        "country": "Bangla",
+        "code": "বাং",
+        "dateNum": "Tax",
+        "dateMonth": "Returns",
+        "length": "270",
+        "lengthUnit": "m",
+        "laps": "BD",
+        "outline": "/images/on-track/calendar/outlets/bangladesh.svg",
+        "about": "আপনার ট্যাক্স, আপনার ভাষায়। Returns, ITINs and IRS letters explained in Bangla, so nothing gets lost in translation and every deduction gets claimed.",
+        "schedule": [
+          {
+            "label": "Bring docs",
+            "date": "Office",
+            "time": "1 visit"
+          },
+          {
+            "label": "We prepare",
+            "date": "Bangla",
+            "time": "48 hrs"
+          },
+          {
+            "label": "E-file",
+            "date": "IRS",
+            "time": "21 days"
+          }
+        ]
+      },
+      {
+        "dateActual": "1/1/2099 0:00",
+        "distance": "24",
+        "distanceUnit": "hrs",
+        "firstCompeted": "Free",
+        "circuit": "multilingual",
+        "round": "03",
+        "name": "Multilingual",
+        "country": "Multilingual",
+        "code": "ALL",
+        "dateNum": "All",
+        "dateMonth": "Policies",
+        "length": "8",
+        "lengthUnit": "bn",
+        "laps": "Yours",
+        "outline": "/images/on-track/calendar/outlets/multilingual-insurance.svg",
+        "about": "Home, life, business or renters. Whatever language your family speaks at the dinner table, we explain your cover in it, then stay on call when you need to claim.",
+        "schedule": [
+          {
+            "label": "Say hello",
+            "date": "Phone",
+            "time": "Day 1"
+          },
+          {
+            "label": "Match agent",
+            "date": "Native",
+            "time": "Today"
+          },
+          {
+            "label": "Covered",
+            "date": "Office",
+            "time": "24 hrs"
+          }
+        ]
+      }
+    ]
+  },
+  "end": {
+    "src": "/images/on-track/otot-end.webp",
+    "alt": "Lando Norris hodling up a helmet with flight cases in the background"
+  },
+  "socials": {
+    "titleTop": "what’s up",
+    "titleBottom": "On Socials",
+    "follow": "Follow Lando on social media",
+    "links": [
+      {
+        "label": "tiktok",
+        "href": "https://www.tiktok.com/@landonorris"
+      },
+      {
+        "label": "instagram",
+        "href": "https://www.instagram.com/lando"
+      },
+      {
+        "label": "Youtube",
+        "href": "https://www.youtube.com/@LandoNorris"
+      },
+      {
+        "label": "Twitch",
+        "href": "https://www.twitch.tv/landonorris"
+      }
+    ],
+    "video": "824804225",
+    "images": [
+      "/images/on-track/social/68d3ba846e593e52541fb7a8_Lando-6-on-track.webp",
+      "/images/on-track/social/6830302d42237886d0c4b24c_ln-social-img-2.webp",
+      "/images/on-track/social/68d3ba8492066d8f173a3829_Lando-2-on-track.webp",
+      "/images/on-track/social/68d3ba844680bf9a8d9104dd_Lando-3-ontrack.webp",
+      "/images/on-track/social/68d3ba8449f0506fbaad037b_Lano-5-on-track.webp",
+      "/images/on-track/social/6830302dadd0727e6ac034dd_ln-social-img-6.webp",
+      "/images/on-track/social/67d955eda1a903a8a63754a7_ln4-on-track-scroll-img5.webp"
+    ]
+  },
+  "callout": {
+    "text": "Explore the exclusive collection of 1:2 and 1:5 scale replicas",
+    "cta": {
+      "label": "buy minis",
+      "href": "https://store.landonorris.com/"
+    }
+  }
+}

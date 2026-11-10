@@ -7,6 +7,9 @@
  * the business CTA; legal row sits in the mask's bottom notches.
  * Metrics are the live layout in fluid units (1u = 13.33 px there).
  */
+/** Reference data-footer-theme="black" (/on-track): black section and panel, light nav. */
+const props = withDefaults(defineProps<{ dark?: boolean }>(), { dark: false });
+
 const content = useHomeContent();
 const f = computed(() => content.footer);
 const ctaHover = ref(false);
@@ -57,7 +60,7 @@ const PX = 1440 / 108;
 </script>
 
 <template>
-  <section class="footer" data-nav-theme-target="dark">
+  <section class="footer" :class="{ 'is-dark': props.dark }" :data-nav-theme-target="props.dark ? 'light' : 'dark'">
     <div class="footer-glow" aria-hidden="true" />
     <div class="footer-c">
       <div class="footer-panel" data-nav-theme-target="light">
@@ -132,6 +135,11 @@ const PX = 1440 / 108;
   padding-top: calc(var(--u) * 14);
   background: #f4f4ed;
   color: #282c20;
+}
+
+.footer.is-dark,
+.footer.is-dark .footer-panel {
+  background: #111112;
 }
 
 .footer-glow {

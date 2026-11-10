@@ -34,15 +34,26 @@ const BAR_S = 0.6;
 interface Word {
   text: string;
   strong: boolean;
+  /** forced line break (<br>) before this word */
+  br?: boolean;
 }
 
-/** "a <strong>b c</strong> d" → words with a strong flag; trailing space kept. */
+/** "a <strong>b c</strong><br>d" → words with a strong flag; trailing space kept. */
 const words = computed<Word[]>(() => {
   const out: Word[] = [];
-  const re = /<strong>([\s\S]*?)<\/strong>|([^<]+)/g;
+  const re = /<strong>([\s\S]*?)<\/strong>|(<br\s*\/?>)|([^<]+)/g;
+  let br = false;
   for (const m of props.html.matchAll(re)) {
+    if (m[2]) {
+      br = true;
+      continue;
+    }
     const strong = m[1] !== undefined;
-    for (const w of (m[1] ?? m[2] ?? "").split(/(?<=\s)/)) if (w) out.push({ text: w, strong });
+    for (const w of (m[1] ?? m[3] ?? "").split(/(?<=\s)/)) {
+      if (!w) continue;
+      out.push({ text: w, strong, br });
+      br = false;
+    }
   }
   return out;
 });
@@ -154,6 +165,7 @@ onBeforeUnmount(() => {
   <component :is="tag" ref="root" class="high-lines" :aria-label="html.replace(/<[^>]+>/g, '')">
     <template v-if="!lines">
       <template v-for="(w, i) in words" :key="i">
+        <br v-if="w.br" />
         <strong v-if="w.strong" data-word>{{ w.text }}</strong>
         <span v-else data-word>{{ w.text }}</span>
       </template>

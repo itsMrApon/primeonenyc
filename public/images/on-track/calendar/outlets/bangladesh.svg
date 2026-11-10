@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 766 482" width="766" height="482" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <title>Tax outlet 4: modern glass front</title>
+  <g id="roof">
+    <path id="roof-slab" pathLength="1" d="M90 140 H676 V160 H90 Z"/>
+    <path id="roof-edge" pathLength="1" d="M90 150 H676"/>
+  </g>
+  <g id="sign">
+    <path id="sign-board" pathLength="1" d="M262 128 H504"/>
+    <path id="sign-brackets" pathLength="1" d="M290 128 V140 M383 128 V140 M476 128 V140"/>
+    <path id="sign-text" pathLength="1" d="M274.0 54 H332.0 M303.0 54 V118 M354.0 118 L383.0 54 L412.0 118 M365.6 95.0 H400.4 M434.0 54 L492.0 118 M492.0 54 L434.0 118"/>
+  </g>
+  <g id="wall">
+    <path id="wall-outline" pathLength="1" d="M120 160 V440 H170 V160 M596 160 V440 H646 V160"/>
+    <path id="ground-line" pathLength="1" d="M60 440 H706"/>
+  </g>
+  <g id="door">
+    <path id="door-frame" pathLength="1" d="M304 440 V292 H462 V440"/>
+    <path id="door" pathLength="1" d="M312 300 H383 V440 H312 Z M383 300 H454 V440 H383 Z"/>
+    <path id="door-handle" pathLength="1" d="M372 356 V384 M394 356 V384"/>
+  </g>
+  <g id="windows">
+    <path id="window-frame" pathLength="1" d="M170 176 H596 V440 H170 Z"/>
+  </g>
+  <g id="bars">
+    <path id="mullions" pathLength="1" d="M241 176 V440 M525 176 V440 M304 176 V292 M462 176 V292 M383 176 V292 M170 270 H304 M462 270 H596 M170 292 H596"/>
+  </g>
+  <g id="details">
+    <path id="planters" pathLength="1" d="M188 410 H286 V440 H188 Z M480 410 H578 V440 H480 Z"/>
+    <path id="plants" pathLength="1" d="M204 410 C200 392 214 386 216 404 M236 410 C234 384 254 384 250 410 M266 410 C268 392 280 394 274 410 M496 410 C492 392 506 386 508 404 M528 410 C526 384 546 384 542 410 M558 410 C560 392 572 394 566 410"/>
+  </g>
+</svg>

@@ -3,6 +3,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 
 gsap.registerPlugin(ScrollTrigger);
+// Reference (lando-by-OFF+BRAND) turns lag smoothing off: tweens keep wall-clock time when
+// frames drop (e.g. the nav menu's first heavy frame) instead of stretching.
+gsap.ticker.lagSmoothing(0);
 
 /**
  * Homepage scroll choreography:
@@ -104,6 +107,17 @@ export function useHomeScroll(options: { getExperience?: () => HeroScrollTarget 
         onRefresh: update
       });
       triggers.push(st);
+    } else if (nav) {
+      // Pages without the home hero (reference, every page): brand + buttons scale
+      // 1.2 → 1 over the first 10vh (scrubbed, power2.out) and the LN4 logo hides
+      // as soon as the page leaves the top.
+      const update = () => {
+        const y = window.scrollY;
+        const k = Math.min(y / (window.innerHeight * 0.1), 1);
+        nav.style.setProperty("--nav-scale", String(1 - (1 / 6) * (1 - (1 - k) * (1 - k))));
+        nav.dataset.navLogo = y > 0 ? "hidden" : "shown";
+      };
+      triggers.push(ScrollTrigger.create({ start: 0, end: "max", onUpdate: update, onRefresh: update }));
     }
 
     // Sections that only declare a nav ink (reference [data-nav-theme-target]):
@@ -118,7 +132,14 @@ export function useHomeScroll(options: { getExperience?: () => HeroScrollTarget 
     document.querySelectorAll<HTMLElement>("[data-nav-theme-target]").forEach((el) => {
       const value = el.dataset.navThemeTarget;
       if (!value) return;
-      const st = ScrollTrigger.create({ trigger: el, start: "top 42px", end: "bottom 42px", onToggle: applyTheme });
+      // onRefresh too: a marker already active at load (page-top section) never toggles.
+      const st = ScrollTrigger.create({
+        trigger: el,
+        start: "top 42px",
+        end: "bottom 42px",
+        onToggle: applyTheme,
+        onRefresh: applyTheme
+      });
       themeTargets.push({ st, value });
       triggers.push(st);
     });

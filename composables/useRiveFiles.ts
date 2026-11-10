@@ -8,6 +8,7 @@ const FILES = {
   circuits: "circuits.riv",
   reef: "reef.riv",
   phrases: "phrases.riv",
+  signature: "signature.riv",
   "mob-landscape": "mob-landscape.riv"
 } as const;
 
