@@ -19,7 +19,7 @@ Crawl mirror: `../noomo/output-lando/mirror/index.html`
 
 - Logo → `/`
 - Store CTA → `https://store.landonorris.com/`
-- Links: Home `/`, On Track `/on-track`, Off Track `/off-track`, Calendar `/calendar`
+- Links: Home `/`, On Track `/on-track`, NYC Insurance `/nyc-insurance`, Calendar `/calendar`
 - Business → `mailto:business@landonorris.com`
 - Socials: TikTok, Instagram, YouTube, Twitch
 
@@ -57,7 +57,7 @@ Quotes in track:
 ## On / Off Track
 
 - **ON TRACK** — Most recent results, career stats and photos from trackside. → `/on-track`
-- **OFF TRACK** — Campaigns, shoots and other such promotional materials for fans. → `/off-track`
+- **OFF TRACK** — Campaigns, shoots and other such promotional materials for fans. → `/nyc-insurance`
 
 ## Helmets Hall of Fame
 

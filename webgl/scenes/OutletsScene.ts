@@ -35,7 +35,10 @@ const DEPTH = 0.11;
 const GROUP_DELAY: Record<string, number> = { roof: 0, sign: 0.5, wall: 0.9, door: 1.2, windows: 1.4, bars: 1.7, details: 2 };
 const DRAW_DURATION = 1.6;
 /** Fine repeated strokes are thinner / dimmer in the demo (stroke 1.4, opacity .75). */
-const FINE = new Set(["awning-ribs", "security-bars", "cornice-dentils", "window-mullions", "porch-railing", "window-shutters", "mullions"]);
+const FINE = new Set([
+  "awning-ribs", "security-bars", "cornice-dentils", "window-mullions", "porch-railing", "window-shutters", "mullions",
+  "spokes", "glass-shine", "motion-lines"
+]);
 const OUT = 0.7; // s, wipe-out before the swap
 
 /**
@@ -90,6 +93,8 @@ const frag = /* glsl */ `
     gl_FragColor = vec4(color, alpha);
   }
 `;
+
+const DARK_BG = 0x121212;
 
 interface Stroke {
   mesh: Mesh<BufferGeometry, ShaderMaterial>;
@@ -174,12 +179,27 @@ export class OutletsScene {
   readonly #size = { w: 1, h: 1, dpr: 1 };
   readonly #plane = new FullscreenPass(
     new ShaderMaterial({
-      uniforms: { tDiffuse: { value: null }, uRect: { value: fullRect() } },
+      uniforms: { tDiffuse: { value: null }, uRect: { value: fullRect() }, uLight: { value: 0 } },
       vertexShader: rectVert,
       fragmentShader: /* glsl */ `
         uniform sampler2D tDiffuse;
+        uniform float uLight;
         varying vec2 vUv;
-        void main() { gl_FragColor = texture2D(tDiffuse, vUv); }
+
+        // Light mode (off-white page): the neon render on black becomes ink on paper. Brightness
+        // drives it: the faint glow turns a soft lime wash, the bright tubes dark green.
+        const vec3 PAGE = vec3(0.957, 0.957, 0.929); // #f4f4ed
+        const vec3 WASH = vec3(0.824, 1.0, 0.0);     // lime
+        const vec3 INK = vec3(0.157, 0.173, 0.125);  // #282c20
+
+        void main() {
+          vec4 c = texture2D(tDiffuse, vUv);
+          if (uLight < 0.5) { gl_FragColor = c; return; }
+          float l = clamp(max(c.r, max(c.g, c.b)), 0.0, 1.0);
+          vec3 col = mix(PAGE, WASH, smoothstep(0.0, 0.15, l) * 0.6);
+          col = mix(col, INK, smoothstep(0.12, 0.55, l));
+          gl_FragColor = vec4(col, 1.0);
+        }
       `,
       transparent: true,
       depthTest: false,
@@ -195,8 +215,14 @@ export class OutletsScene {
   #building: Promise<void> | null = null;
 
   constructor() {
-    this.scene.background = new Color(0x121212).convertLinearToSRGB();
+    this.scene.background = new Color(DARK_BG).convertLinearToSRGB();
     this.scene.add(this.#turn);
+  }
+
+  /** Light mode for an off-white page: render on black, then the plane maps brightness to ink. */
+  setLight(on: boolean) {
+    this.scene.background = on ? new Color(0x000000) : new Color(DARK_BG).convertLinearToSRGB();
+    this.#plane.material.uniforms.uLight.value = on ? 1 : 0;
   }
 
   async load() {
@@ -234,7 +260,10 @@ export class OutletsScene {
     for (const shape of data.paths) {
       const node = shape.userData?.node as Element | undefined;
       const id = node?.getAttribute("id") ?? "";
-      const groupId = (node?.parentNode as Element | null)?.getAttribute?.("id") ?? "";
+      const parent = node?.parentNode as Element | null;
+      const groupId = parent?.getAttribute?.("id") ?? "";
+      // A drawing may set its own group order (data-delay on the <g>), e.g. the car outline.
+      const ownDelay = parseFloat(parent?.getAttribute?.("data-delay") ?? "");
       const sub = shape.subPaths.map((p) => p.getPoints(16));
       const geometry = strokeGeometry(sub);
       const material = new ShaderMaterial({
@@ -253,7 +282,7 @@ export class OutletsScene {
       });
       const mesh = new Mesh(geometry, material);
       group.add(mesh);
-      strokes.push({ mesh, delay: GROUP_DELAY[groupId] ?? 2 });
+      strokes.push({ mesh, delay: Number.isFinite(ownDelay) ? ownDelay : (GROUP_DELAY[groupId] ?? 2) });
     }
     return { name, group, strokes };
   }

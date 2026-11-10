@@ -35,8 +35,8 @@ const CURSOR_FADE_S = 0.233;
 /** Hero subject: "umbrella" (home + car under cover) or the backup "taxi". */
 const HERO: "umbrella" | "taxi" = "umbrella";
 
-/** Which page's GL runs: the home hero pipeline, or the On Track helmet flight. */
-export type ExperiencePage = "home" | "on-track";
+/** Which page's GL runs: the home hero pipeline, the On Track helmet flight, the calendar circuits only, or nothing (unused). */
+export type ExperiencePage = "home" | "on-track" | "calendar" | "blank";
 
 export interface ExperienceOptions {
   canvas: HTMLCanvasElement;
@@ -128,6 +128,16 @@ export class Experience {
   }
 
   async load() {
+    if (this.#page === "blank") {
+      this.#onProgress?.(1, "Ready");
+      return;
+    }
+    if (this.#page === "calendar") {
+      this.#onProgress?.(0.15, "Loading circuits");
+      await this.tracks.load();
+      this.#onProgress?.(1, "Ready");
+      return;
+    }
     if (this.#page === "on-track") {
       this.#onProgress?.(0.15, "Loading helmet");
       await Promise.all([this.#helmetScroll.load(), this.tracks.load()]);
@@ -161,8 +171,8 @@ export class Experience {
     this.#size.w = w;
     this.#size.h = h;
     this.#helmetScroll.resize(w, h, dpr);
-    if (this.#page === "on-track") this.tracks.resize(w, h, dpr, this.#renderer);
-    if (this.#page === "on-track") return;
+    if (this.#page !== "home") this.tracks.resize(w, h, dpr, this.#renderer);
+    if (this.#page !== "home") return;
     const pw = Math.round(w * dpr);
     const ph = Math.round(h * dpr);
     for (const t of [this.#headTarget, this.#textTarget, this.#revealTarget, this.#contourTarget]) t.setSize(pw, ph);
@@ -252,10 +262,11 @@ export class Experience {
     const elapsed = this.#clock.elapsedTime;
     const r = this.#renderer;
 
-    if (this.#page === "on-track") {
+    if (this.#page !== "home") {
       r.setRenderTarget(null);
       r.clear();
-      this.#helmetScroll.render(r);
+      if (this.#page === "blank") return; // nothing to draw: stop the loop
+      if (this.#page === "on-track") this.#helmetScroll.render(r);
       this.tracks.render(r, elapsed);
       this.#frame = requestAnimationFrame(this.#tick);
       return;

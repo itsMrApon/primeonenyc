@@ -17,6 +17,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import content from "~/content/on-track.json";
 
+/** Off-white page variant (/nyc-insurance): dark-green text, light row lines. */
+defineProps<{ light?: boolean }>();
+
 const p = content.podiums;
 const c = p.career;
 const digits = p.count.split("");
@@ -130,7 +133,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="ot-podiums">
+  <section class="ot-podiums" :class="{ 'is-light': light }">
     <div class="spacer h12" />
     <div ref="wrap" class="podium-layout">
       <div class="podium-num" :aria-label="p.count">
@@ -510,6 +513,15 @@ onBeforeUnmount(() => {
   line-height: 0.97;
   letter-spacing: calc(var(--u) * -0.00625);
   text-transform: uppercase;
+}
+
+.ot-podiums.is-light {
+  --grey: #535450;
+  color: #282c20;
+}
+
+.is-light .season-row {
+  border-bottom-color: #dde1d2;
 }
 
 .row-reveal {

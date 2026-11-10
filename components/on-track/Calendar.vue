@@ -19,8 +19,20 @@ import content from "~/content/on-track.json";
 import { fluidUnit } from "~/utils/fluid";
 import type { Experience } from "~/webgl/Experience";
 
+const props = withDefaults(
+  defineProps<{
+    /** Off-white page variant (/nyc-insurance): dark-green text and frame, light GL. */
+    light?: boolean;
+    /** Card shown first (item `circuit` id), e.g. "bangla" on the tax page. */
+    start?: string;
+  }>(),
+  { light: false, start: undefined }
+);
+
 const cal = content.calendar;
 const e = cal.eyebrows;
+/** Light variant: the frame SVGs recoloured (dark-green stroke, off-white fill). */
+const svg = (src: string) => (props.light ? src.replace(/\.svg$/, "-light.svg") : src);
 
 /** "d/m/yyyy H:MM" → local midnight of that day (bundle j$ compares dates only). */
 function dayOf(s: string) {
@@ -33,6 +45,8 @@ const today = new Date();
 today.setHours(0, 0, 0, 0);
 let first = items.findIndex((it) => dayOf(it.dateActual) >= today);
 if (first === -1) first = items.length - 1;
+const startIndex = items.findIndex((it) => it.circuit === props.start);
+if (startIndex !== -1) first = startIndex;
 
 const current = ref(first);
 const item = computed(() => items[current.value]);
@@ -60,6 +74,7 @@ function attach() {
   }
   attached = exp;
   exp.tracks.define(items.map((it) => ({ name: it.circuit, svg: it.outline })));
+  exp.tracks.setLight(props.light);
   exp.tracks.attach(glTarget.value);
   exp.tracks.setTrack(item.value.circuit, "forward", true);
 }
@@ -173,7 +188,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="ot-calendar">
+  <section class="ot-calendar" :class="{ 'is-light': light }">
     <div class="c is-calendar-gl">
       <div class="spacer h4" />
       <div ref="trackWrap" class="track-w">
@@ -196,7 +211,7 @@ onBeforeUnmount(() => {
                       <OnTrackCalTarget>
                         <div class="info-left-row">
                           <OnTrackCalTarget><div class="stat-large lime">{{ item.length }}</div></OnTrackCalTarget>
-                          <div class="stat-sm off-white unit">{{ e.unit }}</div>
+                          <OnTrackCalTarget><div class="stat-sm off-white unit">{{ item.lengthUnit }}</div></OnTrackCalTarget>
                         </div>
                       </OnTrackCalTarget>
                     </div>
@@ -217,7 +232,7 @@ onBeforeUnmount(() => {
                       <OnTrackCalTarget>
                         <div class="info-left-row">
                           <OnTrackCalTarget><div class="stat-large lime">{{ item.distance }}</div></OnTrackCalTarget>
-                          <div class="stat-sm off-white unit">{{ e.unit }}</div>
+                          <OnTrackCalTarget><div class="stat-sm off-white unit">{{ item.distanceUnit }}</div></OnTrackCalTarget>
                         </div>
                       </OnTrackCalTarget>
                     </div>
@@ -254,8 +269,8 @@ onBeforeUnmount(() => {
                     <div class="eyebrow-w grey"><OnTrackCalTarget><div class="eyebrow" hidden>Time/Gap</div></OnTrackCalTarget></div>
                   </div>
                   <div class="info-col">
-                    <OnTrackCalTarget v-for="s in item.schedule" :key="s.label">
-                      <div class="sched-row" :class="{ race: s.label === 'Race' }">
+                    <OnTrackCalTarget v-for="(s, si) in item.schedule" :key="si">
+                      <div class="sched-row" :class="{ race: si === item.schedule.length - 1 }">
                         <div class="stat-sm">{{ s.label }}</div>
                         <div><OnTrackCalTarget><div class="stat-sm">{{ s.date }}</div></OnTrackCalTarget></div>
                         <div><OnTrackCalTarget><div class="stat-sm">{{ s.time }}</div></OnTrackCalTarget></div>
@@ -280,21 +295,29 @@ onBeforeUnmount(() => {
               />
             </svg>
           </div>
-          <div class="f1-logo"><img :src="cal.frame.f1Logo" alt="" /></div>
+          <!-- PrimeOne PO monogram (same paths as the nav, /images/misc/ln-logo.svg) in place of the F1 logo. -->
+          <div class="f1-logo">
+            <svg class="po-logo" viewBox="41 106 430 300" role="img" aria-label="PrimeOne">
+              <g transform="translate(256 256) skewX(-14) translate(-178 -150)" fill="currentColor" fill-rule="evenodd">
+                <path d="M0 0H90C128 0 150 24 150 62V108C150 146 128 170 90 170H52V300H0Z M52 48V122H84C94 122 98 116 98 106V64C98 54 94 48 84 48Z" />
+                <path d="M222 0H310C338 0 356 18 356 46V254C356 282 338 300 310 300H222C194 300 176 282 176 254V46C176 18 194 0 222 0Z M242 48C233 48 228 53 228 62V238C228 247 233 252 242 252H290C299 252 304 247 304 238V62C304 53 299 48 290 48Z" />
+              </g>
+            </svg>
+          </div>
           <!-- Reference .calendar-mobile-frame top / middle / bottom (phones only). -->
-          <img class="mobile-frame is-top" src="/images/on-track/calendar/frame-mobile-top.svg" alt="" />
-          <img class="mobile-frame is-middle" src="/images/on-track/calendar/frame-mobile-middle.svg" alt="" />
-          <img class="mobile-frame is-bottom" src="/images/on-track/calendar/frame-mobile-bottom.svg" alt="" />
+          <img class="mobile-frame is-top" :src="svg('/images/on-track/calendar/frame-mobile-top.svg')" alt="" />
+          <img class="mobile-frame is-middle" :src="svg('/images/on-track/calendar/frame-mobile-middle.svg')" alt="" />
+          <img class="mobile-frame is-bottom" :src="svg('/images/on-track/calendar/frame-mobile-bottom.svg')" alt="" />
           <div ref="glTarget" data-gl="tracks" class="gl-target" />
         </div>
         <div class="title-w">
           <div class="title-layout">
             <OnTrackCalTarget><div class="title-vertical">{{ item.name }}</div></OnTrackCalTarget>
             <div class="flag-ui">
-              <OnTrackCalTarget><img class="flag-img" :src="item.flag" alt="" /></OnTrackCalTarget>
+              <OnTrackCalTarget><span class="lang-badge" :lang="item.circuit === 'bangla' ? 'bn' : undefined">{{ item.code }}</span></OnTrackCalTarget>
             </div>
           </div>
-          <img class="frame-segment" :src="cal.frame.segment" alt="" />
+          <img class="frame-segment" :src="svg(cal.frame.segment)" alt="" />
         </div>
         <div class="controls">
           <a href="#" title="next item" class="icon-btn" @click.prevent="next" @mouseenter="nextHover = true" @mouseleave="nextHover = false">
@@ -343,6 +366,8 @@ onBeforeUnmount(() => {
       </div>
       <div class="spacer h6" />
     </div>
+    <!-- /calendar: the season's results list (reference #calendar-list) above the upcoming list. -->
+    <slot name="before-list" />
     <div class="list-outer">
       <div class="hl-grid is-top">
         <div v-for="col in cal.columns" :key="col" class="eyebrow-w grey">
@@ -357,7 +382,7 @@ onBeforeUnmount(() => {
               :key="it.circuit"
               class="hl-grid is-row"
               :class="{ 'is-active': i === current }"
-              title="View this track"
+              title="View this language"
               data-stat-item
               @mouseenter="hoverTrack = it.circuit"
               @click="pick(i)"
@@ -365,7 +390,7 @@ onBeforeUnmount(() => {
               <div class="hl-item"><div class="stat-major">{{ it.round }}</div></div>
               <div class="hl-item">
                 <div class="stat-major no-wrap">{{ it.country }}</div>
-                <div class="flag-row"><img :src="it.flag" alt="" /></div>
+                <div class="flag-row"><span class="lang-badge" :lang="it.circuit === 'bangla' ? 'bn' : undefined">{{ it.code }}</span></div>
               </div>
               <div class="hl-item">
                 <div class="stat-major">{{ it.dateNum }}</div>
@@ -375,7 +400,7 @@ onBeforeUnmount(() => {
               <div class="hl-item">
                 <div class="text-layout is-gap">
                   <div class="stat-reg">{{ it.distance }}</div>
-                  <div class="descriptor grey">{{ e.unit }}</div>
+                  <div class="descriptor grey">{{ it.distanceUnit }}</div>
                 </div>
               </div>
               <div class="hl-line" />
@@ -410,6 +435,38 @@ onBeforeUnmount(() => {
   position: relative;
   z-index: 15;
   color: #f4f4ed;
+}
+
+/* Light variant (/nyc-insurance, off-white page): dark-green text and lines; lime stays on fills. */
+.ot-calendar.is-light {
+  --grey: #535450;
+  --off-white: #535450;
+  color: #282c20;
+}
+
+.is-light .lime,
+.is-light .sched-row.race,
+.is-light .frame {
+  color: #282c20;
+}
+
+.is-light .sched-row {
+  border-bottom-color: #282c201f;
+}
+
+.is-light .hl-grid.is-row.is-active,
+.is-light .hl-line {
+  background-color: #dde1d2;
+}
+
+.is-light .hl-grid.is-row:hover {
+  background-color: #282c20;
+  color: var(--color-lime);
+}
+
+/* The cursor card keeps its dark tile. */
+.is-light .mouse-w {
+  --grey: #b9bbad;
 }
 
 .c {
@@ -661,10 +718,10 @@ onBeforeUnmount(() => {
   z-index: 5;
 }
 
-.f1-logo img {
-  display: flex;
-  width: calc(var(--u) * 6.75);
-  height: calc(var(--u) * 1.6875);
+.po-logo {
+  display: block;
+  width: auto;
+  height: calc(var(--u) * 2.25);
 }
 
 .mobile-frame {
@@ -718,14 +775,27 @@ onBeforeUnmount(() => {
 }
 
 .flag-ui .cal-target-wrapper,
-.flag-img {
+.lang-badge {
   width: 100%;
   height: 100%;
 }
 
-.flag-img {
-  display: block;
-  object-fit: cover;
+/* Language badge (EN / বাং / ALL) in the flag slots: lime chip, dark text. */
+.lang-badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-lime);
+  color: #111112;
+  font-family: var(--font-mona);
+  font-size: calc(var(--u) * 0.6);
+  font-variation-settings: "wght" 800, "wdth" 87.5;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.flag-row .lang-badge {
+  font-size: calc(var(--u) * 0.65);
 }
 
 .frame-segment {
@@ -894,12 +964,7 @@ onBeforeUnmount(() => {
   overflow: clip;
 }
 
-.flag-row img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+
 
 .hl-line {
   position: absolute;
@@ -917,14 +982,12 @@ onBeforeUnmount(() => {
   background-color: var(--color-lime);
 }
 
+/* Only three languages, so every row stays visible: the CTA sits under the list, no fade over it. */
 .grad {
-  position: absolute;
-  inset: auto 0 0;
+  position: relative;
   display: flex;
   justify-content: center;
-  align-items: flex-end;
-  height: calc(var(--u) * 20);
-  background-image: linear-gradient(180deg, #11111200, #111112c9 58%, #111112);
+  padding-top: calc(var(--gap) * 2);
   pointer-events: none;
 }
 

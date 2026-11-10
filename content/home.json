@@ -12,7 +12,7 @@
     "links": [
       { "label": "Home", "href": "/" },
       { "label": "Tax Consultant", "href": "/tax-consultant" },
-      { "label": "Off Track", "href": "/off-track" },
+      { "label": "NYC Insurance", "href": "/nyc-insurance" },
       { "label": "Calendar", "href": "/calendar" }
     ],
     "tagline": "mclaren f1 since 2019",
@@ -80,10 +80,10 @@
       "imageAlt": "Lando Norris wearing a lime helmet, side profile"
     },
     "off": {
-      "titleTop": "OFF",
-      "titleBottom": "TRACK",
+      "titleTop": "NYC",
+      "titleBottom": "INSURANCE",
       "body": "<strong>Campaigns</strong>, shoots and other such promotional materials for fans",
-      "href": "/off-track",
+      "href": "/nyc-insurance",
       "image": "/images/misc/hp-lando-head.webp",
       "imageAlt": "Lando Norris wearing a fleece, side profile"
     },

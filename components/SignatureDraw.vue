@@ -34,7 +34,11 @@ let trigger: ScrollTrigger | null = null;
 function play() {
   tl?.play();
 }
-defineExpose({ play });
+/** Scroll-driven write-on (signature.riv "signature_scroll"): 0 = blank, 1 = written. */
+function seek(progress: number) {
+  tl?.progress(progress);
+}
+defineExpose({ play, seek });
 
 onMounted(() => {
   const lifts = (strokes.length - 1) * LIFT;

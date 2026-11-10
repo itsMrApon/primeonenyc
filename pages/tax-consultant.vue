@@ -25,12 +25,11 @@ useHelmetFlip(track, getExperience);
       <OnTrackImpact />
     </div>
     <div class="group-z10" data-nav-theme-target="light">
-      <OnTrackPodiums />
       <OnTrackHighlights />
       <OnTrackHorizontalTrack data-nav-theme-target="light" />
       <OnTrackPreF1Career />
       <OnTrackCountdown />
-      <OnTrackCalendar />
+      <OnTrackCalendar start="bangla" />
       <OnTrackOtotEnd />
       <div class="group-bg-black">
         <!-- Same section as the home page (services); its "view on track" callout is off here. -->
