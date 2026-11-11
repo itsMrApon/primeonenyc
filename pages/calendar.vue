@@ -4,8 +4,8 @@ import type { Experience } from "~/webgl/Experience";
 
 /**
  * Calendar page (reference /calendar): calendar hero, the Tax Consultant calendar card
- * (keeps its "upcominG 2026 schedule" title) with the 2026 results list above its upcoming
- * list, "Formula 1 / All Results", the countdown and the footer.
+ * (keeps its "upcominG 2026 schedule" title) with the services calendar above its upcoming
+ * list, "Services / & forms", the countdown and the footer.
  * Stacking like /tax-consultant: GL canvas (z 5: the calendar circuits) < every section
  * (one z 10 group) < nav.
  */
@@ -13,6 +13,8 @@ useHead({ title: "Calendar", htmlAttrs: { class: "is-calendar" } });
 
 const getExperience = () => (window as unknown as { experience?: Experience }).experience ?? null;
 useHomeScroll({ getExperience: () => getExperience() as unknown as HeroScrollTarget | null });
+
+const services = useServices();
 </script>
 
 <template>
@@ -20,9 +22,11 @@ useHomeScroll({ getExperience: () => getExperience() as unknown as HeroScrollTar
     <div class="group-z10" data-nav-theme-target="light">
       <CalendarHero />
       <OnTrackCalendar start="multilingual">
-        <template #before-list><CalendarSeasonList /></template>
+        <template #before-list>
+          <CalendarSeasonList v-if="services" :data="services" />
+        </template>
       </OnTrackCalendar>
-      <CalendarAllResults />
+      <CalendarServiceForms v-if="services" :data="services" />
       <OnTrackCountdown />
       <HomeSiteFooter dark />
     </div>

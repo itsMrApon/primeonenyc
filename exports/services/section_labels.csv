@@ -1,0 +1,22 @@
+section,label_key,label
+calendar,no,No.
+calendar,noMobile,No.
+calendar,event,Key date
+calendar,when,When
+calendar,perk,Your perk
+calendar,perkMobile,Perk
+calendar,gov,Gov says
+calendar,govMobile,Gov
+forms,titleTop,Services
+forms,titleBottom,& forms
+forms,body,"Pick a service to see what we do. <br>Every form you need, ready to download."
+forms,columns.open,Open
+forms,columns.service,Service
+forms,columns.docs,Docs
+forms,columns.ready,Ready in
+forms,columns.no,No.
+forms,columns.doc,Document
+forms,columns.from,From
+forms,columns.format,Format
+forms,columns.download,Download
+forms,columns.noDocs,Documents coming soon

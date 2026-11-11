@@ -1,0 +1,28 @@
+id,event_date,title,service_id,perk,perk_suffix,gift,gov,gov_unit,note
+efile-opens-2026,2026-01-26,E-file season opens,tax,20%,early bird,true,21 days,avg refund,File in the first two weeks: 20% off your return and a welcome gift.
+new-year-llc-2026,2026-01-31,New-year LLC,business-setup,Free,EIN filing,false,$200,NY filing fee,Form your LLC with us in January and we file your EIN for free.
+w2-1099-2026,2026-02-02,W-2 & 1099 due,payroll-sales-tax,Free,1st run,false,$340,per late form,Employee and contractor forms are due. Your first payroll run with us is free.
+plate-transfer-2026,2026-03-02,Plate transfer week,tlc-express,24h,filing,false,TLC,inspection req'd,Moving plates to a new car? We file the TLC paperwork in a day.
+point-reduction-2026,2026-03-09,Point reduction course,courses,15%,off course,false,10%,ins. cut 3 yrs,NY defensive driving cuts your insurance 10% for three years and can take points off.
+business-returns-2026,2026-03-16,Business returns,tax,10%,off,false,Due,S-corp & LLC,S-corp and partnership returns (or extensions) are due.
+registration-rush-2026,2026-04-01,Spring registration rush,dmv-express,24h,plates,false,Ticket,if expired,"Registrations, renewals and plates without the DMV line."
+tax-day-2026,2026-04-15,Tax day,tax,Gift,card,true,5%,per month late,Federal and New York returns are due. Every return filed with us gets a gift card.
+small-business-week-2026,2026-05-04,Small business week,workers-comp,Free,audit,true,"$2,000",per 10 days uncovered,Workers' comp is required in New York. Free coverage audit and a gift for every business owner.
+eid-travel-2026,2026-05-11,Eid travel booking,travel,5%,off fares,true,6 mo,passport validity,Book Eid flights early: 5% off fares and a travel gift.
+summer-surge-2026,2026-05-25,Summer driving surge,rideshare,Free,gap quote,false,Gap,personal policy,Personal auto policies usually exclude app driving. We close the gap.
+hurricane-season-2026,2026-06-01,Hurricane season,home-landlord,Free,review,false,30 days,flood wait,Flood cover takes 30 days to start. Get your home or rental reviewed before the storms.
+sales-tax-q2-2026,2026-06-22,Sales tax quarter,payroll-sales-tax,Free,1st filing,false,Due,NY DTF,Quarterly New York sales tax return. Your first filing with us is free.
+rent-registration-2026,2026-07-31,Rent registration,home-landlord,Free,landlord review,false,Due,NY HCR,Annual rent registration for stabilized units. Free landlord policy review while you're here.
+lease-signing-2026,2026-08-31,Lease & title signing,notary,Free,1st stamp,false,$2,NY max per stamp,"Moving season: leases, titles and affidavits signed and sealed on the spot."
+life-insurance-month-2026,2026-09-01,Life insurance month,life-disability,Gift,box,true,Tax-free,payout,September is Life Insurance Awareness Month. Free quote and a family gift box.
+citizenship-day-2026,2026-09-17,Citizenship day,immigration-forms,Free,N-400 review,false,$710,N-400 online fee,Citizenship Day: we review your N-400 for free before you file.
+winter-flights-2026,2026-10-05,Winter-break flights,travel,Gift,travel kit,true,Real ID,for US flights,Book winter-break flights with us and take home a travel kit.
+extension-deadline-2026,2026-10-15,Extension deadline,tax,Free,e-file,false,Final,no more time,Last day for extended personal returns. We e-file it for free.
+holiday-rush-2026,2026-11-20,Holiday driving rush,tlc-insurance,Free,quote,true,Suspend,on lapse,TLC suspends your plates if insurance lapses. Renew before the busiest weeks.
+small-business-saturday-2026,2026-11-28,Small business Saturday,business-insurance,Free,COI,true,COI,for most leases,Liability quote plus a free certificate of insurance for your landlord or client.
+winter-driving-2026,2026-12-01,Winter driving check,insurance,15%,bundle,false,$8,per day lapse,Bundle auto with home for 15% off. NY fines every day your car is uninsured.
+sales-tax-q3-2026,2026-12-21,Sales tax quarter,payroll-sales-tax,Free,1st filing,false,Due,NY DTF,Quarterly New York sales tax return.
+year-end-writeoffs-2026,2026-12-31,Year-end write-offs,tax,Free,review,false,100%,bonus deduction,Equipment bought before Dec 31 can be written off this year. Free year-end review.
+q4-estimated-2027,2027-01-15,Q4 estimated tax,tax,Free,check,false,Due,IRS,Last 2026 estimated payment. We check your numbers for free.
+efile-opens-2027,2027-01-25,E-file season opens,tax,20%,early bird,true,21 days,avg refund,File early: 20% off your return and a welcome gift.
+tax-day-2027,2027-04-15,Tax day,tax,Gift,card,true,5%,per month late,Federal and New York returns are due. Every return filed with us gets a gift card.

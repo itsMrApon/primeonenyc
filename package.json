@@ -10,7 +10,8 @@
     "generate": "NODE_OPTIONS=--experimental-require-module nuxt generate",
     "preview": "NODE_OPTIONS=--experimental-require-module nuxt preview",
     "postinstall": "NODE_OPTIONS=--experimental-require-module nuxt prepare",
-    "typecheck": "NODE_OPTIONS=--experimental-require-module nuxt typecheck"
+    "typecheck": "NODE_OPTIONS=--experimental-require-module nuxt typecheck",
+    "export:services": "node tools/export-services.mjs"
   },
   "dependencies": {
     "@rive-app/canvas": "2.26.6",

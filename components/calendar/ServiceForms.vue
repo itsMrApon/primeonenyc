@@ -1,27 +1,35 @@
 <script setup lang="ts">
 /**
- * Calendar "Formula 1 / All Results" (reference /calendar, the .s after .is-on-t-calendar).
- * See .reanimate/calendar/spec.md.
+ * Calendar page "Services / & forms" (layout of the reference /calendar "All Results"
+ * accordion, the .s after .is-on-t-calendar). Data: useServices (bundled
+ * content/services.json or the dashboard URL) via the `data` prop.
  *   - Title: oval reveal at "top 95%" (bundle e0: per line clip ellipse(20% 0%) → (100% 120%)
- *     at top centre, 1.5 s power2.inOut, 0.15 s stagger). The reference's line/char drops are
- *     not on that timeline (they finish at page init), so only the clip shows.
+ *     at top centre, 1.5 s power2.inOut, 0.15 s stagger).
  *   - Paragraph highlighter (dark-green-tint-1), header eyebrows (lime).
- *   - One row per season (bundle S_, [data-calendar-history]): click / Enter / Space toggles
- *     it; opening one closes the others (display none ↔ block, no tween); when the opened
- *     row's top is above the viewport or below 30 % of it, lenis scrolls it to −100 px (0.5 s).
- *   - Season head: hover → lime row, black text (≥992); open → lime, chevron black and up.
- *     Reef Rive beside the finish for the seasons that have one.
- *   - Race rows: round, location + flag, date, finish (+ winner's trophy), fastest lap; no
- *     hover fill (.is-history).
+ *   - One row per service ([data-calendar-history] behaviour): click / Enter / Space toggles
+ *     it; opening one closes the others; when the opened row's top is above the viewport or
+ *     below 30 % of it, lenis scrolls it to −100 px (0.5 s).
+ *   - Service head: name, docs count (lime laurel Rive for featured services).
+ *   - Open: headline, details + turnaround, then the downloadable docs (no., name + code
+ *     chip, issuer, format, download link).
  */
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type Lenis from "lenis";
 
-import content from "~/content/calendar.json";
+import type { ServiceDoc, ServicesData } from "~/composables/useServices";
 
-const r = content.results;
-const col = r.columns;
+const props = defineProps<{ data: ServicesData }>();
+const r = computed(() => props.data.formsSection);
+const col = computed(() => r.value.columns);
+
+const services = computed(() => {
+  const byService = new Map<string, ServiceDoc[]>();
+  for (const doc of props.data.docs) byService.set(doc.service, [...(byService.get(doc.service) ?? []), doc]);
+  return [...props.data.services]
+    .sort((a, b) => a.no - b.no)
+    .map((sv) => ({ ...sv, docs: (byService.get(sv.id) ?? []).sort((a, b) => a.sort - b.sort) }));
+});
 
 const open = ref<number | null>(null);
 const items = ref<HTMLElement[]>([]);
@@ -81,18 +89,14 @@ onBeforeUnmount(() => {
     <div class="spacer h10" />
     <div class="collection-w">
       <div class="res-grid is-top is-dd-top">
-        <div class="eyebrow-w">
-          <HighLines class="eyebrow dt-only" :html="col.round" />
-          <div class="eyebrow mob-only">{{ col.roundMobile }}</div>
-        </div>
-        <div class="eyebrow-w is-span"><HighLines class="eyebrow" :html="col.location" /></div>
-        <div class="eyebrow-w"><HighLines class="eyebrow" :html="col.finish" /></div>
-        <div class="eyebrow-w"><HighLines class="eyebrow" :html="col.podiums" /></div>
+        <div class="eyebrow-w"><HighLines class="eyebrow" :html="col.open" /></div>
+        <div class="eyebrow-w is-span3"><HighLines class="eyebrow" :html="col.service" /></div>
+        <div class="eyebrow-w"><HighLines class="eyebrow" :html="col.docs" /></div>
       </div>
       <div class="dd-list">
         <div
-          v-for="(season, i) in r.seasons"
-          :key="season.year"
+          v-for="(sv, i) in services"
+          :key="sv.id"
           ref="items"
           class="dd-item"
           :class="{ 'is-open': open === i }"
@@ -102,7 +106,7 @@ onBeforeUnmount(() => {
             role="button"
             tabindex="0"
             :aria-expanded="open === i"
-            :aria-controls="`cal-results-${season.year}`"
+            :aria-controls="`svc-forms-${sv.id}`"
             @click="toggle(i)"
             @keydown.enter.space.prevent="toggle(i)"
           >
@@ -114,88 +118,91 @@ onBeforeUnmount(() => {
                   </svg>
                 </div>
               </div>
-              <h3 class="label-major is-span">{{ season.year }}</h3>
+              <h3 class="label-major is-span3">{{ sv.name }}</h3>
               <div class="res-item">
                 <div class="item-text">
-                  <div class="label-major is-flex">
-                    {{ season.position }}<span class="label-sm" :class="{ 'is-lime': season.position === '1' }">{{
-                      season.suffix
+                  <div v-if="sv.docs.length" class="label-major is-flex">
+                    {{ sv.docs.length }}<span class="label-sm" :class="{ 'is-lime': sv.featured }">{{
+                      sv.docs.length === 1 ? "doc" : "docs"
                     }}</span>
                   </div>
+                  <div v-else class="label-major is-muted">–</div>
                 </div>
-                <div v-if="season.reef" class="trophy-w">
+                <div v-if="sv.featured && sv.docs.length" class="trophy-w">
                   <div class="reef">
                     <RiveCanvas
                       file="reef"
                       artboard="reef"
                       state-machine="reef_play"
-                      :inputs="{ [`color_${season.reef}`]: true }"
+                      :inputs="{ color_lime: true }"
                       play-at="top 80%"
                     />
                   </div>
                 </div>
               </div>
-              <div class="label-major is-flex">{{ season.podiums }}</div>
               <div class="head-line" />
             </div>
           </div>
           <div
             v-show="open === i"
-            :id="`cal-results-${season.year}`"
+            :id="`svc-forms-${sv.id}`"
             class="dd-content"
             role="region"
             :aria-hidden="open !== i"
           >
-            <div class="res-grid is-top is-dd-item">
-              <div class="eyebrow-w">
-                <div class="eyebrow dt-only">{{ col.round }}</div>
-                <div class="eyebrow mob-only">{{ col.roundMobile }}</div>
-              </div>
-              <div class="eyebrow-w is-span"><div class="eyebrow">{{ col.location }}</div></div>
-              <div class="eyebrow-w"><div class="eyebrow">{{ col.finish }}</div></div>
-              <div class="eyebrow-w"><div class="eyebrow">{{ col.lap }}</div></div>
-            </div>
-            <div class="collection">
-              <div class="res-list" role="list">
-                <div
-                  v-for="(race, j) in season.races"
-                  :key="`${race.round}-${j}`"
-                  class="res-grid is-row"
-                  role="listitem"
-                >
-                  <div class="res-item">
-                    <div class="round-w"><div class="label-major">{{ race.round }}</div></div>
-                  </div>
-                  <div class="res-item">
-                    <h4 class="label-major">{{ race.location }}</h4>
-                    <div class="flag"><img :src="race.flag" alt="" loading="lazy" /></div>
-                  </div>
-                  <div class="res-item hide-m">
-                    <div class="label-major">{{ race.date }}</div>
-                    <div class="label-major">{{ race.year }}</div>
-                  </div>
-                  <div class="res-item">
-                    <div class="item-text">
-                      <div class="label-major is-flex">
-                        {{ race.position
-                        }}<span v-if="race.suffix" class="label-sm" :class="{ 'is-lime': race.position === '1' }">{{
-                          race.suffix
-                        }}</span>
-                      </div>
-                    </div>
-                    <div v-if="race.trophy" class="trophy-w">
-                      <img class="trophy" :src="race.trophy" alt="" loading="lazy" />
-                    </div>
-                  </div>
-                  <div class="res-item">
-                    <div class="item-text is-gap">
-                      <div class="label-reg">{{ race.lap }}</div>
-                      <div class="descriptor">{{ race.lapUnit }}</div>
-                    </div>
-                  </div>
-                  <div class="row-line" />
+            <div class="res-grid is-detail">
+              <div class="detail-w is-head-w"><p class="detail-headline">{{ sv.headline }}</p></div>
+              <div class="detail-w is-body-w"><p class="body-reg">{{ sv.details }}</p></div>
+              <div v-if="sv.ready" class="detail-w is-ready-w">
+                <div class="eyebrow">{{ col.ready }}</div>
+                <div class="label-major is-flex">
+                  {{ sv.ready }}<span v-if="sv.readyUnit" class="label-sm">{{ sv.readyUnit }}</span>
                 </div>
               </div>
+            </div>
+            <template v-if="sv.docs.length">
+              <div class="res-grid is-top is-dd-item">
+                <div class="eyebrow-w"><div class="eyebrow">{{ col.no }}</div></div>
+                <div class="eyebrow-w"><div class="eyebrow">{{ col.doc }}</div></div>
+                <div class="eyebrow-w hide-m"><div class="eyebrow">{{ col.from }}</div></div>
+                <div class="eyebrow-w"><div class="eyebrow">{{ col.format }}</div></div>
+                <div class="eyebrow-w"><div class="eyebrow">{{ col.download }}</div></div>
+              </div>
+              <div class="collection">
+                <div class="res-list" role="list">
+                  <div v-for="(doc, j) in sv.docs" :key="doc.id" class="res-grid is-row" role="listitem">
+                    <div class="res-item">
+                      <div class="round-w"><div class="label-major">{{ String(j + 1).padStart(2, "0") }}</div></div>
+                    </div>
+                    <div class="res-item">
+                      <h4 class="label-major">{{ doc.name }}</h4>
+                      <div class="flag"><span class="code-chip">{{ doc.code }}</span></div>
+                    </div>
+                    <div class="res-item hide-m">
+                      <div class="label-major">{{ doc.issuer }}</div>
+                    </div>
+                    <div class="res-item">
+                      <div class="label-major">{{ doc.format }}</div>
+                    </div>
+                    <div class="res-item">
+                      <a
+                        class="item-text is-gap is-link"
+                        :href="doc.url"
+                        target="_blank"
+                        rel="noopener"
+                        download
+                        :aria-label="`Download ${doc.name} (${doc.code})`"
+                      >
+                        <span class="label-reg">Get</span><span class="descriptor">{{ doc.code }} ↓</span>
+                      </a>
+                    </div>
+                    <div class="row-line" />
+                  </div>
+                </div>
+              </div>
+            </template>
+            <div v-else class="res-grid is-empty">
+              <div class="descriptor">{{ col.noDocs }}</div>
             </div>
           </div>
         </div>
@@ -321,6 +328,14 @@ onBeforeUnmount(() => {
 
 .is-span {
   grid-column: span 2;
+}
+
+.is-span3 {
+  grid-column: span 3;
+}
+
+.label-major.is-muted {
+  color: var(--grey);
 }
 
 /* .f1-highlight-grid */
@@ -475,11 +490,90 @@ onBeforeUnmount(() => {
   overflow: clip;
 }
 
-.flag img {
-  display: block;
+.flag {
+  flex: none;
+  width: auto;
+  min-width: calc(var(--u) * 2.12438);
+}
+
+/* Form code in the flag slot: lime chip, dark text (as the calendar list). */
+.code-chip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  padding-inline: calc(var(--u) * 0.3);
+  background-color: var(--color-lime);
+  color: #111112;
+  font-family: var(--font-mona);
+  font-size: calc(var(--u) * 0.65);
+  font-variation-settings: "wght" 800, "wdth" 87.5;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.res-grid.is-detail {
+  padding-top: calc(var(--gap) * 2);
+}
+
+/* Open service: headline (brier) over details in cols 2–4, turnaround in col 5. */
+.detail-w.is-head-w {
+  grid-column: 2 / span 3;
+  grid-row: 1;
+}
+
+.detail-w.is-body-w {
+  grid-column: 2 / span 3;
+  grid-row: 2;
+  max-width: 44em;
+  color: var(--grey);
+}
+
+.detail-w.is-ready-w {
+  grid-column: 5;
+  grid-row: 1 / span 2;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 0.5);
+}
+
+.detail-w.is-ready-w .eyebrow {
+  color: var(--grey);
+}
+
+.res-grid.is-empty {
+  padding-block: calc(var(--gap) * 2);
+}
+
+.res-grid.is-empty .descriptor {
+  grid-column: 2 / -1;
+}
+
+.detail-headline {
+  margin: 0;
+  font-family: var(--font-brier);
+  font-size: calc(var(--u) * 2.6);
+  line-height: 0.95;
+}
+
+/* Form rows: smaller than the season rows (names run longer than race locations). */
+.res-grid.is-row .label-major {
+  font-size: calc(var(--u) * 2.6);
+}
+
+.item-text.is-link {
+  color: var(--color-lime);
+  text-decoration: none;
+}
+
+.item-text.is-link .descriptor {
+  color: inherit;
+}
+
+@media (hover: hover) {
+  .item-text.is-link:hover .label-reg {
+    text-decoration: underline;
+  }
 }
 
 .item-text {
@@ -502,12 +596,6 @@ onBeforeUnmount(() => {
   align-items: center;
   height: 100%;
   aspect-ratio: 1;
-}
-
-.trophy {
-  width: 100%;
-  height: 90%;
-  object-fit: contain;
 }
 
 /* .icon-svg-closed-reef.pre-f1-car.is-2nd.is-history */
@@ -596,7 +684,8 @@ onBeforeUnmount(() => {
   }
 
   /* Location takes the date column's place (reference w-node span 2 at ≤479). */
-  .res-grid.is-row > .res-item:nth-child(2) {
+  .res-grid.is-row > .res-item:nth-child(2),
+  .res-grid.is-dd-item > .eyebrow-w:nth-child(2) {
     grid-column: span 2;
   }
 
@@ -637,6 +726,34 @@ onBeforeUnmount(() => {
   .reef {
     position: relative;
     height: calc(var(--u) * 2);
+  }
+
+  .res-grid.is-detail {
+    row-gap: var(--gap);
+  }
+
+  .detail-w.is-head-w,
+  .detail-w.is-body-w,
+  .detail-w.is-ready-w {
+    grid-column: 2 / -1;
+    grid-row: auto;
+  }
+
+  .detail-headline {
+    font-size: calc(var(--u) * 2);
+  }
+
+  .res-grid.is-row .label-major {
+    font-size: calc(var(--u) * 1.6);
+  }
+
+  .code-chip {
+    font-size: calc(var(--u) * 0.5);
+  }
+
+  .item-text.is-gap {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 </style>

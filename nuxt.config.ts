@@ -6,6 +6,12 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true },
 
+  // NUXT_PUBLIC_SERVICES_URL: dashboard endpoint for /calendar (services, forms, key dates;
+  // same JSON shape as content/services.json). Empty = bundled JSON.
+  runtimeConfig: {
+    public: { servicesUrl: "" }
+  },
+
   css: ["~/assets/css/main.css"],
 
   app: {
