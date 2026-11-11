@@ -1,9 +1,9 @@
 {
-  "eyebrow": "Helmets",
-  "title": "Hall of Fame",
-  "body": "From his iconic blobs to innovative one-off designs, Lando has always been passionate about designing innovative and memorable helmets.",
+  "eyebrow": "Services",
+  "title": "Under one roof",
+  "body": "Sixteen services, one front desk. From TLC plates to tax returns, every badge here is something we handle for Queens families every week.",
   "callout": {
-    "text": "See more helmets and highlights from Lando on the track",
+    "text": "See tax dates, rates and how filing works at our tax desk",
     "cta": {
       "label": "view tax consultant",
       "href": "/tax-consultant"
@@ -11,100 +11,100 @@
   },
   "items": [
     {
-      "name": "Season",
-      "year": "2025",
-      "src": "/images/helmets/2025-Season-base.webp",
-      "hover": "/images/helmets/2025-Season-hover.webp"
+      "name": "Insurance",
+      "year": "INS",
+      "src": "/images/services/insurance-base.webp",
+      "hover": "/images/services/insurance-hover.webp"
     },
     {
-      "name": "Discoball",
-      "year": "2025",
-      "src": "/images/helmets/2025-Discoball-base.webp",
-      "hover": "/images/helmets/2025-Discoball-hover.webp"
+      "name": "TLC Insurance",
+      "year": "TLC",
+      "src": "/images/services/tlc-insurance-base.webp",
+      "hover": "/images/services/tlc-insurance-hover.webp"
     },
     {
-      "name": "Dark Glitter",
-      "year": "2025",
-      "src": "/images/helmets/2025-DarkGlitter-base.webp",
-      "hover": "/images/helmets/2025-DarkGlitter-hover.webp"
+      "name": "TLC Express",
+      "year": "TLC EXP",
+      "src": "/images/services/tlc-express-base.webp",
+      "hover": "/images/services/tlc-express-hover.webp"
     },
     {
-      "name": "Season",
-      "year": "2024",
-      "src": "/images/helmets/2024-Season-base.webp",
-      "hover": "/images/helmets/2024-Season-hover.webp"
+      "name": "DMV Express",
+      "year": "DMV",
+      "src": "/images/services/dmv-express-base.webp",
+      "hover": "/images/services/dmv-express-hover.webp"
     },
     {
-      "name": "Porcelain",
-      "year": "2024",
-      "src": "/images/helmets/2024-Porcelain-base.webp",
-      "hover": "/images/helmets/2024-Porcelain-hover.webp"
+      "name": "Tax",
+      "year": "TAX",
+      "src": "/images/services/tax-base.webp",
+      "hover": "/images/services/tax-hover.webp"
     },
     {
-      "name": "Japan",
-      "year": "2024",
-      "src": "/images/helmets/2024-Japan-base.webp",
-      "hover": "/images/helmets/2024-Japan-hover.webp"
+      "name": "Travel",
+      "year": "TRAVEL",
+      "src": "/images/services/travel-base.webp",
+      "hover": "/images/services/travel-hover.webp"
     },
     {
-      "name": "GIF",
-      "year": "2024",
-      "src": "/images/helmets/2024-GIF-Helmet-base.webp",
-      "hover": "/images/helmets/2024-GIF-Helmet-hover.webp"
+      "name": "Courses",
+      "year": "COURSE",
+      "src": "/images/services/courses-base.webp",
+      "hover": "/images/services/courses-hover.webp"
     },
     {
-      "name": "Dark Mode",
-      "year": "2024",
-      "src": "/images/helmets/2024-DarkMode-base.webp",
-      "hover": "/images/helmets/2024-DarkMode-hover.webp"
+      "name": "Notary",
+      "year": "NOTARY",
+      "src": "/images/services/notary-base.webp",
+      "hover": "/images/services/notary-hover.webp"
     },
     {
-      "name": "Race",
-      "year": "2023",
-      "src": "/images/helmets/2023-Race-100-base.webp",
-      "hover": "/images/helmets/2023-Race-100-hover.webp"
+      "name": "Business Insurance",
+      "year": "BIZ",
+      "src": "/images/services/business-insurance-base.webp",
+      "hover": "/images/services/business-insurance-hover.webp"
     },
     {
-      "name": "Las Vegas",
-      "year": "2023",
-      "src": "/images/helmets/2023-Las-Vegas-base.webp",
-      "hover": "/images/helmets/2023-Las-Vegas-hover.webp"
+      "name": "Rideshare",
+      "year": "RIDE",
+      "src": "/images/services/rideshare-base.webp",
+      "hover": "/images/services/rideshare-hover.webp"
     },
     {
-      "name": "Chrome",
-      "year": "2023",
-      "src": "/images/helmets/2023-Chrome-base.webp",
-      "hover": "/images/helmets/2023-Chrome-hover.webp"
+      "name": "Home & Landlord",
+      "year": "HOME",
+      "src": "/images/services/home-landlord-base.webp",
+      "hover": "/images/services/home-landlord-hover.webp"
     },
     {
-      "name": "Beachball",
-      "year": "2023",
-      "src": "/images/helmets/2023-Beach-Ball-base.webp",
-      "hover": "/images/helmets/2023-Beach-Ball-hover.webp"
+      "name": "Life & Disability",
+      "year": "LIFE",
+      "src": "/images/services/life-disability-base.webp",
+      "hover": "/images/services/life-disability-hover.webp"
     },
     {
-      "name": "Basketball",
-      "year": "2022",
-      "src": "/images/helmets/2022-Basketball-base.webp",
-      "hover": "/images/helmets/2022-Basketball-hover.webp"
+      "name": "Workers’ Comp",
+      "year": "COMP",
+      "src": "/images/services/workers-comp-base.webp",
+      "hover": "/images/services/workers-comp-hover.webp"
     },
     {
-      "name": "Season",
-      "year": "2021",
-      "src": "/images/helmets/2021-base.webp",
-      "hover": "/images/helmets/2021-hover.webp"
+      "name": "Business Setup",
+      "year": "SETUP",
+      "src": "/images/services/business-setup-base.webp",
+      "hover": "/images/services/business-setup-hover.webp"
     },
     {
-      "name": "Silverstone",
-      "year": "2020",
-      "src": "/images/helmets/2020-Silverstone-base.webp",
-      "hover": "/images/helmets/2020-Silverstone-hover.webp"
+      "name": "Payroll & Sales Tax",
+      "year": "PAY",
+      "src": "/images/services/payroll-sales-tax-base.webp",
+      "hover": "/images/services/payroll-sales-tax-hover.webp"
     },
     {
-      "name": "Season",
-      "year": "2019",
-      "src": "/images/helmets/2019-base.webp",
-      "hover": "/images/helmets/2019-hover.webp"
+      "name": "Immigration Forms",
+      "year": "IMMIG",
+      "src": "/images/services/immigration-forms-base.webp",
+      "hover": "/images/services/immigration-forms-hover.webp"
     }
   ]
 }

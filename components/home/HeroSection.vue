@@ -119,7 +119,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
               <RiveCanvas file="reef" artboard="helmet-reef" state-machine="helmet-reef_play" />
             </span>
 
-            <span class="nr-text nr-sub">mclaren f1<br />since 2019</span>
+            <span class="nr-text nr-sub" v-html="content.hero.nextRace.sub" />
           </a>
         </div>
       </section>

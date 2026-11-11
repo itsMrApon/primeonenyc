@@ -2,12 +2,12 @@
   "hero": {
     "titleBrier": "NYC",
     "title": "Insurance",
-    "name": "Lando Norris",
-    "age": "26 y.o",
-    "eyebrow": "bringing the fight",
-    "intro": "Since his F1 debut with McLaren in 2019, Lando Norris has been all in – pushing limits, chasing podiums, and bringing the",
-    "introAccent": "fight to every race",
-    "sub": "Recently, Lando has been getting ready for the new season trying the new ways to stay at Hilton hotels.",
+    "name": "Delowar Hossain",
+    "age": "local agent",
+    "eyebrow": "protection meets perfection",
+    "intro": "From yellow cabs to the family car, the house and the corner store, Delowar Hossain checks every line and brings the",
+    "introAccent": "right cover to every road",
+    "sub": "Auto, home, life and business cover, plus PrimeOne TLC for yellow, green and black cars, all at 69-03 Woodside Ave.",
     "images": [
       "/images/horiz/01.webp",
       "/images/horiz/02.webp",
@@ -21,16 +21,34 @@
       "/images/horiz/10.webp"
     ],
     "logos": [
-      { "src": "/images/partners/logo-ralph.svg", "alt": "Ralph Lauren" },
-      { "src": "/images/partners/logo-mind.svg", "alt": "Mind" },
-      { "src": "/images/partners/logo-ps4.svg", "alt": "PlayStation" },
-      { "src": "/images/partners/logo-quadrant.svg", "alt": "Quadrant" },
-      { "src": "/images/partners/logo-tumi.svg", "alt": "Tumi" },
-      { "src": "/images/partners/logo-hilton.svg", "alt": "Hilton" }
+      {
+        "src": "/images/brands/dh-agency.svg",
+        "alt": "Delowar Hossain Agency"
+      },
+      {
+        "src": "/images/brands/primeone-tlc.svg",
+        "alt": "PrimeOne TLC"
+      },
+      {
+        "src": "/images/brands/primeone-tlc-express.svg",
+        "alt": "PrimeOne TLC Express"
+      },
+      {
+        "src": "/images/brands/dh-dmv.svg",
+        "alt": "Delowar Hossain DMV"
+      },
+      {
+        "src": "/images/brands/ff-tax.svg",
+        "alt": "Friends & Family Tax Service"
+      },
+      {
+        "src": "/images/brands/primeone-travels.svg",
+        "alt": "PrimeOne Travels"
+      }
     ]
   },
   "impact": {
-    "eyebrow": "mclaren f1 since 2019",
-    "html": "Challenging<br>the <strong>limits</strong>, <strong>winning</strong> races. Bringing <strong>it all</strong> each and every weekend."
+    "eyebrow": "primeone tlc · woodside",
+    "html": "Covering<br>the <strong>cabs</strong>, <strong>protecting</strong> homes. Bringing <strong>it all</strong> under one roof in Woodside."
   }
 }

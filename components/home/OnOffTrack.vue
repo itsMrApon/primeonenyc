@@ -136,7 +136,7 @@ onBeforeUnmount(() => {
     <section class="otot-end">
       <picture>
         <source media="(max-width: 767px)" :srcset="content.onOffTrack.featureImageMobile" />
-        <img ref="endImg" class="otot-end-img" :src="content.onOffTrack.featureImage" alt="Lando lifting helmet up" />
+        <img ref="endImg" class="otot-end-img" :src="content.onOffTrack.featureImage" :alt="content.onOffTrack.featureImageAlt" />
       </picture>
     </section>
   </div>

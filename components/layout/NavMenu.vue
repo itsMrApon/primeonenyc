@@ -26,7 +26,12 @@ const nav = computed(() => content.nav);
 const route = useRoute();
 
 /** Photo per link (data-nav-img N ↔ link N − 1); 4 is in the markup but hidden; 5 has no link. */
-const IMAGES = { 1: "/images/nav/menu-img-1.webp", 2: "/images/nav/menu-img-2.webp", 3: "/images/nav/menu-img-3.webp", 5: "/images/nav/menu-img-5.webp" };
+const IMAGES = {
+  1: "/images/social/primeone-office-booth.webp",
+  2: "/images/social/primeone-delowar-kurta.webp",
+  3: "/images/social/primeone-duo-sunglasses.webp",
+  5: "/images/social/primeone-family-autumn.webp"
+};
 const COLUMNS = [
   [1, 3],
   [2, 5]

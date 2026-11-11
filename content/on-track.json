@@ -2,128 +2,110 @@
   "hero": {
     "title": "Consultant",
     "meta": {
-      "nickname": "last lap lando",
-      "age": "25 y. expert",
-      "hometown": "Queens, US"
+      "nickname": "friends & family tax",
+      "age": "B.B.A. accounting",
+      "hometown": "Woodside, NY"
     },
-    "eyebrow": "bringing the fight",
-    "intro": "Since his F1 debut with McLaren in 2019, Lando Norris has been all in – pushing limits, chasing wins, and bringing the",
-    "introAccent": "fight to every race",
+    "eyebrow": "tax season, made easy",
+    "intro": "Kamrun Bithi’s Friends & Family Tax desk files personal and business returns, sets up new LLCs and brings the",
+    "introAccent": "same care to every file",
     "previous": {
-      "label": "previous",
+      "label": "last deadline",
       "circuit": "mexico-city",
       "name": [
-        "Mexico",
-        "gp"
+        "Extension",
+        "day"
       ],
-      "position": "5",
-      "suffix": "th",
+      "position": "15",
+      "suffix": "oct",
       "hoverTrack": "australia"
     },
     "current": {
-      "label": "Current",
-      "round": "20",
-      "city": "USA",
+      "label": "Next",
+      "round": "27",
+      "city": "NYC",
       "flag": "/images/on-track/calendar/flag-usa.svg",
-      "team": "mclaren f1 since 2019",
+      "team": "friends & family tax",
       "outline": "/images/on-track/calendar/outlets/united-states.svg",
       "country": "USA",
       "dates": [
-        "06-08",
-        "Nov"
+        "15",
+        "Apr"
       ]
     }
   },
   "impact": {
-    "eyebrow": "mclaren f1 since 2019",
-    "html": "Challenging <br>the <strong>limits</strong>, <strong>winning</strong> races. Bringing <strong>it all</strong> each and every weekend."
+    "eyebrow": "friends & family tax",
+    "html": "Checking <br>every <strong>credit</strong>, <strong>filing</strong> on time. Bringing <strong>it all</strong> home every tax season."
   },
   "podiums": {
-    "count": "49",
-    "label": "podiums",
+    "count": "16",
+    "label": "services",
     "media": [
-      "/images/on-track/podiums/emilia-romagna-2022.webp",
-      "/images/on-track/podiums/singapore-2024.webp",
-      "/images/on-track/podiums/abu-dhabi-2024.webp",
-      "/images/on-track/podiums/united-states-2023.webp",
-      "/images/on-track/podiums/lando-6-on-track.webp",
-      "/images/on-track/podiums/miami-2024.webp",
-      "/images/on-track/podiums/dutch-2024.webp",
-      "/images/on-track/podiums/australian-2025.webp",
-      "/images/on-track/podiums/austrian-2020.webp",
-      "/images/on-track/podiums/monaco-2021.webp"
+      "/images/social/primeone-office-booth.webp",
+      "/images/social/primeone-family-autumn.webp",
+      "/images/social/primeone-delowar-classic-car.webp",
+      "/images/social/primeone-delowar-kurta.webp",
+      "/images/social/primeone-duo-sunglasses.webp",
+      "/images/social/primeone-selfie-duo.webp",
+      "/images/social/primeone-delowar-vest.webp",
+      "/images/misc/delowar-portrait.webp",
+      "/images/misc/kamrun-portrait.webp",
+      "/images/misc/footer-helm.webp"
     ],
     "career": {
-      "title": "f1 career<br><strong>since 2019</strong>",
+      "title": "your agent<br><strong>in woodside</strong>",
       "image": {
-        "src": "/images/on-track/podiums/lando-australia-2025.webp",
-        "alt": "Lando in F1 car"
+        "src": "/images/social/primeone-delowar-vest.webp",
+        "alt": "Delowar Hossain outside the office"
       },
       "wins": {
-        "label": "formula 1  wins",
-        "value": "13"
+        "label": "services, one desk",
+        "value": "16"
       },
       "poles": {
-        "label": "pole positions",
-        "value": "19"
+        "label": "businesses, one roof",
+        "value": "7"
       },
       "average": {
-        "label": "average finish",
-        "value": "6",
-        "decimals": "28"
+        "label": "nyc sales tax %",
+        "value": "8",
+        "decimals": "875"
       },
       "fastest": {
-        "label": "fastest laps",
-        "value": "18"
+        "label": "languages spoken",
+        "value": "3"
       },
       "seasons": {
-        "label": "F1 Seasons",
+        "label": "TLC minimums",
         "columns": [
-          "Year",
-          "Finish",
-          "Podiums"
+          "Cover",
+          "Limit",
+          "Per"
         ],
         "rows": [
           {
-            "year": "2024",
-            "finish": "2",
-            "suffix": "nd",
-            "podiums": "13"
+            "year": "BI",
+            "finish": "100",
+            "suffix": "k",
+            "podiums": "person"
           },
           {
-            "year": "2023",
-            "finish": "6",
-            "suffix": "th",
-            "podiums": "7"
+            "year": "BI",
+            "finish": "300",
+            "suffix": "k",
+            "podiums": "crash"
           },
           {
-            "year": "2022",
-            "finish": "7",
-            "suffix": "th",
-            "podiums": "1"
-          },
-          {
-            "year": "2021",
-            "finish": "6",
-            "suffix": "th",
-            "podiums": "4"
-          },
-          {
-            "year": "2020",
-            "finish": "9",
-            "suffix": "th",
-            "podiums": "1"
-          },
-          {
-            "year": "2019",
-            "finish": "11",
-            "suffix": "th",
-            "podiums": "0"
+            "year": "PIP",
+            "finish": "200",
+            "suffix": "k",
+            "podiums": "person"
           }
         ]
       },
       "cta": {
-        "label": "full schedule & results",
+        "label": "all key dates & forms",
         "href": "/calendar"
       }
     }
@@ -269,7 +251,7 @@
       }
     ],
     "quote": {
-      "text": "It doesn’t matter <strong>where</strong> you start, it’s <strong>how</strong> you progress from there.",
+      "text": "Every <strong>credit</strong> you’re owed, explained in the <strong>language</strong> you think in.",
       "signature": "/images/misc/signature-kamrun-lime.svg",
       "signatureAlt": "Kamrun Nahar's signature in lime"
     },
@@ -280,55 +262,55 @@
     }
   },
   "preF1": {
-    "title": "pre-f1 career <br><strong>2007-2019</strong>",
-    "body": "Prior to starting his Formula 1 career, <br>Lando had an illustrious junior career <br>in karting and junior formulae, winning <br>multiple titles on his way to the pinnacle <br>of motorsport.",
+    "title": "forms we <br><strong>know by heart</strong>",
+    "body": "From a first W-2 to a growing <br>S-corp, we know the forms New <br>York families and small businesses <br>actually need, and we walk you <br>through every line.",
     "mobileImage": {
-      "src": "/images/on-track/pre-f1/champagne.webp",
-      "alt": "Lando spraying champagne"
+      "src": "/images/social/primeone-selfie-duo.webp",
+      "alt": "Kamrun Bithi and Delowar Hossain"
     },
     "image": {
-      "src": "/images/on-track/pre-f1/celebrating.webp",
-      "alt": "Lando in celebrating win"
+      "src": "/images/social/primeone-duo-sunglasses.webp",
+      "alt": "Kamrun Bithi and Delowar Hossain, Friends & Family Tax"
     },
     "stats": [
       {
-        "title": "fia formula 3 eu champion",
-        "year": "2017",
+        "title": "personal returns",
+        "year": "1040",
         "color": "lime"
       },
       {
-        "title": "formula 2 2nd place",
-        "year": "2018",
+        "title": "s-corp returns",
+        "year": "1120-S",
         "color": "grey-on-track"
       },
       {
-        "title": "renault 2.0 nec champion",
-        "year": "2016",
+        "title": "partnership returns",
+        "year": "1065",
         "color": "lime"
       },
       {
-        "title": "renault 2.0 eurocup champion",
-        "year": "2016",
+        "title": "self-employed & rideshare",
+        "year": "Sch C",
         "color": "lime"
       },
       {
-        "title": "toyota series champion",
-        "year": "2016",
+        "title": "itin applications",
+        "year": "W-7",
         "color": "lime"
       },
       {
-        "title": "cik-fia karting world champion",
-        "year": "2014",
+        "title": "payroll filings",
+        "year": "941",
         "color": "lime"
       },
       {
-        "title": "MSA Formula (british f4) champion",
-        "year": "2015",
+        "title": "citizenship forms",
+        "year": "N-400",
         "color": "lime"
       },
       {
-        "title": "World Karting (KFJ) champion",
-        "year": "2013",
+        "title": "irs letters, answered",
+        "year": "CP2000",
         "color": "lime"
       }
     ]
@@ -498,47 +480,46 @@
     ]
   },
   "end": {
-    "src": "/images/on-track/otot-end.webp",
-    "alt": "Lando Norris hodling up a helmet with flight cases in the background"
+    "src": "/images/misc/footer-helm.webp",
+    "alt": "Delowar Hossain overlooking the sea on holiday"
   },
   "socials": {
     "titleTop": "what’s up",
     "titleBottom": "On Socials",
-    "follow": "Follow Lando on social media",
+    "follow": "Follow Prime One on social media",
     "links": [
       {
-        "label": "tiktok",
-        "href": "https://www.tiktok.com/@landonorris"
+        "label": "facebook",
+        "href": "https://www.facebook.com/profile.php?id=100063516761659"
       },
       {
         "label": "instagram",
-        "href": "https://www.instagram.com/lando"
+        "href": "https://www.instagram.com/delowar_hossain_agency/"
       },
       {
-        "label": "Youtube",
-        "href": "https://www.youtube.com/@LandoNorris"
+        "label": "tiktok",
+        "href": "https://www.tiktok.com/@kbithi90"
       },
       {
-        "label": "Twitch",
-        "href": "https://www.twitch.tv/landonorris"
+        "label": "google",
+        "href": "https://share.google/SNpH65PbvIUJ9acse"
       }
     ],
-    "video": "824804225",
     "images": [
-      "/images/on-track/social/68d3ba846e593e52541fb7a8_Lando-6-on-track.webp",
-      "/images/on-track/social/6830302d42237886d0c4b24c_ln-social-img-2.webp",
-      "/images/on-track/social/68d3ba8492066d8f173a3829_Lando-2-on-track.webp",
-      "/images/on-track/social/68d3ba844680bf9a8d9104dd_Lando-3-ontrack.webp",
-      "/images/on-track/social/68d3ba8449f0506fbaad037b_Lano-5-on-track.webp",
-      "/images/on-track/social/6830302dadd0727e6ac034dd_ln-social-img-6.webp",
-      "/images/on-track/social/67d955eda1a903a8a63754a7_ln4-on-track-scroll-img5.webp"
+      "/images/social/primeone-office-booth.webp",
+      "/images/social/primeone-family-autumn.webp",
+      "/images/social/primeone-delowar-classic-car.webp",
+      "/images/social/primeone-delowar-kurta.webp",
+      "/images/social/primeone-duo-sunglasses.webp",
+      "/images/social/primeone-selfie-duo.webp",
+      "/images/social/primeone-delowar-vest.webp"
     ]
   },
   "callout": {
-    "text": "Explore the exclusive collection of 1:2 and 1:5 scale replicas",
+    "text": "Got an IRS letter? Bring it in and we’ll read it with you.",
     "cta": {
-      "label": "buy minis",
-      "href": "https://store.landonorris.com/"
+      "label": "call the tax desk",
+      "href": "tel:+19177450549"
     }
   }
 }

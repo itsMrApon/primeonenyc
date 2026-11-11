@@ -38,23 +38,16 @@ onBeforeUnmount(() => {
   clearTimeout(signatureTimer);
 });
 
-/** Marquee logos in reference order; widths in px at 1440 (height 35). */
+/** Marquee logos: Prime One brand wordmarks (tools/brand-wordmarks.mjs); widths in px at 1440 (height 35). */
 const LOGOS = [
-  { src: "logo-inline-1.svg", w: 80.8 },
-  { src: "logo-inline-2.svg", w: 65 },
-  { src: "logo-inline-3.svg", w: 26.7 },
-  { src: "logo-inline-4.svg", w: 78.3 },
-  { src: "logo-inline-5.svg", w: 66.7 },
-  { src: "logo-inline-6.svg", w: 65 },
-  { src: "logo-inline-7.svg", w: 55.8 },
-  { src: "ln4-footer-logo-add-c.svg", w: 67.5 },
-  { src: "logo-inline-8.svg", w: 34.2 },
-  { src: "ln4-footer-logo-google.svg", w: 116.7 },
-  { src: "ln4-footer-logo-ralph-lauren.svg", w: 140.8 },
-  { src: "ln4-footer-logo-android.svg", w: 105 },
-  { src: "ln4-footer-logo-pap.svg", w: 92.5 },
-  { src: "ln4-footer-logo-monster.svg", w: 134.2 },
-  { src: "ln4-footer-logo-hilton.svg", w: 105 }
+  { src: "dh-agency-lime.svg", w: 119 },
+  { src: "primeone-tlc-lime.svg", w: 119 },
+  { src: "primeone-tlc-express-lime.svg", w: 119 },
+  { src: "dh-dmv-lime.svg", w: 119 },
+  { src: "ff-tax-lime.svg", w: 119 },
+  { src: "primeone-travels-lime.svg", w: 119 },
+  { src: "dh-institution-lime.svg", w: 182 },
+  { src: "dh-notary-lime.svg", w: 119 }
 ];
 const PX = 1440 / 108;
 </script>
@@ -68,7 +61,7 @@ const PX = 1440 / 108;
 
         <Marquee class="footer-marquee" :speed="30" direction="left" :duplicate="3" :scroll-shift="5">
           <div v-for="logo in LOGOS" :key="logo.src" class="footer-logo" :style="{ width: `calc(var(--u) * ${(logo.w / PX).toFixed(4)})` }">
-            <img :src="`/images/footer/${logo.src}`" alt="" />
+            <img :src="`/images/brands/${logo.src}`" alt="" />
           </div>
         </Marquee>
 
