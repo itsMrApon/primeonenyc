@@ -1,43 +1,72 @@
-# Prime One agency homepage (`primeone_agency`)
+# Prime One
 
-Nuxt 3 + GSAP + Three.js + Rive homepage built on the finished Lando Norris clone in `~/Dev/web/crawl/boilerplate_agency`, rebranded for Prime One.
+The website for Prime One, a small insurance and tax office in Queens, NYC.
 
-## Stack
+I wanted it to feel more like a motion piece than a typical insurance site. You scroll past a little 3D umbrella diorama, photos slide sideways, and the text animates in as you go. Under all that it's still just a site that tells people what we do and how to book.
 
-- **Nuxt 3.14** (`ssr: false`)
-- **Three.js** — hero helmet/head WebGL (`webgl/`)
-- **GSAP ScrollTrigger** — horizontal photo track pin/scrub, reveals, nav theme
-- **Lenis** — smooth scroll
-- **pnpm** package manager
+## What's in it
 
-## Run
+- **Home**: 3D hero (umbrella over a house and car), the horizontal photo strip, services and partners
+- **Tax Consultant**: tax services, with a pile of papers and envelopes flying around in 3D
+- **NYC Insurance**: auto, TLC, business and life insurance
+- **Calendar**: the yearly schedule, plus services and forms pulled from the dashboard data
+
+## Built with
+
+- [Nuxt 3](https://nuxt.com) (client-side only, `ssr: false`)
+- [Three.js](https://threejs.org) for the 3D bits
+- [GSAP](https://gsap.com) + ScrollTrigger for scroll animation
+- [Lenis](https://lenis.darkroom.engineering) for smooth scrolling
+- [Rive](https://rive.app) for the logo, signature and button animations
+- Blender (scripted) for the hero model
+
+## Running it locally
+
+You'll need Node 20 and pnpm.
 
 ```bash
-cd /Users/itsmrapon/Dev/threejs/primeone_agency
 pnpm install
 pnpm dev
 ```
 
-Open the URL Nuxt prints (usually `http://localhost:3000`).
+Then open http://localhost:3000.
 
-Node **20+** recommended (see `.nvmrc`). Scripts use `NODE_OPTIONS=--experimental-require-module` for Nuxt 3.14 on Node 20.
+Other commands:
 
-## Project map
+```bash
+pnpm build             # production build
+pnpm generate          # static build
+pnpm typecheck         # check types
+pnpm export:services   # export services/forms to CSV + SQL for the dashboard
+```
 
-| Path | Role |
+## Changing the content
+
+Most of the copy is in `content/home.json`. Services, forms and calendar events are in `content/services.json`, so you don't have to dig through components for a typo.
+
+Images are in `public/images/`, 3D models and textures in `public/gl/`, and Rive files in `public/rive/`.
+
+## Where things are
+
+| Folder | What's there |
 | --- | --- |
-| `CONTENT.md` / `content/home.json` | Editable homepage copy & links |
-| `public/gl/` | Models, textures, HDRI, Draco, Basis |
-| `public/images/` | Horiz photos, helmets, partners, store, misc |
-| `public/fonts/` | Mona Sans Variable, Brier Bold |
-| `webgl/Experience.ts` | Renderer + RAF loop |
-| `webgl/scenes/` | `HeroStage`, `UmbrellaScene` (hero diorama), `MarqueeTextScene`, `TaxiScene` (backup) |
-| `tools/blender/build_hero_miniature.py` | Builds the hero diorama GLB |
-| `components/RiveCanvas.vue` / `public/rive/` | Rive player + `.riv` files |
-| `composables/useHomeScroll.ts` | ScrollTrigger + Lenis |
-| `components/home/*` | Homepage sections |
-| `assets/css/` | Brand tokens + base styles (+ vendored Webflow CSS in `original/`) |
+| `pages/` | One file per page |
+| `components/home/` | Homepage sections |
+| `components/on-track/`, `components/calendar/` | Sections for the other pages |
+| `webgl/` | Three.js renderer (`Experience.ts`) and the scenes |
+| `composables/useHomeScroll.ts` | Scroll setup (Lenis + ScrollTrigger) |
+| `tools/blender/build_hero_miniature.py` | Generates the hero diorama model |
+| `assets/css/` | Brand colors, fonts, base styles |
 
-## Reference
+### The hero model
 
-The behaviour reference is the boilerplate clone. Run it from this repo with the `boilerplate` config in `.claude/launch.json` (port 3002). `docs/EXACT-CLONE-PLAYBOOK.md` documents how that clone was built (gotchas, building blocks, probes in `tools/probes/`).
+The umbrella diorama is built by a Blender script, not modeled by hand. If you want to change it, edit `tools/blender/build_hero_miniature.py` and export it again. Don't edit the `.glb` directly or your changes will be lost the next time it's rebuilt.
+
+## Notes
+
+- The layout and scroll animations started from an earlier agency template I'd built. The content, 3D hero, logos and copy are all Prime One's own.
+- Fonts are Mona Sans and Brier.
+
+## Contact
+
+Questions or want to work together? Reach out through the contact links on the site.
