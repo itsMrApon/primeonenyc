@@ -194,10 +194,8 @@ onBeforeUnmount(() => {
                     </div>
                     <div class="box1-row is-2">
                       <div class="helmet-rive">
-                        <RiveCanvas
+                        <PoReef
                           :ref="setRive"
-                          file="reef"
-                          artboard="helmet-reef"
                           state-machine="helmet-reef_play"
                           :inputs="{ 'color_grey-on-track': true }"
                           :autoplay="false"
@@ -621,6 +619,7 @@ onBeforeUnmount(() => {
 .helmet-rive {
   position: relative;
   display: flex;
+  color: #b9bbad; /* PO monogram = the laurels' grey-on-track */
   width: calc(var(--u) * 6.0625);
   height: calc(var(--u) * 3.1875);
 }

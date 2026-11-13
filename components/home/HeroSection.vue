@@ -116,7 +116,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()));
             <span class="nr-line" />
 
             <span class="nr-helmet">
-              <RiveCanvas file="reef" artboard="helmet-reef" state-machine="helmet-reef_play" />
+              <PoReef state-machine="helmet-reef_play" />
             </span>
 
             <span class="nr-text nr-sub" v-html="content.hero.nextRace.sub" />

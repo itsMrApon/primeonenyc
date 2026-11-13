@@ -36,11 +36,11 @@ onBeforeUnmount(() => {
   <section ref="section" class="ot-callout">
     <div class="callout-layout">
       <div class="callout-icon">
-        <RiveCanvas
-          file="reef"
-          artboard="helmet-reef"
+        <PoReef
           state-machine="helmet-reef_scroll"
           :inputs="{ color_lime: true, scroll: reefScroll }"
+          :progress="reefScroll / 1000"
+          color="#d2ff00"
         />
       </div>
       <HighLines class="callout-text" :html="c.text" />

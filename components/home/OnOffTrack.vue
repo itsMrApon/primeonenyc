@@ -114,7 +114,7 @@ onBeforeUnmount(() => {
           <div ref="col2" class="otot-col is-2">
             <div class="otot-titles">
               <HighLines tag="h2" class="otot-t-brier" :html="off.titleTop" color="dark-green-tint-1" direction="left" />
-              <HighLines tag="h2" class="otot-t-mona" :html="off.titleBottom" color="dark-green-tint-1" direction="left" />
+              <HighLines tag="h2" class="otot-t-mona is-long" :html="off.titleBottom" color="dark-green-tint-1" direction="left" />
             </div>
             <HighLines tag="p" class="otot-p" :html="off.body" color="dark-green-tint-1" direction="left" :delay="0.2" />
             <a
@@ -246,7 +246,7 @@ onBeforeUnmount(() => {
   margin-inline: 0;
 }
 
-/* CONSULTANT (6.48 em) sized to the column the reference TRACK filled. */
+/* CONSULTANT (6.48 em) sized to the column the reference TRACK filled; INSURANCE uses the same size. */
 .otot-t-mona.is-long {
   font-size: calc(var(--u) * 3.2);
   letter-spacing: calc(var(--u) * -0.1);

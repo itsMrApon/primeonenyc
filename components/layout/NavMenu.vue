@@ -225,11 +225,10 @@ onBeforeUnmount(() => {
             </div>
             <div class="nav-helmet-rive-w">
               <div class="base-helmet-rive">
-                <RiveCanvas
-                  file="reef"
-                  artboard="helmet-reef"
+                <PoReef
                   state-machine="helmet-reef_scroll"
                   :inputs="{ 'color_green-off-white-2': true, scroll: helmetScroll }"
+                  :progress="helmetScroll / 1000"
                 />
               </div>
               <div data-nav-link-highlight class="text-eyebrow">

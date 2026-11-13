@@ -8,12 +8,11 @@ const content = useHomeContent();
     <div class="impact-content">
       <div class="impact-icon">
         <span class="impact-helmet">
-          <RiveCanvas
-            file="reef"
-            artboard="helmet-reef"
+          <PoReef
             state-machine="helmet-reef_play"
             :inputs="{ 'color_green-off-white-2': true }"
             play-on-view
+            color="#b4b8a5"
           />
         </span>
         <HighLines class="impact-eyebrow" :html="content.impact.eyebrow" color="lime" />
