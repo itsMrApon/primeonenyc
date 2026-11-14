@@ -9,7 +9,7 @@ Tick each line or correct it. Nothing here is legal advice. The compliance rows 
 | 1 | `934-444-61475` has 11 digits (US numbers have 10) | not used | ☐ correct number: ________ |
 | 2 | Tax email given as both `helpfortax1040@gmail.com` and `helpfortax@gmail.com` | `helpfortax1040@gmail.com` (JSON-LD only) | ☐ which one is real? |
 | 3 | Brand email `primeoneinsurance@gmail.com`: confirm spelling | nav + footer "business enquiries" | ☐ |
-| 4 | Social links are personal profiles (facebook.com/delowar.bai, facebook.com/kamrun…, tiktok @kbithi90) | site uses Farmers business page `facebook.com/100050273034759`, IG `delowar_hossain_agency`, TikTok `@kbithi90`, Google profile | ☐ OK to show Kamrun's personal TikTok? |
+| 4 | Social links are personal profiles (facebook.com/delowar.bai, facebook.com/kamrun…, tiktok @kbithi90) | site uses `facebook.com/delowar.bai`, IG `delowar_hossain_agency`, TikTok `@kbithi90` (Farmers page + Google profile removed) | ☐ OK to show Kamrun's personal TikTok? |
 | 5 | Typos in the service lists: "rideshearing", "trasport", "Disablity" | not copied | – |
 | 6 | Old site primeonenyc.com: phone link `telto:` (broken), address/mail links prefixed with `/`, template text ("best shirts I've ever owned"), Farmers link without `https://` | – | ☐ fix or retire old site |
 | 7 | No opening hours anywhere | not shown | ☐ hours: ________ |
@@ -39,7 +39,6 @@ Each number or promise on the site, where it comes from, and its status.
 
 | Topic | Why | Who to ask |
 | --- | --- | --- |
-| **Farmers brand** | The site shows the Farmers logo in photos and says "local agent". Farmers agents usually need marketing approval before publishing ads or websites. | Farmers district manager / agency marketing |
 | **Immigration forms (N-400, visa, asylum)** | NY General Business Law Art. 28-C covers non-attorney immigration assistance providers: required disclaimers, a written contract, a bond, and no "notario" wording. Asylum help in particular should go through an attorney or accredited representative. | NY Dept. of State / an immigration attorney |
 | **Notary ads in Bangla** | NY Executive Law §135-c requires non-attorney notaries who advertise in another language to include the "I am not an attorney…" disclaimer. | NY Dept. of State |
 | **Hajj tickets ("স্বল্পমূল্যে হজের টিকেট")** | Since 2022, US Hajj packages are booked through Saudi Arabia's Nusuk Hajj platform, not travel agents. Advertise flights only, not Hajj packages. Not on the site yet. | Nusuk Hajj rules |

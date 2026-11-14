@@ -24,7 +24,7 @@ const structuredData = {
       knowsLanguage: ["en", "bn"],
       employee: [{ "@type": "Person", name: "Delowar Hossain", jobTitle: "Founder" }],
       sameAs: [
-        "https://www.facebook.com/100050273034759",
+        "https://www.facebook.com/delowar.bai",
         "https://www.instagram.com/delowar_hossain_agency/"
       ]
     },

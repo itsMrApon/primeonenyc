@@ -21,10 +21,9 @@
       "href": "mailto:primeoneinsurance@gmail.com"
     },
     "socials": [
-      { "label": "facebook", "href": "https://www.facebook.com/100050273034759" },
+      { "label": "facebook", "href": "https://www.facebook.com/delowar.bai" },
       { "label": "instagram", "href": "https://www.instagram.com/delowar_hossain_agency/" },
-      { "label": "tiktok", "href": "https://www.tiktok.com/@kbithi90" },
-      { "label": "google", "href": "https://share.google/c1NKmbY2MjDQlQjEN" }
+      { "label": "tiktok", "href": "https://www.tiktok.com/@kbithi90" }
     ]
   },
   "hero": {
@@ -112,10 +111,9 @@
     "titleBottom": "On Socials",
     "follow": "Follow Prime One on social media",
     "links": [
-      { "label": "facebook", "href": "https://www.facebook.com/100050273034759" },
+      { "label": "facebook", "href": "https://www.facebook.com/delowar.bai" },
       { "label": "instagram", "href": "https://www.instagram.com/delowar_hossain_agency/" },
-      { "label": "tiktok", "href": "https://www.tiktok.com/@kbithi90" },
-      { "label": "google", "href": "https://share.google/c1NKmbY2MjDQlQjEN" }
+      { "label": "tiktok", "href": "https://www.tiktok.com/@kbithi90" }
     ],
     "images": [
       "/images/social/primeone-office-booth.webp",
